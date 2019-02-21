@@ -1,0 +1,49 @@
+
+
+.img-thumbnail.art{
+    width: 25% !important;
+    height: 25% !important;
+}
+
+.navbar {
+    /* margin-bottom: 0px; */
+    border-radius: 0!important;
+}
+
+.container .jumbotron {
+    /* margin-bottom: 0px; */
+    border-radius: 0!important;
+}
+
+.container * {
+    margin-bottom: 0px;
+}
+
+.metadata {
+    top: 50%;
+    padding: 2%;
+    background-color: lightgray;
+}
+
+ul.metadata {
+    
+    
+    padding: 0%;
+    list-style-type: none;
+}
+
+.albumbio {
+    background-color: darkgray;
+    padding: 2%;
+    text-indent: 5%;
+}
+
+.equal {
+    display: flex;
+    flex-wrap: wrap;
+    
+}
+
+.tracklist {
+    list-style-type: none;
+}
