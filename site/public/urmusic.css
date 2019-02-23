@@ -1,4 +1,6 @@
-
+* {
+    list-style-type: none;
+}
 
 .img-thumbnail.art{
     width: 25% !important;
@@ -29,7 +31,7 @@ ul.metadata {
     
     
     padding: 0%;
-    list-style-type: none;
+    /* list-style-type: none; */
 }
 
 .albumbio {
@@ -45,5 +47,5 @@ ul.metadata {
 }
 
 .tracklist {
-    list-style-type: none;
+    /* list-style-type: none; */
 }
