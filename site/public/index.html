@@ -4,50 +4,65 @@
 <head>
     <meta content="width=device-width, initial-scale=1.0, text/html; charset=UTF-8" />
     <title>urMusic</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css"
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         type="text/css" />
-    <link href="urmusic.css" rel="stylesheet" type="text/css" />
+    <link href="urmusic2.css" rel="stylesheet" type="text/css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </head>
 
 <body>
-    <div class="container">
-        <nav class="navbar navbar-inverse">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="#">WebSiteName</a>
-                </div>
-                <ul class="nav navbar-nav">
-                    <li class="active"><a href="#">Home</a></li>
-                    <li><a href="#">Page 1</a></li>
-                </ul>
-                <form class="navbar-form navbar-left" action="/action_page.php">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Search" name="search" />
-                        <div class="input-group-btn">
-                            <button class="btn btn-default" type="submit">
-                                <i class="glyphicon glyphicon-search"></i>
-                            </button>
-                        </div>
-                    </div>
-                </form>
-                <ul class="nav navbar-nav navbar-right">
-                    <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-                    <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-                </ul>
-            </div>
-        </nav>
-        <div style="clear:none;"></div>
-        <div class="jumbotron jumbotron-fluid" style="align-content: center; text-align: center">
-            <h2>Naked Flames Who Can Recall His Past Lives</h2>
-            <h3>Naked Flames</h3>
-            <img src="cover.png" class="img-thumbnail art" alt="coverart" />
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <!-- <div class="col"> -->
+            <a class="navbar-brand" href="#">
+                <h3>urMusic</h3>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Product</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Forum</a>
+                    </li>
+                </ul>
+                <form class="form-inline mr-auto">
+                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" />
+                    <button class="btn  my-2 my-sm-0" type="submit">Search</button>
+                </form>
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Sign Up</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Login</a>
+                    </li>
+                </ul>
+                <!-- </div> -->
+            </div>
         </div>
-        <div class="equal">
-            <div class="col-sm-3 metadata align-self-center">
-                <ul class="metadata ">
+    </nav>
+    <div class="container">
+        <div class="row mt-3" style="align-content: center; text-align: center">
+            <div class="col">
+
+                <h2>Naked Flames Who Can Recall His Past Lives</h2>
+                <h3>Naked Flames</h3>
+                <img src="cover.png" class="img-thumbnail art" alt="coverart" height="25%" width="25%" />
+            </div>
+        </div>
+
+        <div class="row mt-3">
+
+            <div class="col-md-3">
+                <ul>
                     <li>
                         <h4>Release Date:</h4>
                     </li>
@@ -65,8 +80,8 @@
                     </li>
                 </ul>
             </div>
-            <div class="col-sm-3 metadata">
-                <ul class="metadata">
+            <div class="col-md-3">
+                <ul>
                     <li>
                         <h4>01 Jan 2018</h4>
                     </li>
@@ -84,7 +99,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="col-sm-6 albumbio">
+            <div class="col-md-6 albumbio">
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
                     et dolore magna
                     aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
@@ -98,9 +113,9 @@
                     occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
             </div>
         </div>
-        <div class="">
-            <div class="col-sm-1 tracknumber">
-                <ul class="tracklist">
+        <div class="row row mt-3">
+            <div class="col-md-1">
+                <ul>
                     <li>
                         <h4>1</h4>
                     </li>
@@ -112,8 +127,8 @@
                     </li>
                 </ul>
             </div>
-            <div class="col-sm-9 tracknames">
-                <ul class="tracklist">
+            <div class="col-md-9">
+                <ul>
                     <li>
                         <h4>Up Syndrome</h4>
                     </li>
@@ -125,8 +140,8 @@
                     </li>
                 </ul>
             </div>
-            <div class="col-sm-2 tracklengths">
-                <ul class="tracklist">
+            <div class="col-md-2">
+                <ul>
                     <li>
                         <h4>2:09</h4>
                     </li>
@@ -139,7 +154,6 @@
                 </ul>
             </div>
         </div>
-
     </div>
 </body>
 
