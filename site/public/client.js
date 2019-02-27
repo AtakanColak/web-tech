@@ -1,0 +1,1 @@
+document.getElementById("footer-dest").innerText = document.getElementById("footer-src").innerHTML;
