@@ -2,8 +2,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-    <meta content="width=device-width, initial-scale=1.0, text/html; charset=UTF-8" />
     <title>urMusic</title>
+    <meta content="width=device-width, initial-scale=1.0, text/html; charset=UTF-8" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         type="text/css" />
@@ -68,8 +68,8 @@
                     <h5 class="col-md-7 ml-5 text-left">
                         Release Type:
                     </h5>
-                    <h5 class="col text-left">
-                        Compilation
+                    <h5 class="col text-left" id="compilation">
+                        (@Compilation)
                     </h5>
                 </div>
                 <div class="row">
@@ -350,7 +350,6 @@
 
     </div>
 
-    <iframe src="/masters/footer.txt" id="footer-src" hidden="hidden"></iframe>
     <footer id="footer-dest"> </footer>
     <script>
         document.getElementById("footer-dest").innerHTML = document.getElementById("footer-src").body;
