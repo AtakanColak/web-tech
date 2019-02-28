@@ -9,29 +9,27 @@ app.use( express.static( "public" ) );
 // use res.render to load up an ejs view file
 
 // index page 
-app.get('/', function(req, res) {
-    res.render('pages/index');
-});
 
 var sql = require("sqlite3");
 var db = new sql.Database("/home/anton/Documents/ataweb/web-tech/site/public/bruh.db");
 
-let sqlQuery = `SELECT ReleaseName relNam FROM Release`;
-
-var testVar = 'populate me';
+let sqlQuery = `SELECT RelType relTyp, RelDate relDat, ReleaseLength relLen FROM Release`;
 
 db.each(sqlQuery, (err, row) => {
     if (err) {
         throw err;
     }
-    testVar = `${row.relNam}`;
-    console.log(testVar);
+    relTypSTR = `${row.relTyp}`;
+    relDatSTR = `${row.relDat}`;
+    relLenSTR = `${row.relLen}`;
+    
 });
 
-// // about page 
-// app.get('/about', function(req, res) {
-//     res.render('pages/about');
-// });
+app.get('/', function(req, res) {
+
+    var str = "test";
+    res.render('pages/index', { release_type: relTypSTR, release_date: relDatSTR, release_length: relLenSTR});
+});
 
 app.listen(8080);
 console.log('8080 is the magic port');
