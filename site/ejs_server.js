@@ -13,35 +13,71 @@ app.use( express.static( "public" ) );
 var sql = require("sqlite3");
 var db = new sql.Database("bruh.db");
 
-let sqlQuery = `SELECT RelType relTyp, RelDate relDat, ReleaseLength relLen FROM Release`;
+let sqlReleaseQuery = `SELECT AlbumArtPath aaPath,
+                       ReleaseName relNam,
+                       ArtistID aID,
+                       RelType relTyp, 
+                       RelDate relDat,
+                       ReleaseLength relLen,
+                       LabelID lID,
+                       RelFormat relFor,
+                       Rating rating,
+                       Bio bioTxt,
+                       NumRatings ratNum,
+                       GenreID gID FROM Release`;
 
-db.each(sqlQuery, (err, row) => {
+let sqlTrackQuery = `SELECT TrackName trkNam,
+                            TrackLength trkLen,
+                            TrackPath trkPat,
+                            ReleaseID rID,
+                            TrackIndex tIndex FROM Track`;
+
+db.each(sqlReleaseQuery, (err, row) => {
     if (err) {
         throw err;
     }
+    aaPathSTR = `${row.aaPath}`;
+    relNamSTR = `${row.relNam}`;
+    aIDSTR    = `${row.aID}`;
     relTypSTR = `${row.relTyp}`;
     relDatSTR = `${row.relDat}`;
     relLenSTR = `${row.relLen}`;
+    lIDSTR    = `${row.lID}`;
+    relForSTR = `${row.relFor}`;
+    ratingSTR = `${row.rating}`;
+    bioTxtSTR = `${row.bioTxt}`;
+    ratNumSTR = `${row.ratNum}`;
+    gIDSTR    = `${row.gID}`;
     
+});
+
+db.each(sqlTrackQuery, (err, row) => {
+    if (err) {
+        throw err;
+    }
+    numberSTR = `${row.tIndex}`;
+    nameSTR   = `${row.trkNam}`;
+    lengthSTR = `${row.trkLen}`;
+    console.log(`${row.tIndex} ${row.trkNam} ${ row.trkLen }`);
 });
 
 app.get('/Album', function(req, res) {
 
     var str = "to_be_added";
-    var songs = [{number: 2, name:"Troy Snipes the World", length: "1.56"}];
+    //var songs = [{ number: numberSTR, name: nameSTR, length: lengthSTR}];
     res.render('pages/album', { 
-        release_name: str,
-        release_artist: str,
-        release_artwork: str,
+        release_name: relNamSTR,
+        release_artist: aIDSTR,
+        release_artwork: aaPathSTR,
         release_type: relTypSTR, 
         release_date: relDatSTR, 
         release_length: relLenSTR,
-        release_label : str,
-        release_formats : str,
-        release_genres : str, 
-        release_rating : str,
-        release_desc : str,
-        tracks : songs
+        release_label : lIDSTR,
+        release_formats : relForSTR,
+        release_genres : gIDSTR, 
+        release_rating : ratingSTR,
+        release_desc : bioTxtSTR,
+        tracks: [{ number: numberSTR, name: nameSTR, length: lengthSTR }]
     });
 });
 
