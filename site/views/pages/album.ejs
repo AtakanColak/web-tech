@@ -16,9 +16,9 @@
     <main class="container">
         <div class="row mt-3" style="align-content: center; text-align: center">
             <div class="col">
-                <h2>Naked Flames Who Can Recall His Past Lives</h2>
-                <h3>Naked Flames</h3>
-                <img src="/images/cover.png" class="img-thumbnail art" alt="coverart" height="25%" width="25%" />
+                <h2><%= release_name %></h2>
+                <h3><%= release_artist %></h3>
+                <img src="<%= release_artwork %>" class="img-thumbnail art" alt="coverart" height="25%" width="25%" />
             </div>
         </div>
 
@@ -53,7 +53,7 @@
                         Label:
                     </h5>
                     <h5 class="col text-left">
-                        No Label
+                        <%= release_label %>
                     </h5>
                 </div>
                 <div class="row">
@@ -61,7 +61,7 @@
                         Format(s):
                     </h5>
                     <h5 class="col text-left">
-                        Digital
+                        <%= release_formats %>
                     </h5>
                 </div>
                 <div class="row">
@@ -69,7 +69,7 @@
                         Genre:
                     </h5>
                     <h5 class="col text-left">
-                        Ambient, Experimental Rock
+                        <%= release_genres %>
                     </h5>
                 </div>
                 <div class="row">
@@ -77,23 +77,12 @@
                         User Rating:
                     </h5>
                     <h5 class="col text-left">
-                        3.4 / 5.0
+                        <%= release_rating %> / 5.0
                     </h5>
                 </div>
             </div>
             <p class="col-md-6">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                incididunt ut labore
-                et dolore magna
-                aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                commodo consequat. Duis
-                aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                Excepteur sint
-                occaecat cupidatat non proident, sunt in culpa quistrud exercitation ullamco laboris nisi ut aliquip
-                ex ea commodo consequat. Duis
-                aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                Excepteur sint
-                occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                <%= release_desc %>
             </p>
         </div>
         <div class="row ml-5 mt-3">
@@ -113,19 +102,22 @@
 
                 <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
                     <div class="card-body">
-                        <div class="row ml-5 mt-3">
-                            <h6 class="col-md-2 text-center">
-                                1
-                            </h6>
-                            <h6 class="col-md-7 text-left">
-                                Up Syndrome
-                            </h6>
-                            <h6 class="col-md-1 text-right">
-                                2:09
-                            </h6>
+                       
+                        <% tracks.forEach(function(track) { %>
+                        <div class="row ml-5">
+                            <h5 class="col-md-2 text-center">
+                                <%= track.number %>
+                            </h5>
+                            <h5 class="col-md-7 text-left">
+                                <%= track.name %>
+                            </h5>
+                            <h5 class="col-md-1 text-right">
+                                <%= track.length %>
+                            </h5>
                             <div class="col-md-2"></div>
                         </div>
-                        <div class="row ml-5">
+                        <% }); %>
+                        <!-- <div class="row ml-5">
                             <h6 class="col-md-2 text-center">
                                 2
                             </h6>
@@ -148,7 +140,7 @@
                                 4:11
                             </h6>
                             <div class="col-md-2"></div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>

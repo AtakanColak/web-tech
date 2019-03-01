@@ -11,7 +11,7 @@ app.use( express.static( "public" ) );
 // index page 
 
 var sql = require("sqlite3");
-var db = new sql.Database("/home/anton/Documents/ataweb/web-tech/site/public/bruh.db");
+var db = new sql.Database("bruh.db");
 
 let sqlQuery = `SELECT RelType relTyp, RelDate relDat, ReleaseLength relLen FROM Release`;
 
@@ -25,10 +25,24 @@ db.each(sqlQuery, (err, row) => {
     
 });
 
-app.get('/', function(req, res) {
+app.get('/Album', function(req, res) {
 
-    var str = "test";
-    res.render('pages/index', { release_type: relTypSTR, release_date: relDatSTR, release_length: relLenSTR});
+    var str = "to_be_added";
+    var songs = [{number: 2, name:"Troy Snipes the World", length: "1.56"}];
+    res.render('pages/album', { 
+        release_name: str,
+        release_artist: str,
+        release_artwork: str,
+        release_type: relTypSTR, 
+        release_date: relDatSTR, 
+        release_length: relLenSTR,
+        release_label : str,
+        release_formats : str,
+        release_genres : str, 
+        release_rating : str,
+        release_desc : str,
+        tracks : songs
+    });
 });
 
 app.listen(8080);
