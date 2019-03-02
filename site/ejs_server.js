@@ -51,14 +51,15 @@ db.each(sqlReleaseQuery, (err, row) => {
     
 });
 
+var tracks= [];
+
 db.each(sqlTrackQuery, (err, row) => {
     if (err) {
         throw err;
     }
-    numberSTR = `${row.tIndex}`;
-    nameSTR   = `${row.trkNam}`;
-    lengthSTR = `${row.trkLen}`;
-    console.log(`${row.tIndex} ${row.trkNam} ${ row.trkLen }`);
+    var t = {number : `${row.tIndex}`, name : `${row.trkNam}`, length:`${row.trkLen}`};
+    tracks.push(t);
+    //console.log(`${row.tIndex} ${row.trkNam} ${ row.trkLen }`);
 });
 
 app.get('/Album', function(req, res) {
@@ -77,7 +78,7 @@ app.get('/Album', function(req, res) {
         release_genres : gIDSTR, 
         release_rating : ratingSTR,
         release_desc : bioTxtSTR,
-        tracks: [{ number: numberSTR, name: nameSTR, length: lengthSTR }]
+        tracks: tracks
     });
 });
 
