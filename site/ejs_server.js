@@ -61,7 +61,8 @@ db.each(sqlTrackQuery, (err, row) => {
     tracks.push(t);
     //console.log(`${row.tIndex} ${row.trkNam} ${ row.trkLen }`);
 });
-
+var rel_types = ["Album","EP","Single","Compilation"];
+                        
 app.get('/Album', function(req, res) {
 
     var str = "to_be_added";
@@ -70,7 +71,7 @@ app.get('/Album', function(req, res) {
         release_name: relNamSTR,
         release_artist: aIDSTR,
         release_artwork: aaPathSTR,
-        release_type: relTypSTR, 
+        release_type: rel_types[relTypSTR], 
         release_date: relDatSTR, 
         release_length: relLenSTR,
         release_label : lIDSTR,
