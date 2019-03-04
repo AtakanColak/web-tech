@@ -61,6 +61,7 @@ db.each(sqlTrackQuery, (err, row) => {
     tracks.push(t);
     //console.log(`${row.tIndex} ${row.trkNam} ${ row.trkLen }`);
 });
+
 var rel_types = ["Album","EP","Single","Compilation"];
                         
 app.get('/Album', function(req, res) {
