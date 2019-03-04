@@ -32,6 +32,7 @@ let sqlTrackQuery = `SELECT TrackName trkNam,
                             ReleaseID rID,
                             TrackIndex tIndex FROM Track`;
 
+
 db.each(sqlReleaseQuery, (err, row) => {
     if (err) {
         throw err;
@@ -48,10 +49,11 @@ db.each(sqlReleaseQuery, (err, row) => {
     bioTxtSTR = `${row.bioTxt}`;
     ratNumSTR = `${row.ratNum}`;
     gIDSTR    = `${row.gID}`;
-    
+    formatTest = `${row.relFor}`;    
 });
 
 var tracks= [];
+var formatTest = "";
 
 db.each(sqlTrackQuery, (err, row) => {
     if (err) {
@@ -59,12 +61,24 @@ db.each(sqlTrackQuery, (err, row) => {
     }
     var t = {number : `${row.tIndex}`, name : `${row.trkNam}`, length:`${row.trkLen}`};
     tracks.push(t);
-    //console.log(`${row.tIndex} ${row.trkNam} ${ row.trkLen }`);
 });
 
 var rel_types = ["Album","EP","Single","Compilation"];
+var formats   = "";
+
                         
 app.get('/Album', function(req, res) {
+
+    for (i = 0; i < 4; i++) {
+        if (formatTest.charAt(i) == 1) {
+            if (i == 0)         formats += "Vinyl, ";
+            else if (i == 1)    formats += "CD, ";
+            else if (i == 2)    formats += "Cassette, ";
+            else if (i == 3)    formats += "Digital, ";
+        }
+    }
+
+    formats = formats.slice(0, (formats.length - 2));
 
     var str = "to_be_added";
     //var songs = [{ number: numberSTR, name: nameSTR, length: lengthSTR}];
@@ -76,12 +90,13 @@ app.get('/Album', function(req, res) {
         release_date: relDatSTR, 
         release_length: relLenSTR,
         release_label : lIDSTR,
-        release_formats : relForSTR,
+        release_formats : formats,
         release_genres : gIDSTR, 
         release_rating : ratingSTR,
         release_desc : bioTxtSTR,
         tracks: tracks
     });
+    formats = "";
 });
 
 app.listen(8080);
