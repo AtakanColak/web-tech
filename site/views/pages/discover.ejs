@@ -1,0 +1,94 @@
+<!-- views/pages/index.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <% include ../partials/head %>
+</head>
+
+<body>
+
+    <header>
+        <% include ../partials/header %>
+    </header>
+
+    <main class="container">
+        <div class="row">
+            <!-- <div class="col-md-11 offset-md-1">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Active</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Link</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Link</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled" href="#">Disabled</a>
+                    </li>
+                </ul>
+            </div>
+        </div> -->
+            <div class="row">
+                <nav class="nav flex-column col-md-1">
+                    <div class="row ml-1">
+                        <h5 class="nav-link pb-0 mb-1">Genre</h5>
+                        <!-- <ul class="pl-4 nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="" href="#">
+                                Rock
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="" href="#">
+                                Pop
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="" href="#">
+                                Electronic
+                            </a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+                                aria-haspopup="true" aria-expanded="false">Dropdown</a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="#">Action</a>
+                                <a class="dropdown-item" href="#">Another action</a>
+                                <a class="dropdown-item" href="#">Something else here</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">Separated link</a>
+                            </div>
+                        </li>
+                    </ul> -->
+                    </div>
+                    <a href="#" class="row ml-4 mt-0 bt-0 text-left">Rock</a>
+                    <a href="#" class="row ml-4 mt-0 bt-0 text-left">Pop</a>
+                    <a href="#" class="row ml-4 mt-0 bt-0 text-left">Electronic</a>
+                    <div class="dropdown ml-4 mt-0 bt-0">
+                        <a class="dropdown-toggle" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false" style="color:#007bff ;">
+                            All
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                            <button class="dropdown-item" type="button">Action</button>
+                            <button class="dropdown-item" type="button">Another action</button>
+                            <button class="dropdown-item" type="button">Something else here</button>
+                        </div>
+                    </div>
+                </nav>
+                <div class="col-md-11">
+
+                </div>
+            </div>
+    </main>
+
+    <footer>
+        <% include ../partials/footer %>
+    </footer>
+</body>
+
+</html>
