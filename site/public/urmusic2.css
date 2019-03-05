@@ -5,6 +5,10 @@
 
 }
 
+.dropdown * {
+    text-decoration: blue !important;
+}
+
 /* button h4 {
     color: white;
 } */

@@ -5,7 +5,7 @@ var app = express();
 
 // set the view engine to ejs
 app.set('view engine', 'ejs');
-app.use( express.static( "public" ) );
+app.use( express.static( "public/" ) );
 // use res.render to load up an ejs view file
 
 // index page 
@@ -60,6 +60,7 @@ db.each(sqlTrackQuery, (err, row) => {
     var t = {number : `${row.tIndex}`, name : `${row.trkNam}`, length:`${row.trkLen}`};
     tracks.push(t);
 });
+
 var rel_types = ["Album","EP","Single","Compilation"];
 
 function makeStringFromBin(theString) {
@@ -153,6 +154,10 @@ app.get('/Album', async function(req, res) {
         tracks: tracks
     });
     formats = "";
+});
+
+app.get('/Discover', function (req, res) {
+    res.render('pages/discover');
 });
 
 app.listen(8080);
