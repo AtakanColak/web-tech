@@ -48,12 +48,10 @@ db.each(sqlReleaseQuery, (err, row) => {
     ratingSTR = `${row.rating}`;
     bioTxtSTR = `${row.bioTxt}`;
     ratNumSTR = `${row.ratNum}`;
-    gIDSTR    = `${row.gID}`;
-    formatTest = `${row.relFor}`;    
+    gIDSTR    = `${row.gID}`;   
 });
 
 var tracks= [];
-var formatTest = "";
 
 db.each(sqlTrackQuery, (err, row) => {
     if (err) {
@@ -63,22 +61,81 @@ db.each(sqlTrackQuery, (err, row) => {
     tracks.push(t);
 });
 var rel_types = ["Album","EP","Single","Compilation"];
-var formats   = "";
 
-                        
-app.get('/Album', function(req, res) {
-
-    for (i = 0; i < 4; i++) {
-        if (formatTest.charAt(i) == 1) {
-            if (i == 0)         formats += "Vinyl, ";
-            else if (i == 1)    formats += "CD, ";
-            else if (i == 2)    formats += "Cassette, ";
-            else if (i == 3)    formats += "Digital, ";
+function makeStringFromBin(theString) {
+    var newString = "";
+    for (i = 0; i < theString.length; i++) {
+        if (theString.charAt(i) == 1) {
+            if (i == 0) newString += "Vinyl, ";
+            else if (i == 1) newString += "CD, ";
+            else if (i == 2) newString += "Cassette, ";
+            else if (i == 3) newString += "Digital, ";
         }
     }
+    newString = newString.slice(0, (newString.length - 2));
+    return newString;
+}
 
-    formats = formats.slice(0, (formats.length - 2));
+var test = "hmm";
+function getLabel(idTest) {
+    let sqlLabelQuery = `SELECT LabelName lblNam FROM Label WHERE ID=` + idTest;
+    console.log(sqlLabelQuery);
+    console.log(idTest);
+    
+    db.each(sqlLabelQuery, (err, row) => {
+        if (err) {
+            throw err;
+        }
+        var test = `${row.lblNam}`;
+        console.log(test + " abcdefg");
+        //console.log(row);
+        test = row;
+    });
+    console.log(test);
+    return test;
+}
 
+db.getAsync = function (sql) {
+    var that = this;
+    return new Promise(function (resolve, reject) {
+        that.get(sql, function (err, row) {
+            if (err)
+                reject(err);
+            else
+                resolve(row);
+        });
+    });
+};
+
+async function getLabel(idTest) {
+    try {
+        var val;
+        var getStmt = `SELECT LabelName lblNam FROM Label WHERE ID="${idTest}"`;
+        var row = await db.getAsync(getStmt);
+        if (!row) {
+            console.log("oh no");
+            return;
+        }
+        else {
+            val = row["lblNam"];
+            console.log(val);
+        }
+        return val;
+    }
+    catch (e) {
+        console.log(e);
+        return "error";
+    }
+}
+                        
+app.get('/Album', async function(req, res) {
+    var label;
+    try {
+        label = await getLabel(lIDSTR);
+    }
+    catch (e) {
+        label = "erro13r";
+    }
     var str = "to_be_added";
     //var songs = [{ number: numberSTR, name: nameSTR, length: lengthSTR}];
     res.render('pages/album', { 
@@ -88,8 +145,8 @@ app.get('/Album', function(req, res) {
         release_type: rel_types[relTypSTR], 
         release_date: relDatSTR, 
         release_length: relLenSTR,
-        release_label : lIDSTR,
-        release_formats : formats,
+        release_label : label,
+        release_formats : makeStringFromBin(relForSTR),
         release_genres : gIDSTR, 
         release_rating : ratingSTR,
         release_desc : bioTxtSTR,
