@@ -57,7 +57,7 @@ db.each(sqlTrackQuery, (err, row) => {
     if (err) {
         throw err;
     }
-    var t = {number : `${row.tIndex}`, name : `${row.trkNam}`, length:`${row.trkLen}`};
+    var t = {number : `${row.tIndex}`, name : `${row.trkNam}`, length: toMMSS(`${row.trkLen}`)};
     tracks.push(t);
 });
 
@@ -75,25 +75,6 @@ function makeStringFromBin(theString) {
     }
     newString = newString.slice(0, (newString.length - 2));
     return newString;
-}
-
-var test = "hmm";
-function getLabel(idTest) {
-    let sqlLabelQuery = `SELECT LabelName lblNam FROM Label WHERE ID=` + idTest;
-    console.log(sqlLabelQuery);
-    console.log(idTest);
-    
-    db.each(sqlLabelQuery, (err, row) => {
-        if (err) {
-            throw err;
-        }
-        var test = `${row.lblNam}`;
-        console.log(test + " abcdefg");
-        //console.log(row);
-        test = row;
-    });
-    console.log(test);
-    return test;
 }
 
 db.getAsync = function (sql) {
@@ -128,24 +109,55 @@ async function getLabel(idTest) {
         return "error";
     }
 }
+
+async function getArtist(idTest) {
+    try {
+        var val;
+        var getStmt = `SELECT ArtistName artNam FROM Artist WHERE ID="${idTest}"`;
+        var row = await db.getAsync(getStmt);
+        if (!row) {
+            console.log("oh no");
+            return;
+        }
+        else {
+            val = row["artNam"];
+            console.log(val);
+        }
+        return val;
+    }
+    catch (e) {
+        console.log(e);
+        return "error";
+    }
+}
+
+function toMMSS(thetime) {
+    var hours   = parseInt(thetime[0]) + parseInt(thetime[1]);
+    var minutes = parseInt(thetime[3] + thetime[4]);
+    var sum     = (hours*60) + minutes;
+    var total   = String(sum) + ":" + (String(thetime[6]) + String(thetime[7]));
+    console.log("hours: " + hours + ", minutes: " + minutes + ", sum: " + sum + ", total: " + total);
+    return total;
+}
                         
 app.get('/Album', async function(req, res) {
     var label;
-    try {
-        label = await getLabel(lIDSTR);
-    }
-    catch (e) {
-        label = "erro13r";
-    }
+    try { label = await getLabel(lIDSTR); }
+    catch (e) { label = "erro13r"; }
+
+    var artist;
+    try { artist = await getArtist(aIDSTR); }
+    catch (e) { artist = "erro12133r"; }
+
     var str = "to_be_added";
     //var songs = [{ number: numberSTR, name: nameSTR, length: lengthSTR}];
     res.render('pages/album', { 
         release_name: relNamSTR,
-        release_artist: aIDSTR,
+        release_artist: artist,
         release_artwork: aaPathSTR,
         release_type: rel_types[relTypSTR], 
         release_date: relDatSTR, 
-        release_length: relLenSTR,
+        release_length: toMMSS(relLenSTR),
         release_label : label,
         release_formats : makeStringFromBin(relForSTR),
         release_genres : gIDSTR, 

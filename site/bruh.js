@@ -10,8 +10,9 @@ function create() {
     db.run("CREATE TABLE ShoppingItem (ID INTEGER NOT NULL PRIMARY KEY, ReleaseID int, CatalogNum int, Price decimal, RelFormat int);");
     db.run("CREATE TABLE OrderItem (ID INTEGER NOT NULL PRIMARY KEY, UserID int, ShoppingItemID int);");
     db.run("CREATE TABLE Label (ID INTEGER NOT NULL PRIMARY KEY, LabelName Text);");
+    db.run("CREATE TABLE Artist (ID INTEGER NOT NULL PRIMARY KEY, ArtistName Text);");
 
-    db.run("INSERT INTO Release VALUES(NULL, 'images/cover.png', 'Naked Flames Who Can Recall His Past Lives', 389, 3, 2018-01-01, time(12146, 'unixepoch'), 1, 1111, 3.4, 'Lorem Ipsum Dolor Sit Amet', 21, 01011)");
+    db.run("INSERT INTO Release VALUES(NULL, 'images/cover.png', 'Naked Flames Who Can Recall His Past Lives', 1, 3, 2018-01-01, time(12146, 'unixepoch'), 1, 1111, 3.4, 'A sprawling and meandering compilation of (almost) all of Naked Flames'' tracks between 2015 and 2017.', 21, 01011)");
 
     db.run("INSERT INTO Track VALUES(NULL, 'Up Syndrome', time(129, 'unixepoch'), 'not sure what to put here', 1, 1)");
     db.run("INSERT INTO Track VALUES(NULL, 'Troy Snipes the World', time(116, 'unixepoch'), 'not sure what to put here', 1, 2)");
@@ -53,6 +54,7 @@ function create() {
     db.run("INSERT INTO Track VALUES(NULL, 'sLAUGHTERhouse', time(624, 'unixepoch'), 'not sure what to put here', 1, 38)");
 
     db.run("INSERT INTO Label VALUES(NULL, 'No Label')");
+    db.run("INSERT INTO Artist VALUES(NULL, 'Naked Flames')");
 
     db.all("select * from Release", show);
     function show(err, rows) {
