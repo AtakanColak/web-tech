@@ -14,11 +14,9 @@
     </header>
 
     <main class="container">
+
         <div class="row">
-            <h5>Sort By:</h5>
-        </div>
-        <div class="row">
-            <nav class="nav flex-column col-sm-2">
+            <nav class="nav flex-column col-sm-2 mt-4">
                 <div class="row ml-1">
                     <h5 class="nav-link pb-0 mb-1">Genre</h5>
                 </div>
@@ -75,16 +73,34 @@
                 </div>
             </nav>
             <div class="col">
+                <div class="row justify-content-start ml-1 align-items-center">
+                    <h6 class="pt-2">Sort By:</h6>
+                    <div class="dropdown ml-4 border pl-1 pr-1">
+                        <a class="dropdown-toggle" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false" style="color:#007bff ;">
+                            Hottest
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                            <a href="/Discover?sort=1" class="row ml-4 mt-0 bt-0 text-left">Hottest</a>
+                            <a href="/Discover?sort=2" class="row ml-4 mt-0 bt-0 text-left">Most Popular</a>
+                            <a href="/Discover?sort=3" class="row ml-4 mt-0 bt-0 text-left">Title, A-Z </a>
+                            <a href="/Discover?sort=4" class="row ml-4 mt-0 bt-0 text-left">Title, Z-A</a>
+                        </div>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-sm-2 card border-0">
-                        <img class="card-img-top" src="images/cover.png" alt="Album Image">
+                        <a class="" href="/Album?id=1">
+                            <img class="card-img-top" src="images/cover.png" alt="Album Image">
+                        </a>
                         <div class="card-body p-1 ">
                             <div class="noverflow">
-                                <a class="" href="/Album"><small><b>Naked Flames Who Can Recall His Past Lives</b></small> </a>
+                                <a class="" href="/Album?id=1"><small><b>Naked Flames Who Can Recall His Past
+                                            Lives</b></small> </a>
 
                             </div>
                             <div class="noverflow">
-                                <a class="" href="#"><small><small>Naked Flames</small></small>  </a>
+                                <a class="" href="/Artist?id=1"><small><small>Naked Flames</small></small> </a>
                             </div>
                         </div>
                     </div>

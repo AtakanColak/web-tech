@@ -6,16 +6,12 @@
 }
 
 .dropdown * {
-    text-decoration: blue !important;
+    text-decoration: blue;
 }
+
 
 .noverflow {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-
-
-/* button h4 {
-    color: white;
-} */
