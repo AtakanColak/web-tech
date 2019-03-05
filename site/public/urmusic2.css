@@ -9,6 +9,13 @@
     text-decoration: blue !important;
 }
 
+.noverflow {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
 /* button h4 {
     color: white;
 } */
