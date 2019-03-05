@@ -63,16 +63,37 @@ db.each(sqlTrackQuery, (err, row) => {
 
 var rel_types = ["Album","EP","Single","Compilation"];
 
-function makeStringFromBin(theString) {
+function makeStringFromBin(theString, thetype) {
     var newString = "";
-    for (i = 0; i < theString.length; i++) {
-        if (theString.charAt(i) == 1) {
-            if (i == 0) newString += "Vinyl, ";
-            else if (i == 1) newString += "CD, ";
-            else if (i == 2) newString += "Cassette, ";
-            else if (i == 3) newString += "Digital, ";
+    if (thetype == "format") {
+        for (i = 0; i < theString.length; i++) {
+            if (theString.charAt(i) == 1) {
+                if (i == 0) newString += "Vinyl, ";
+                else if (i == 1) newString += "CD, ";
+                else if (i == 2) newString += "Cassette, ";
+                else if (i == 3) newString += "Digital, ";
+            }
         }
     }
+    else if (thetype == "genre") {
+        for (i = 0; i < theString.length; i++) {
+            if (theString.charAt(i) == 1) {
+                if (i == 0) newString += "Dance, ";
+                else if (i == 1) newString += "Electronic, ";
+                else if (i == 2) newString += "Experimental, ";
+                else if (i == 3) newString += "Folk, ";
+                else if (i == 4) newString += "Hip Hop, ";
+                else if (i == 5) newString += "Jazz, ";
+                else if (i == 6) newString += "Pop, ";
+                else if (i == 7) newString += "Punk, ";
+                else if (i == 8) newString += "Rock, ";
+                else if (i == 9) newString += "Metal, ";
+            }
+        }
+    }
+
+    else return "invalid string";
+    
     newString = newString.slice(0, (newString.length - 2));
     return newString;
 }
@@ -119,10 +140,7 @@ async function getArtist(idTest) {
             console.log("oh no");
             return;
         }
-        else {
-            val = row["artNam"];
-            console.log(val);
-        }
+        else { val = row["artNam"]; }
         return val;
     }
     catch (e) {
@@ -136,7 +154,7 @@ function toMMSS(thetime) {
     var minutes = parseInt(thetime[3] + thetime[4]);
     var sum     = (hours*60) + minutes;
     var total   = String(sum) + ":" + (String(thetime[6]) + String(thetime[7]));
-    console.log("hours: " + hours + ", minutes: " + minutes + ", sum: " + sum + ", total: " + total);
+    //console.log("hours: " + hours + ", minutes: " + minutes + ", sum: " + sum + ", total: " + total);
     return total;
 }
                         
@@ -159,8 +177,8 @@ app.get('/Album', async function(req, res) {
         release_date: relDatSTR, 
         release_length: toMMSS(relLenSTR),
         release_label : label,
-        release_formats : makeStringFromBin(relForSTR),
-        release_genres : gIDSTR, 
+        release_formats : makeStringFromBin(relForSTR, "format"),
+        release_genres : makeStringFromBin(gIDSTR, "genre"),
         release_rating : ratingSTR,
         release_desc : bioTxtSTR,
         tracks: tracks
