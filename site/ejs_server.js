@@ -180,7 +180,9 @@ function toMMSS(thetime) {
     //console.log("hours: " + hours + ", minutes: " + minutes + ", sum: " + sum + ", total: " + total);
     return total;
 }
-                        
+
+//var albumID = req.query.id
+
 app.get('/Album', async function(req, res) {
     var label;
     try { label = await getLabel(lIDSTR); }
@@ -217,6 +219,10 @@ app.get('/Album', async function(req, res) {
 
 app.get('/Discover', function (req, res) {
     res.render('pages/discover');
+});
+
+app.get('/Error', function (req, res) {
+    res.render('pages/error');
 });
 
 app.listen(8080);
