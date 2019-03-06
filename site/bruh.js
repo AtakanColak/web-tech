@@ -3,16 +3,16 @@ var sql = require("sqlite3");
 var db = new sql.Database("bruh.db");
 db.serialize(create);
 function create() {
-    db.run("CREATE TABLE Release (ID INTEGER NOT NULL PRIMARY KEY, AlbumArtPath Text, ReleaseName Text, ArtistID int, RelType int, RelDate Date, ReleaseLength Text, LabelID int, RelFormat int2, Rating float, Bio Text, NumRatings int, GenreID Text);");
+    db.run("CREATE TABLE Release (ID INTEGER NOT NULL PRIMARY KEY, AlbumArtPath Text, ReleaseName Text, ArtistID int, RelType int, RelDate int, ReleaseLength Text, LabelID int, RelFormat int2, Rating float, Bio Text, NumRatings int, GenreID Text);");
     db.run("CREATE TABLE Genre (ID INTEGER NOT NULL PRIMARY KEY, GenreName Str, ParentGenreID int);");
     db.run("CREATE TABLE Track (ID INTEGER NOT NULL PRIMARY KEY, TrackName Str, TrackLength int, TrackPath Str, ReleaseID int, TrackIndex int);");
     db.run("CREATE TABLE Review (ID INTEGER NOT NULL PRIMARY KEY, ReleaseID int, UserID int, Rating float, Comment Str);");
-    db.run("CREATE TABLE ShoppingItem (ID INTEGER NOT NULL PRIMARY KEY, ReleaseID int, CatalogNum int, Price decimal, RelFormat int);");
+    db.run("CREATE TABLE ShoppingItem (ID INTEGER NOT NULL PRIMARY KEY, ReleaseID int, CatalogNum Text, Price decimal, RelFormat Text);");
     db.run("CREATE TABLE OrderItem (ID INTEGER NOT NULL PRIMARY KEY, UserID int, ShoppingItemID int);");
     db.run("CREATE TABLE Label (ID INTEGER NOT NULL PRIMARY KEY, LabelName Text);");
     db.run("CREATE TABLE Artist (ID INTEGER NOT NULL PRIMARY KEY, ArtistName Text);");
 
-    db.run("INSERT INTO Release VALUES(NULL, 'images/cover.png', 'Naked Flames Who Can Recall His Past Lives', 1, 3, 2018-01-01, time(12146, 'unixepoch'), 1, 1111, 3.4, 'A sprawling and meandering compilation of (almost) all of Naked Flames'' tracks between 2015 and 2017.', 21, '0010000010')");
+    db.run("INSERT INTO Release VALUES(NULL, 'images/cover.png', 'Naked Flames Who Can Recall His Past Lives', 1, 3, 2018, time(12146, 'unixepoch'), 1, 1111, 3.4, 'A sprawling and meandering compilation of (almost) all of Naked Flames'' tracks between 2015 and 2017.', 21, '0010000010')");
 
     db.run("INSERT INTO Track VALUES(NULL, 'Up Syndrome', time(129, 'unixepoch'), 'not sure what to put here', 1, 1)");
     db.run("INSERT INTO Track VALUES(NULL, 'Troy Snipes the World', time(116, 'unixepoch'), 'not sure what to put here', 1, 2)");
@@ -55,6 +55,12 @@ function create() {
 
     db.run("INSERT INTO Label VALUES(NULL, 'No Label')");
     db.run("INSERT INTO Artist VALUES(NULL, 'Naked Flames')");
+
+    // db.run("CREATE TABLE ShoppingItem (ID INTEGER NOT NULL PRIMARY KEY, ReleaseID int, CatalogNum int, Price decimal, RelFormat int);");
+    db.run("INSERT INTO ShoppingItem VALUES(NULL, 1, '1571-66778-1', 4.99, 'Digital')");
+    db.run("INSERT INTO ShoppingItem VALUES(NULL, 1, '1571-66778-2', 44.99, 'Vinyl')");
+    db.run("INSERT INTO ShoppingItem VALUES(NULL, 1, '1571-66778-3', 14.99, 'CD')");
+    db.run("INSERT INTO ShoppingItem VALUES(NULL, 1, '1571-66778-4', 12.99, 'Cassette')");
 
     db.all("select * from Release", show);
     function show(err, rows) {

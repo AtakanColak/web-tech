@@ -32,6 +32,11 @@ let sqlTrackQuery = `SELECT TrackName trkNam,
                             ReleaseID rID,
                             TrackIndex tIndex FROM Track`;
 
+let sqlShoppingQuery = `SELECT ReleaseID rID,
+                               CatalogNum catNum,
+                               Price price,
+                               RelFormat format FROM ShoppingItem`;
+
 
 db.each(sqlReleaseQuery, (err, row) => {
     if (err) {
@@ -51,14 +56,19 @@ db.each(sqlReleaseQuery, (err, row) => {
     gIDSTR    = `${row.gID}`;   
 });
 
-var tracks= [];
+var tracks = [];
+var shopItems = [];
 
 db.each(sqlTrackQuery, (err, row) => {
-    if (err) {
-        throw err;
-    }
+    if (err) throw err;
     var t = {number : `${row.tIndex}`, name : `${row.trkNam}`, length: toMMSS(`${row.trkLen}`)};
     tracks.push(t);
+});
+
+db.each(sqlShoppingQuery, (err, row) => {
+    if (err) throw err;
+    var s = {relID : `${row.rID}`, catalog : `${row.catNum}`, price : `${row.price}`, format : `${row.format}`};
+    shopItems.push(s);
 });
 
 var rel_types = ["Album","EP","Single","Compilation"];
@@ -181,7 +191,8 @@ app.get('/Album', async function(req, res) {
         release_genres : makeStringFromBin(gIDSTR, "genre"),
         release_rating : ratingSTR,
         release_desc : bioTxtSTR,
-        tracks: tracks
+        tracks: tracks,
+        shopItems : shopItems
     });
     formats = "";
 });
