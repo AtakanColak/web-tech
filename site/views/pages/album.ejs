@@ -102,7 +102,7 @@
 
                 <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
                     <div class="card-body">
-                       
+
                         <% tracks.forEach(function(track) { %>
                         <div class="row ml-5">
                             <h5 class="col-md-2 text-center">
@@ -117,7 +117,7 @@
                             <div class="col-md-2"></div>
                         </div>
                         <% }); %>
-                        
+
                     </div>
                 </div>
             </div>
@@ -142,10 +142,11 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                <% items.forEach(function(item) { %>
                                 <tr>
-                                    <th scope="row">1571-66778-3 </th>
-                                    <td>CD</td>
-                                    <td>£14.99</td>
+                                    <th scope="row"><%= item.catalog %> </th>
+                                    <td><%= item.format %></td>
+                                    <td>£<%= item.price %></td>
                                     <td class="">
                                         <a href="#" class="btn btn-success btn-sm ml-5" role="button">
                                             <img class="align-middle" style="height: 18px; width: 18px;"
@@ -154,42 +155,7 @@
                                         </a>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <th scope="row">1571-66778-2 </th>
-                                    <td>Vinyl</td>
-                                    <td>£45.00</td>
-                                    <td class="">
-                                        <a href="#" class="btn btn-success btn-sm ml-5" role="button">
-                                            <img class="align-middle" style="height: 18px; width: 18px;"
-                                                src="/images/shopping-cart.svg" />
-                                            Add to Cart
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">1571-66778-1 </th>
-                                    <td>Digital</td>
-                                    <td>£5.00</td>
-                                    <td class="">
-                                        <a href="#" class="btn btn-success btn-sm ml-5" role="button">
-                                            <img class="align-middle" style="height: 18px; width: 18px;"
-                                                src="/images/shopping-cart.svg" />
-                                            Add to Cart
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">1571-66778-4 </th>
-                                    <td>Cassette</td>
-                                    <td>£12.99</td>
-                                    <td class="">
-                                        <a href="#" class="btn btn-success btn-sm ml-5" role="button">
-                                            <img class="align-middle" style="height: 18px; width: 18px;"
-                                                src="/images/shopping-cart.svg" />
-                                            Add to Cart
-                                        </a>
-                                    </td>
-                                </tr>
+                                <% }); %>
                             </tbody>
                         </table>
                     </div>
@@ -207,6 +173,23 @@
                 <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
                     <div class="card-body">
 
+                        <% comments.forEach(function(comment) { %>
+                        <div class="panel panel-default mt-3">
+                            <div class="panel-heading">
+                                <strong><%= comment.username %></strong>
+                                <% for (var i = 0; i < comment.rating; i++) } %>
+                                <span class=""><img src="images/star-checked.svg" /></span>
+                                <% }); %>
+                                <% for (var i = 0; i < (5 - comment.rating); i++) } %>
+                                <span class=""><img src="images/star.svg" /></span>
+                                <% }); %>
+                                <span class="text-muted ml-2"><%= comment.date %> </span>
+                            </div>
+                            <div class="panel-body">
+                                <%= comment.desc %>
+                            </div>
+                        </div>
+                        <% }); %>
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <strong>Hakita</strong>
@@ -233,8 +216,8 @@
                                 Despite being long, I was never once bored during it, and will probably relisten to it
                                 in the future.
 
-                            </div><!-- /panel-body -->
-                        </div><!-- /panel panel-default -->
+                            </div>
+                        </div>
                         <div class="panel panel-default mt-3">
                             <div class="panel-heading">
                                 <strong>1Chops</strong>
@@ -256,8 +239,8 @@
                                 And the absence of a human voice really goes noticed sometimes. Other than that THESE
                                 TUNES ARE GOOD and I'm excited to finish off the tracklist.
 
-                            </div><!-- /panel-body -->
-                        </div><!-- /panel panel-default -->
+                            </div>
+                        </div>
                         <div class="jumbotron mt-3 pt-3 pb-2 pl-4 pr-4 border">
                             <form>
                                 <div class="form-group">

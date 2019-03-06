@@ -192,7 +192,7 @@ app.get('/Album', async function(req, res) {
         release_rating : ratingSTR,
         release_desc : bioTxtSTR,
         tracks: tracks,
-        shopItems : shopItems
+        items : shopItems
     });
     formats = "";
 });
