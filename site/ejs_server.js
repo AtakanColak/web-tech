@@ -37,6 +37,12 @@ let sqlShoppingQuery = `SELECT ReleaseID rID,
                                Price price,
                                RelFormat format FROM ShoppingItem`;
 
+let sqlReviewQuery = `SELECT ReleaseID rID,
+                             UserID uID,
+                             Rating rating,
+                             Comment comment,
+                             Date date FROM Review`;
+
 
 db.each(sqlReleaseQuery, (err, row) => {
     if (err) {
@@ -58,6 +64,7 @@ db.each(sqlReleaseQuery, (err, row) => {
 
 var tracks = [];
 var shopItems = [];
+var comments = [];
 
 db.each(sqlTrackQuery, (err, row) => {
     if (err) throw err;
@@ -69,6 +76,12 @@ db.each(sqlShoppingQuery, (err, row) => {
     if (err) throw err;
     var s = {relID : `${row.rID}`, catalog : `${row.catNum}`, price : `${row.price}`, format : `${row.format}`};
     shopItems.push(s);
+});
+
+db.each(sqlReviewQuery, (err, row) => {
+    if (err) throw err;
+    var u = {release : `${row.rID}`, username : `${row.uID}`, rating : `${row.rating}`, comment : `${row.comment}`, date : `${row.date}`};
+    comments.push(u);
 });
 
 var rel_types = ["Album","EP","Single","Compilation"];
@@ -177,6 +190,10 @@ app.get('/Album', async function(req, res) {
     try { artist = await getArtist(aIDSTR); }
     catch (e) { artist = "erro12133r"; }
 
+    var user;
+    try { user = await getUser(uIDSTR); }
+    catch (e) { user = "oijadsoijdsaerro12133r"; }
+
     var str = "to_be_added";
     //var songs = [{ number: numberSTR, name: nameSTR, length: lengthSTR}];
     res.render('pages/album', { 
@@ -192,7 +209,8 @@ app.get('/Album', async function(req, res) {
         release_rating : ratingSTR,
         release_desc : bioTxtSTR,
         tracks: tracks,
-        items : shopItems
+        items : shopItems,
+        comments : comments
     });
     formats = "";
 });
