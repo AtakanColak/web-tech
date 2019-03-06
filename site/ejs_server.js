@@ -80,7 +80,7 @@ db.each(sqlShoppingQuery, (err, row) => {
 
 db.each(sqlReviewQuery, (err, row) => {
     if (err) throw err;
-    var u = {release : `${row.rID}`, username : `${row.uID}`, rating : `${row.rating}`, comment : `${row.comment}`, date : `${row.date}`};
+    var u = {release : `${row.rID}`, username : `${row.uID}`, rating : `${row.rating}`, desc : `${row.comment}`, date : `${row.date}`};
     comments.push(u);
 });
 
@@ -172,6 +172,24 @@ async function getArtist(idTest) {
     }
 }
 
+async function getUser(idTest) {
+    try {
+        var val;
+        var getStmt = `SELECT UserName usrNam FROM User WHERE ID="${idTest}"`;
+        var row = await db.getAsync(getStmt);
+        if (!row) {
+            console.log("oh no");
+            return;
+        }
+        else { val = row["usrNam"]; }
+        return val;
+    }
+    catch (e) {
+        console.log(e);
+        return "error";
+    }
+}
+
 function toMMSS(thetime) {
     var hours   = parseInt(thetime[0]) + parseInt(thetime[1]);
     var minutes = parseInt(thetime[3] + thetime[4]);
@@ -192,9 +210,12 @@ app.get('/Album', async function(req, res) {
     try { artist = await getArtist(aIDSTR); }
     catch (e) { artist = "erro12133r"; }
 
-    var user;
-    try { user = await getUser(uIDSTR); }
-    catch (e) { user = "oijadsoijdsaerro12133r"; }
+    for (let i=0; i<comments.length; i++){
+        //var user;
+        try { comments[i].username = await getUser(comments[i].username); }
+        catch (e) { comments[i].username = "oijadsoijdsaerro12133r"; }
+
+    }
 
     var str = "to_be_added";
     //var songs = [{ number: numberSTR, name: nameSTR, length: lengthSTR}];
