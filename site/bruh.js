@@ -6,11 +6,12 @@ function create() {
     db.run("CREATE TABLE Release (ID INTEGER NOT NULL PRIMARY KEY, AlbumArtPath Text, ReleaseName Text, ArtistID int, RelType int, RelDate int, ReleaseLength Text, LabelID int, RelFormat int2, Rating float, Bio Text, NumRatings int, GenreID Text);");
     db.run("CREATE TABLE Genre (ID INTEGER NOT NULL PRIMARY KEY, GenreName Str, ParentGenreID int);");
     db.run("CREATE TABLE Track (ID INTEGER NOT NULL PRIMARY KEY, TrackName Str, TrackLength int, TrackPath Str, ReleaseID int, TrackIndex int);");
-    db.run("CREATE TABLE Review (ID INTEGER NOT NULL PRIMARY KEY, ReleaseID int, UserID int, Rating float, Comment Str);");
+    db.run("CREATE TABLE Review (ID INTEGER NOT NULL PRIMARY KEY, ReleaseID int, UserID int, Rating int, Comment Text, Date Text);");
     db.run("CREATE TABLE ShoppingItem (ID INTEGER NOT NULL PRIMARY KEY, ReleaseID int, CatalogNum Text, Price decimal, RelFormat Text);");
     db.run("CREATE TABLE OrderItem (ID INTEGER NOT NULL PRIMARY KEY, UserID int, ShoppingItemID int);");
     db.run("CREATE TABLE Label (ID INTEGER NOT NULL PRIMARY KEY, LabelName Text);");
     db.run("CREATE TABLE Artist (ID INTEGER NOT NULL PRIMARY KEY, ArtistName Text);");
+    db.run("CREATE TABLE User (ID INTEGER NOT NULL PRIMARY KEY, UserName Text, Password Text);");
 
     db.run("INSERT INTO Release VALUES(NULL, 'images/cover.png', 'Naked Flames Who Can Recall His Past Lives', 1, 3, 2018, time(12146, 'unixepoch'), 1, 1111, 3.4, 'A sprawling and meandering compilation of (almost) all of Naked Flames'' tracks between 2015 and 2017.', 21, '0010000010')");
 
@@ -61,6 +62,8 @@ function create() {
     db.run("INSERT INTO ShoppingItem VALUES(NULL, 1, '1571-66778-2', 44.99, 'Vinyl')");
     db.run("INSERT INTO ShoppingItem VALUES(NULL, 1, '1571-66778-3', 14.99, 'CD')");
     db.run("INSERT INTO ShoppingItem VALUES(NULL, 1, '1571-66778-4', 12.99, 'Cassette')");
+
+    db.run("INSERT INTO User VALUES(NULL, '1Chops', ")
 
     db.all("select * from Release", show);
     function show(err, rows) {
