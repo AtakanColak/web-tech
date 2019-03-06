@@ -102,7 +102,7 @@
 
                 <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
                     <div class="card-body">
-                       
+
                         <% tracks.forEach(function(track) { %>
                         <div class="row ml-5">
                             <h5 class="col-md-2 text-center">
@@ -117,7 +117,7 @@
                             <div class="col-md-2"></div>
                         </div>
                         <% }); %>
-                        
+
                     </div>
                 </div>
             </div>
@@ -142,10 +142,11 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                <% items.forEach(function(item) { %>
                                 <tr>
-                                    <th scope="row">1571-66778-3 </th>
-                                    <td>CD</td>
-                                    <td>£14.99</td>
+                                    <th scope="row"><%= item.catalog %> </th>
+                                    <td><%= item.format %></td>
+                                    <td>£<%= item.price %></td>
                                     <td class="">
                                         <a href="#" class="btn btn-success btn-sm ml-5" role="button">
                                             <img class="align-middle" style="height: 18px; width: 18px;"
@@ -154,31 +155,9 @@
                                         </a>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <th scope="row">1571-66778-2 </th>
-                                    <td>Vinyl</td>
-                                    <td>£45.00</td>
-                                    <td class="">
-                                        <a href="#" class="btn btn-success btn-sm ml-5" role="button">
-                                            <img class="align-middle" style="height: 18px; width: 18px;"
-                                                src="/images/shopping-cart.svg" />
-                                            Add to Cart
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">1571-66778-1 </th>
-                                    <td>Digital</td>
-                                    <td>£5.00</td>
-                                    <td class="">
-                                        <a href="#" class="btn btn-success btn-sm ml-5" role="button">
-                                            <img class="align-middle" style="height: 18px; width: 18px;"
-                                                src="/images/shopping-cart.svg" />
-                                            Add to Cart
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
+                                <% }); %>
+
+                                <!-- <tr>
                                     <th scope="row">1571-66778-4 </th>
                                     <td>Cassette</td>
                                     <td>£12.99</td>
@@ -189,7 +168,7 @@
                                             Add to Cart
                                         </a>
                                     </td>
-                                </tr>
+                                </tr> -->
                             </tbody>
                         </table>
                     </div>
