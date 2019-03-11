@@ -70,9 +70,6 @@ function makeStringFromBin(theString, thetype) {
     return newString;
 }
 
-
-
-
 db.getAsync = function (sql) {
     var that = this;
     return new Promise(function (resolve, reject) {
@@ -125,7 +122,7 @@ async function getTracks(idTest) {
                             TrackLength trkLen,
                             TrackPath trkPat,
                             ReleaseID rID,
-                            TrackIndex tIndex FROM Track WHERE ID="${ idTest }"`;
+                            TrackIndex tIndex FROM Track WHERE ReleaseID="${ idTest }"`;
 
         var tracks = []; //= await db.getAsync(sqlTrackQuery);
 
@@ -135,14 +132,6 @@ async function getTracks(idTest) {
             tracks.push(t);
         });
 
-        // if (!row) {
-        //     console.log("oh no");
-        //     return;
-        // }
-        // else {
-        //     // val = row["aaPath", "relNam", "aID", "relTyp", "relDat", ];
-        //     console.log(row);
-        // }
         return tracks;
     }
     catch (e) {
@@ -157,7 +146,7 @@ async function getShoppingItems(idTest) {
         var sqlShoppingQuery = `SELECT ReleaseID rID,
                                CatalogNum catNum,
                                Price price,
-                               RelFormat format FROM ShoppingItem WHERE ID="${ idTest }"`;
+                               RelFormat format FROM ShoppingItem WHERE ReleaseID="${ idTest }"`;
 
         var shoppingItems = [];
 
@@ -182,7 +171,7 @@ async function getComments(idTest) {
                              UserID uID,
                              Rating rating,
                              Comment comment,
-                             Date date FROM Review WHERE ID="${ idTest }"`;
+                             Date date FROM Review WHERE ReleaseID="${ idTest }"`;
 
         var comments = [];
 
@@ -296,6 +285,7 @@ app.get('/Album', async function(req, res) {
     var album;
     try { album = await getRelease(albumID); }
     catch (e) { res.render('pages/error'); }
+    console.log(album);
 
     var tracks = [];
     try { tracks = await getTracks(albumID); }
@@ -343,6 +333,7 @@ app.get('/Album', async function(req, res) {
 
 
 
+    //formats = "";
     var str = "to_be_added";
     //var songs = [{ number: numberSTR, name: nameSTR, length: lengthSTR}];
     res.render('pages/album', { 
@@ -361,7 +352,7 @@ app.get('/Album', async function(req, res) {
         items : shoppingItems,
         comments : comments
     });
-    formats = "";
+
 });
 
 app.get('/Discover', function (req, res) {

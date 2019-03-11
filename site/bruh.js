@@ -3,7 +3,7 @@ var sql = require("sqlite3");
 var db = new sql.Database("bruh.db");
 db.serialize(create);
 function create() {
-    db.run("CREATE TABLE Release (ID INTEGER NOT NULL PRIMARY KEY, AlbumArtPath Text, ReleaseName Text, ArtistID int, RelType int, RelDate int, ReleaseLength Text, LabelID int, RelFormat int2, Rating float, Bio Text, NumRatings int, GenreID Text);");
+    db.run("CREATE TABLE Release (ID INTEGER NOT NULL PRIMARY KEY, AlbumArtPath Text, ReleaseName Text, ArtistID int, RelType int, RelDate int, ReleaseLength Text, LabelID int, RelFormat Text, Rating float, Bio Text, NumRatings int, GenreID Text);");
     db.run("CREATE TABLE Genre (ID INTEGER NOT NULL PRIMARY KEY, GenreName Str, ParentGenreID int);");
     db.run("CREATE TABLE Track (ID INTEGER NOT NULL PRIMARY KEY, TrackName Str, TrackLength int, TrackPath Str, ReleaseID int, TrackIndex int);");
     db.run("CREATE TABLE Review (ID INTEGER NOT NULL PRIMARY KEY, ReleaseID int, UserID int, Rating int, Comment Text, Date Text);");
@@ -13,8 +13,8 @@ function create() {
     db.run("CREATE TABLE Artist (ID INTEGER NOT NULL PRIMARY KEY, ArtistName Text);");
     db.run("CREATE TABLE User (ID INTEGER NOT NULL PRIMARY KEY, UserName Text, Password Text);");
 
-    db.run("INSERT INTO Release VALUES(NULL, 'images/cover.png', 'Naked Flames Who Can Recall His Past Lives', 1, 3, 2018, time(12146, 'unixepoch'), 1, 1111, 3.4, 'A sprawling and meandering compilation of (almost) all of Naked Flames'' tracks between 2015 and 2017.', 21, '0010000010')");
-    db.run("INSERT INTO Release VALUES(NULL, 'images/0002.png', 'Professional Amateur', 2, 1, 2018, time(1574, 'unixepoch'), 1, 0001, 3.7, 'Recordings of Atakan Colak playing some of his favorite piano pieces between 2017-2018. None of the original versions or their piano arrangements are made by him.', 0, '0000100000')");
+    db.run("INSERT INTO Release VALUES(NULL, 'images/cover.png', 'Naked Flames Who Can Recall His Past Lives', 1, 3, 2018, time(12146, 'unixepoch'), 1, '1111', 3.4, 'A sprawling and meandering compilation of (almost) all of Naked Flames'' tracks between 2015 and 2017.', 21, '0010000010')");
+    db.run("INSERT INTO Release VALUES(NULL, 'images/0002.png', 'Professional Amateur', 2, 0, 2018, time(1574, 'unixepoch'), 1, '0001', 3.7, 'Recordings of Atakan Colak playing some of his favorite piano pieces between 2017-2018. None of the original versions or their piano arrangements are made by him.', 0, '0000100000')");
 
     db.run("INSERT INTO Track VALUES(NULL, 'Up Syndrome', time(129, 'unixepoch'), 'not sure what to put here', 1, 1)");
     db.run("INSERT INTO Track VALUES(NULL, 'Troy Snipes the World', time(116, 'unixepoch'), 'not sure what to put here', 1, 2)");
