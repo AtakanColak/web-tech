@@ -359,6 +359,10 @@ app.get('/Discover', function (req, res) {
     res.render('pages/discover');
 });
 
+app.get('/EditRelease', function (req, res) {
+    res.render('pages/edit_release');
+});
+
 app.get('/Error', function (req, res) {
     res.render('pages/error');
 });
