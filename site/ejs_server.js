@@ -80,7 +80,7 @@ db.each(sqlShoppingQuery, (err, row) => {
 
 db.each(sqlReviewQuery, (err, row) => {
     if (err) throw err;
-    var u = {release : `${row.rID}`, username : `${row.uID}`, rating : `${row.rating}`, desc : `${row.comment}`, date : `${row.date}`};
+    var u = {release : `${row.rID}`, userid : `${row.uID}`, rating : `${row.rating}`, desc : `${row.comment}`, date : `${row.date}`};
     comments.push(u);
 });
 
@@ -120,6 +120,7 @@ function makeStringFromBin(theString, thetype) {
     newString = newString.slice(0, (newString.length - 2));
     return newString;
 }
+
 
 db.getAsync = function (sql) {
     var that = this;
@@ -190,6 +191,25 @@ async function getUser(idTest) {
     }
 }
 
+async function getRating(idTest) {
+    try {
+        var val;
+        var getStmt = `SELECT Rating rating FROM Review WHERE ID="${idTest}"`;
+        var row = await db.getAsync(getStmt);
+        if (!row) {
+            console.log("oh no");
+            return;
+        }
+        else { val = row["rating"]; }
+        console.log(val);
+        return val;
+    }
+    catch (e) {
+        console.log(e);
+        return "error";
+    }
+}
+
 function toMMSS(thetime) {
     var hours   = parseInt(thetime[0]) + parseInt(thetime[1]);
     var minutes = parseInt(thetime[3] + thetime[4]);
@@ -210,12 +230,33 @@ app.get('/Album', async function(req, res) {
     try { artist = await getArtist(aIDSTR); }
     catch (e) { artist = "erro12133r"; }
 
+    // var rating;
+    // try { rating = await getRatingScore(comments); }
+    // catch (e) { rating = "erro1213req3r"; }
+
     for (let i=0; i<comments.length; i++){
         //var user;
-        try { comments[i].username = await getUser(comments[i].username); }
+        try { comments[i].username = await getUser(comments[i].userid); }
         catch (e) { comments[i].username = "oijadsoijdsaerro12133r"; }
 
     }
+
+    var ratingList = [];
+    for (let i = 0; i < comments.length; i++) {
+        //var user;
+        console.log
+        try { rating = await getRating(comments[i].userid); }
+        catch (e) { rating = "oijadsoijdasdasdasdadsro12133r"; }
+        ratingList.push(rating);
+    }
+    var total = 0;
+    console.log(ratingList);
+    for (i = 0; i < ratingList.length; i++){
+        total += ratingList[i];
+    }
+    total = total/ratingList.length;
+
+
 
     var str = "to_be_added";
     //var songs = [{ number: numberSTR, name: nameSTR, length: lengthSTR}];
@@ -229,7 +270,7 @@ app.get('/Album', async function(req, res) {
         release_label : label,
         release_formats : makeStringFromBin(relForSTR, "format"),
         release_genres : makeStringFromBin(gIDSTR, "genre"),
-        release_rating : ratingSTR,
+        release_rating : total,
         release_desc : bioTxtSTR,
         tracks: tracks,
         items : shopItems,
