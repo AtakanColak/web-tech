@@ -13,76 +13,25 @@ app.use( express.static( "public/" ) );
 var sql = require("sqlite3");
 var db = new sql.Database("bruh.db");
 
-let sqlReleaseQuery = `SELECT AlbumArtPath aaPath,
-                       ReleaseName relNam,
-                       ArtistID aID,
-                       RelType relTyp, 
-                       RelDate relDat,
-                       ReleaseLength relLen,
-                       LabelID lID,
-                       RelFormat relFor,
-                       Rating rating,
-                       Bio bioTxt,
-                       NumRatings ratNum,
-                       GenreID gID FROM Release`;
-
-let sqlTrackQuery = `SELECT TrackName trkNam,
-                            TrackLength trkLen,
-                            TrackPath trkPat,
-                            ReleaseID rID,
-                            TrackIndex tIndex FROM Track`;
-
-let sqlShoppingQuery = `SELECT ReleaseID rID,
-                               CatalogNum catNum,
-                               Price price,
-                               RelFormat format FROM ShoppingItem`;
-
-let sqlReviewQuery = `SELECT ReleaseID rID,
-                             UserID uID,
-                             Rating rating,
-                             Comment comment,
-                             Date date FROM Review`;
 
 
-db.each(sqlReleaseQuery, (err, row) => {
-    if (err) {
-        throw err;
-    }
-    aaPathSTR = `${row.aaPath}`;
-    relNamSTR = `${row.relNam}`;
-    aIDSTR    = `${row.aID}`;
-    relTypSTR = `${row.relTyp}`;
-    relDatSTR = `${row.relDat}`;
-    relLenSTR = `${row.relLen}`;
-    lIDSTR    = `${row.lID}`;
-    relForSTR = `${row.relFor}`;
-    ratingSTR = `${row.rating}`;
-    bioTxtSTR = `${row.bioTxt}`;
-    ratNumSTR = `${row.ratNum}`;
-    gIDSTR    = `${row.gID}`;   
-});
-
-var tracks = [];
-var shopItems = [];
-var comments = [];
-
-db.each(sqlTrackQuery, (err, row) => {
-    if (err) throw err;
-    var t = {number : `${row.tIndex}`, name : `${row.trkNam}`, length: toMMSS(`${row.trkLen}`)};
-    tracks.push(t);
-});
-
-db.each(sqlShoppingQuery, (err, row) => {
-    if (err) throw err;
-    var s = {relID : `${row.rID}`, catalog : `${row.catNum}`, price : `${row.price}`, format : `${row.format}`};
-    shopItems.push(s);
-});
-
-db.each(sqlReviewQuery, (err, row) => {
-    if (err) throw err;
-    var u = {release : `${row.rID}`, userid : `${row.uID}`, rating : `${row.rating}`, desc : `${row.comment}`, date : `${row.date}`};
-    comments.push(u);
-});
+// db.each(sqlReleaseQuery, (err, row) => {
+//     if (err) {
+//         throw err;
+//     }
+//     aaPathSTR = `${row.aaPath}`;
+//     relNamSTR = `${row.relNam}`;
+//     aIDSTR    = `${row.aID}`;
+//     relTypSTR = `${row.relTyp}`;
+//     relDatSTR = `${row.relDat}`;
+//     relLenSTR = `${row.relLen}`;
+//     lIDSTR    = `${row.lID}`;
+//     relForSTR = `${row.relFor}`;
+//     ratingSTR = `${row.rating}`;
+//     bioTxtSTR = `${row.bioTxt}`;
+//     ratNumSTR = `${row.ratNum}`;
+//     gIDSTR    = `${row.gID}`;   
+// });
 
 var rel_types = ["Album","EP","Single","Compilation"];
 
@@ -122,6 +71,8 @@ function makeStringFromBin(theString, thetype) {
 }
 
 
+
+
 db.getAsync = function (sql) {
     var that = this;
     return new Promise(function (resolve, reject) {
@@ -133,6 +84,121 @@ db.getAsync = function (sql) {
         });
     });
 };
+
+async function getRelease(idTest) {
+    try {
+
+        var sqlReleaseQuery = `SELECT AlbumArtPath aaPath,
+                       ReleaseName relNam,
+                       ArtistID aID,
+                       RelType relTyp, 
+                       RelDate relDat,
+                       ReleaseLength relLen,
+                       LabelID lID,
+                       RelFormat relFor,
+                       Rating rating,
+                       Bio bioTxt,
+                       NumRatings ratNum,
+                       GenreID gID FROM Release WHERE ID="${ idTest }"`;
+
+        var row = await db.getAsync(sqlReleaseQuery);
+        if (!row) {
+            console.log("oh no");
+            return;
+        }
+        else {
+            // val = row["aaPath", "relNam", "aID", "relTyp", "relDat", ];
+            console.log(row);
+        }
+        return row;
+    }
+    catch (e) {
+        console.log(e);
+        return "error";
+    }
+}
+
+async function getTracks(idTest) {
+    try {
+
+        var sqlTrackQuery = `SELECT TrackName trkNam,
+                            TrackLength trkLen,
+                            TrackPath trkPat,
+                            ReleaseID rID,
+                            TrackIndex tIndex FROM Track WHERE ID="${ idTest }"`;
+
+        var tracks = []; //= await db.getAsync(sqlTrackQuery);
+
+        db.each(sqlTrackQuery, (err, row) => {
+            if (err) throw err;
+            var t = { number: `${row.tIndex}`, name: `${row.trkNam}`, length: toMMSS(`${row.trkLen}`) };
+            tracks.push(t);
+        });
+
+        // if (!row) {
+        //     console.log("oh no");
+        //     return;
+        // }
+        // else {
+        //     // val = row["aaPath", "relNam", "aID", "relTyp", "relDat", ];
+        //     console.log(row);
+        // }
+        return tracks;
+    }
+    catch (e) {
+        console.log(e);
+        return "error";
+    }
+}
+
+async function getShoppingItems(idTest) {
+    try {
+
+        var sqlShoppingQuery = `SELECT ReleaseID rID,
+                               CatalogNum catNum,
+                               Price price,
+                               RelFormat format FROM ShoppingItem WHERE ID="${ idTest }"`;
+
+        var shoppingItems = [];
+
+        db.each(sqlShoppingQuery, (err, row) => {
+            if (err) throw err;
+            var s = { relID: `${row.rID}`, catalog: `${row.catNum}`, price: `${row.price}`, format: `${row.format}` };
+            shoppingItems.push(s);
+        });
+
+        return shoppingItems;
+    }
+    catch (e) {
+        console.log(e);
+        return "error";
+    }
+}
+
+async function getComments(idTest) {
+    try {
+
+        var sqlReviewQuery = `SELECT ReleaseID rID,
+                             UserID uID,
+                             Rating rating,
+                             Comment comment,
+                             Date date FROM Review WHERE ID="${ idTest }"`;
+
+        var comments = [];
+
+        db.each(sqlReviewQuery, (err, row) => {
+            if (err) throw err;
+            var u = { release: `${row.rID}`, userid: `${row.uID}`, rating: `${row.rating}`, desc: `${row.comment}`, date: `${row.date}` };
+            comments.push(u);
+        });
+
+        return comments;
+    }
+    catch (e) {
+        console.log(e);
+        return "error";
+    }
+}
 
 async function getLabel(idTest) {
     try {
@@ -222,12 +288,33 @@ function toMMSS(thetime) {
 //var albumID = req.query.id
 
 app.get('/Album', async function(req, res) {
+    
+    var albumID = req.query.id;
+    console.log(albumID);
+
+
+    var album;
+    try { album = await getRelease(albumID); }
+    catch (e) { res.render('pages/error'); }
+
+    var tracks = [];
+    try { tracks = await getTracks(albumID); }
+    catch (e) { console.log("track error"); }
+
+    var shoppingItems = [];
+    try { shoppingItems = await getShoppingItems(albumID); }
+    catch (e) { console.log("shopitem error"); }
+
+    var comments = [];
+    try { comments = await getComments(albumID); }
+    catch (e) { console.log("comments error"); }
+
     var label;
-    try { label = await getLabel(lIDSTR); }
+    try { label = await getLabel(album["lID"]); }
     catch (e) { label = "erro13r"; }
 
     var artist;
-    try { artist = await getArtist(aIDSTR); }
+    try { artist = await getArtist(album["aID"]); }
     catch (e) { artist = "erro12133r"; }
 
     // var rating;
@@ -243,8 +330,6 @@ app.get('/Album', async function(req, res) {
 
     var ratingList = [];
     for (let i = 0; i < comments.length; i++) {
-        //var user;
-        console.log
         try { rating = await getRating(comments[i].userid); }
         catch (e) { rating = "oijadsoijdasdasdasdadsro12133r"; }
         ratingList.push(rating);
@@ -261,19 +346,19 @@ app.get('/Album', async function(req, res) {
     var str = "to_be_added";
     //var songs = [{ number: numberSTR, name: nameSTR, length: lengthSTR}];
     res.render('pages/album', { 
-        release_name: relNamSTR,
+        release_name: album["relNam"],
         release_artist: artist,
-        release_artwork: aaPathSTR,
-        release_type: rel_types[relTypSTR], 
-        release_date: relDatSTR, 
-        release_length: toMMSS(relLenSTR),
+        release_artwork: album["aaPath"],
+        release_type: rel_types[album["relTyp"]], 
+        release_date: album["relDat"], 
+        release_length: toMMSS(album["relLen"]),
         release_label : label,
-        release_formats : makeStringFromBin(relForSTR, "format"),
-        release_genres : makeStringFromBin(gIDSTR, "genre"),
-        release_rating : total,
-        release_desc : bioTxtSTR,
+        release_formats : makeStringFromBin(album["relFor"], "format"),
+        release_genres : makeStringFromBin(album["gID"], "genre"),
+        release_rating: album["rating"],
+        release_desc: album["bioTxt"],
         tracks: tracks,
-        items : shopItems,
+        items : shoppingItems,
         comments : comments
     });
     formats = "";

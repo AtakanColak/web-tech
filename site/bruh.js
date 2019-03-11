@@ -14,6 +14,7 @@ function create() {
     db.run("CREATE TABLE User (ID INTEGER NOT NULL PRIMARY KEY, UserName Text, Password Text);");
 
     db.run("INSERT INTO Release VALUES(NULL, 'images/cover.png', 'Naked Flames Who Can Recall His Past Lives', 1, 3, 2018, time(12146, 'unixepoch'), 1, 1111, 3.4, 'A sprawling and meandering compilation of (almost) all of Naked Flames'' tracks between 2015 and 2017.', 21, '0010000010')");
+    db.run("INSERT INTO Release VALUES(NULL, 'images/0002.png', 'Professional Amateur', 2, 1, 2018, time(1574, 'unixepoch'), 1, 0001, 3.7, 'Recordings of Atakan Colak playing some of his favorite piano pieces between 2017-2018. None of the original versions or their piano arrangements are made by him.', 0, '0000100000')");
 
     db.run("INSERT INTO Track VALUES(NULL, 'Up Syndrome', time(129, 'unixepoch'), 'not sure what to put here', 1, 1)");
     db.run("INSERT INTO Track VALUES(NULL, 'Troy Snipes the World', time(116, 'unixepoch'), 'not sure what to put here', 1, 2)");
@@ -54,8 +55,14 @@ function create() {
     db.run("INSERT INTO Track VALUES(NULL, 'Airships at Sea', time(213, 'unixepoch'), 'not sure what to put here', 1, 37)");
     db.run("INSERT INTO Track VALUES(NULL, 'sLAUGHTERhouse', time(624, 'unixepoch'), 'not sure what to put here', 1, 38)");
 
+    db.run("INSERT INTO Track VALUES(NULL, 'Can Can', time(19, 'unixepoch'), 'not sure what to put here', 2, 1)");
+    db.run("INSERT INTO Track VALUES(NULL, 'Prologue', time(268, 'unixepoch'), 'not sure what to put here', 2, 2)");
+    db.run("INSERT INTO Track VALUES(NULL, 'Lilium', time(284, 'unixepoch'), 'not sure what to put here', 2, 3)");
+    db.run("INSERT INTO Track VALUES(NULL, 'She Is Still Sleeping', time(114, 'unixepoch'), 'not sure what to put here', 2, 4)");
+
     db.run("INSERT INTO Label VALUES(NULL, 'No Label')");
     db.run("INSERT INTO Artist VALUES(NULL, 'Naked Flames')");
+    db.run("INSERT INTO Artist VALUES(NULL, 'Atakan Colak')");
 
     // db.run("CREATE TABLE ShoppingItem (ID INTEGER NOT NULL PRIMARY KEY, ReleaseID int, CatalogNum int, Price decimal, RelFormat int);");
     db.run("INSERT INTO ShoppingItem VALUES(NULL, 1, '1571-66778-1', 4.99, 'Digital')");
@@ -63,8 +70,11 @@ function create() {
     db.run("INSERT INTO ShoppingItem VALUES(NULL, 1, '1571-66778-3', 14.99, 'CD')");
     db.run("INSERT INTO ShoppingItem VALUES(NULL, 1, '1571-66778-4', 12.99, 'Cassette')");
 
+    db.run("INSERT INTO ShoppingItem VALUES(NULL, 2, 'ACR 0001', 5.99, 'Digital')");
+
     db.run("INSERT INTO User VALUES(NULL, '1Chops', 'password12345')");
     db.run("INSERT INTO User VALUES(NULL, 'Hakita', '54321drowssap')");
+    db.run("INSERT INTO User VALUES(NULL, 'nakedflames', 'asdfghjk')");
 
     // db.run("CREATE TABLE Review (ID INTEGER NOT NULL PRIMARY KEY, ReleaseID int, UserID int, Rating int, Comment Text, Date Text);");
 
