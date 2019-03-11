@@ -187,8 +187,9 @@
                                 <%= comment.desc %>
                             </div>
                         </div>
-                        <% }); %>
-                        
+                        <% }); if(!Array.isArray(comments) || !comments.length) { %>
+                        <h1>There is no comment</h1>
+                        <% } %>
                         <div class="jumbotron mt-3 pt-3 pb-2 pl-4 pr-4 border">
                             <form>
                                 <div class="form-group">
