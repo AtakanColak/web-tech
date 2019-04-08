@@ -391,6 +391,10 @@ app.get('/Discover', async function (req, res) {
     });
 });
 
+app.get('/EditRelease', function (req, res) {
+    res.render('pages/edit_release');
+});
+
 app.get('/Error', function (req, res) {
     res.render('pages/error');
 });
