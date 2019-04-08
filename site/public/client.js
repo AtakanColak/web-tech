@@ -10,14 +10,16 @@ $(function () {
         $('.custom-file-label').html(fileName);
     });
 
-    $('input[type="checkbox"]').change(function(e) {
-        if ($(this).attr("checked") == "1") {
-            $(this).attr("checked", 0);
+    $('input[type="checkbox"]').change(function (e) {
+        var check = $(this).prop("checked");
+        $(this).val(check);
+    });
+
+    $(".add-song").click(function (e) {
+        e.preventDefault();
+        var name = $(this).parents(".jumbotron").find("#input_song_name").val();
+        if (name != "") {
+            $(this).parents(".song-section").find(".song-list ul").append("<li>" + name + "</li>");
         }
-        else if ($(this).attr("checked") == "0") {
-            $(this).attr("checked", 1);
-        }
-        // $(this).attr("checked", !$(this).attr("checked")); 
-        // $(this).parents("label").val($(this).prop("checked"));
     });
 });
