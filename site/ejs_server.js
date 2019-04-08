@@ -5,7 +5,7 @@ var app = express();
 
 // set the view engine to ejs
 app.set('view engine', 'ejs');
-app.use( express.static( "public/" ) );
+app.use(express.static("public/"));
 // use res.render to load up an ejs view file
 
 // index page 
@@ -13,27 +13,15 @@ app.use( express.static( "public/" ) );
 var sql = require("sqlite3");
 var db = new sql.Database("bruh.db");
 
+const fs = require('fs') 
+  
+// Data which will write in a file. 
+// let data = "Learning how to write in a file."
+  
+// Write data in 'Output.txt' . 
 
 
-// db.each(sqlReleaseQuery, (err, row) => {
-//     if (err) {
-//         throw err;
-//     }
-//     aaPathSTR = `${row.aaPath}`;
-//     relNamSTR = `${row.relNam}`;
-//     aIDSTR    = `${row.aID}`;
-//     relTypSTR = `${row.relTyp}`;
-//     relDatSTR = `${row.relDat}`;
-//     relLenSTR = `${row.relLen}`;
-//     lIDSTR    = `${row.lID}`;
-//     relForSTR = `${row.relFor}`;
-//     ratingSTR = `${row.rating}`;
-//     bioTxtSTR = `${row.bioTxt}`;
-//     ratNumSTR = `${row.ratNum}`;
-//     gIDSTR    = `${row.gID}`;   
-// });
-
-var rel_types = ["Album","EP","Single","Compilation"];
+var rel_types = ["Album", "EP", "Single", "Compilation"];
 
 function makeStringFromBin(theString, thetype) {
     var newString = "";
@@ -65,7 +53,7 @@ function makeStringFromBin(theString, thetype) {
     }
 
     else return "invalid string";
-    
+
     newString = newString.slice(0, (newString.length - 2));
     return newString;
 }
@@ -96,11 +84,11 @@ async function getRelease(idTest) {
                        Rating rating,
                        Bio bioTxt,
                        NumRatings ratNum,
-                       GenreID gID FROM Release WHERE ID="${ idTest }"`;
+                       GenreID gID FROM Release WHERE ID="${ idTest}"`;
 
         var row = await db.getAsync(sqlReleaseQuery);
         if (!row) {
-            console.log("oh no");
+            console.log("oh no getrelease didnt work");
             return;
         }
         else {
@@ -122,7 +110,7 @@ async function getTracks(idTest) {
                             TrackLength trkLen,
                             TrackPath trkPat,
                             ReleaseID rID,
-                            TrackIndex tIndex FROM Track WHERE ReleaseID="${ idTest }"`;
+                            TrackIndex tIndex FROM Track WHERE ReleaseID="${ idTest}"`;
 
         var tracks = []; //= await db.getAsync(sqlTrackQuery);
 
@@ -146,7 +134,7 @@ async function getShoppingItems(idTest) {
         var sqlShoppingQuery = `SELECT ReleaseID rID,
                                CatalogNum catNum,
                                Price price,
-                               RelFormat format FROM ShoppingItem WHERE ReleaseID="${ idTest }"`;
+                               RelFormat format FROM ShoppingItem WHERE ReleaseID="${ idTest}"`;
 
         var shoppingItems = [];
 
@@ -171,7 +159,7 @@ async function getComments(idTest) {
                              UserID uID,
                              Rating rating,
                              Comment comment,
-                             Date date FROM Review WHERE ReleaseID="${ idTest }"`;
+                             Date date FROM Review WHERE ReleaseID="${ idTest}"`;
 
         var comments = [];
 
@@ -195,7 +183,7 @@ async function getLabel(idTest) {
         var getStmt = `SELECT LabelName lblNam FROM Label WHERE ID="${idTest}"`;
         var row = await db.getAsync(getStmt);
         if (!row) {
-            console.log("oh no");
+            console.log("oh no getlabel didnt work");
             return;
         }
         else {
@@ -216,7 +204,7 @@ async function getArtist(idTest) {
         var getStmt = `SELECT ArtistName artNam FROM Artist WHERE ID="${idTest}"`;
         var row = await db.getAsync(getStmt);
         if (!row) {
-            console.log("oh no");
+            console.log("oh no getartist didnt work because artistis was" + idTest);
             return;
         }
         else { val = row["artNam"]; }
@@ -234,7 +222,7 @@ async function getUser(idTest) {
         var getStmt = `SELECT UserName usrNam FROM User WHERE ID="${idTest}"`;
         var row = await db.getAsync(getStmt);
         if (!row) {
-            console.log("oh no");
+            console.log("oh no getuser didnt work");
             return;
         }
         else { val = row["usrNam"]; }
@@ -252,7 +240,7 @@ async function getRating(idTest) {
         var getStmt = `SELECT Rating rating FROM Review WHERE ID="${idTest}"`;
         var row = await db.getAsync(getStmt);
         if (!row) {
-            console.log("oh no");
+            console.log("oh no getrating didnt work");
             return;
         }
         else { val = row["rating"]; }
@@ -266,26 +254,81 @@ async function getRating(idTest) {
 }
 
 function toMMSS(thetime) {
-    var hours   = parseInt(thetime[0]) + parseInt(thetime[1]);
+    var hours = parseInt(thetime[0]) + parseInt(thetime[1]);
     var minutes = parseInt(thetime[3] + thetime[4]);
-    var sum     = (hours*60) + minutes;
-    var total   = String(sum) + ":" + (String(thetime[6]) + String(thetime[7]));
-    //console.log("hours: " + hours + ", minutes: " + minutes + ", sum: " + sum + ", total: " + total);
+    var sum = (hours * 60) + minutes;
+    var total = String(sum) + ":" + (String(thetime[6]) + String(thetime[7]));
     return total;
 }
 
 //var albumID = req.query.id
 
-app.get('/Album', async function(req, res) {
-    
-    var albumID = req.query.id;
-    console.log(albumID);
+// async function getAlbums() {
+//     try {
+//         var sqlAlbumsQuery = `SELECT ID id, AlbumArtPath coverpath, ReleaseName name, ArtistID aID FROM Release`;
+//         var albums = []; // await db.getAsync(sqlAlbumsQuery);
 
+//         db.each(sqlAlbumsQuery, (err, row) => {
+//             if (err) throw err;
+//             var t = { albumid: `${row.id}`, coverpath: `${row.coverpath}`, name: `${row.name}`, artist:`${row.aID}` };
+//             albums.push(t);
+//         });
+//         console.log(albums);
+
+//         return albums;
+//     }
+//     catch (e) {
+//         console.log(e);
+//         return "error";
+//     }
+// }
+
+async function getAlbums() {
+    try {
+        
+
+        var sqlAlbumsQuery = `SELECT ID id,
+                             AlbumArtPath coverpath,
+                             ReleaseName name,
+                             ArtistID aID FROM Release`;
+        
+        db.each(sqlAlbumsQuery, (err, row) => {
+            if (err) throw err;
+            var u = { albumid: `${row.id}`, coverpath: `${row.coverpath}`, name: `${row.name}`, artist: `${row.aID}` };
+            //albums.push(u);
+            deleteFile();
+            fs.writeFile('Output.txt', u.albumid + "," + u.coverpath + "," + u.name + "," + u.artist + ",", {flag:"a"}, (err) => { 
+                if (err) throw err; 
+                if (fs.existsSync("Output.txt")) console.log("BLABLABLABLABLABLABLA THE FILE WAS WRITTEN");
+            }) 
+            if (fs.existsSync("Output.txt")) console.log("here is a debug to say that the db thing happened in getalbums");
+        });
+    }
+    catch (e) {
+        console.log(e);
+        return "error";
+    }
+
+}
+
+async function deleteFile(){
+    if (fs.existsSync("Output.txt")) {
+        fs.unlink('Output.txt', (err) => {
+            if (err) throw err;
+            console.log('Output.txt was deleted');
+        });
+    }
+}
+
+app.get('/Album', async function (req, res) {
+
+    var albumID = req.query.id;
+    console.log("here is the albumID " + albumID);
 
     var album;
     try { album = await getRelease(albumID); }
     catch (e) { res.render('pages/error'); }
-    console.log(album);
+    console.log("here is the album " + album);
 
     var tracks = [];
     try { tracks = await getTracks(albumID); }
@@ -307,15 +350,10 @@ app.get('/Album', async function(req, res) {
     try { artist = await getArtist(album["aID"]); }
     catch (e) { artist = "erro12133r"; }
 
-    // var rating;
-    // try { rating = await getRatingScore(comments); }
-    // catch (e) { rating = "erro1213req3r"; }
-
-    for (let i=0; i<comments.length; i++){
+    for (let i = 0; i < comments.length; i++) {
         //var user;
         try { comments[i].username = await getUser(comments[i].userid); }
         catch (e) { comments[i].username = "oijadsoijdsaerro12133r"; }
-
     }
 
     var ratingList = [];
@@ -325,38 +363,63 @@ app.get('/Album', async function(req, res) {
         ratingList.push(rating);
     }
     var total = 0;
-    console.log(ratingList);
-    for (i = 0; i < ratingList.length; i++){
+    console.log("here is the ratinglist " + ratingList);
+    for (i = 0; i < ratingList.length; i++) {
         total += ratingList[i];
     }
-    total = total/ratingList.length;
+    total = total / ratingList.length;
 
-
-
-    //formats = "";
-    var str = "to_be_added";
-    //var songs = [{ number: numberSTR, name: nameSTR, length: lengthSTR}];
-    res.render('pages/album', { 
+    res.render('pages/album', {
         release_name: album["relNam"],
         release_artist: artist,
         release_artwork: album["aaPath"],
-        release_type: rel_types[album["relTyp"]], 
-        release_date: album["relDat"], 
+        release_type: rel_types[album["relTyp"]],
+        release_date: album["relDat"],
         release_length: toMMSS(album["relLen"]),
-        release_label : label,
-        release_formats : makeStringFromBin(album["relFor"], "format"),
-        release_genres : makeStringFromBin(album["gID"], "genre"),
+        release_label: label,
+        release_formats: makeStringFromBin(album["relFor"], "format"),
+        release_genres: makeStringFromBin(album["gID"], "genre"),
         release_rating: album["rating"],
         release_desc: album["bioTxt"],
         tracks: tracks,
-        items : shoppingItems,
-        comments : comments
+        items: shoppingItems,
+        comments: comments
     });
 
 });
 
-app.get('/Discover', function (req, res) {
-    res.render('pages/discover');
+app.get('/Discover', async function (req, res) {
+
+    getAlbums();
+    
+    var albums = [];
+    var albumString = "";
+    try { albumString = fs.readFileSync('Output.txt','utf8'); }
+    catch (e) {console.log(e); }
+    console.log("THIS IS THE ALBUMSTRING " + albumString);
+
+    // fs.readFile('/etc/passwd', (err, data) => {
+    //     if (err) throw err;
+    //     console.log(data);
+    //   });
+    
+    var albumSplit = albumString.split(',');
+    console.log("AND HERE IS THE SPLIT " + albumSplit);
+    
+    var count = 0;
+    for (i = 0; i < 2; i++) {
+        var u = { id: albumSplit[(count)], coverpath: albumSplit[(count)+1],  name: albumSplit[(count)+2], artist: await getArtist(albumSplit[(count)+3]) };
+        albums.push(u);
+        //console.log("HERE ARE ALBUMDADA " + albums);
+        count += 4;
+    }
+    //console.log("heres the albums for discover " + albums);
+    
+    res.render('pages/discover', {
+        releases: albums
+    });
+    
+    //await deleteFile();
 });
 
 app.get('/EditRelease', function (req, res) {
