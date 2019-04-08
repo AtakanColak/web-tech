@@ -15,5 +15,17 @@
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+/* 
+.file-name {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: middle;
+    /* new lines */
+    width: 100%;
+    position: absolute;
+    left: 0;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+} */
 
 
