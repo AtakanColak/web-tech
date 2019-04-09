@@ -49,19 +49,15 @@ function makeStringFromBin(theString, thetype) {
     newString = newString.slice(0, (newString.length - 2));
     return newString;
 }
-/*
-db.get = function (sql) {
-    var that = this;
-    return new Promise(function (resolve, reject) {
-        that.get(sql, function (err, row) {
-            if (err)
-                reject(err);
-            else
-                resolve(row);
-        });
-    });
-};
-*/
+
+function returnFormats() {
+    return ["Vinyl", "CD", "Cassette", "Digital"];
+}
+
+function returnGenres() {
+    return ["Dance", "Electronic", "Experimental", "Folk", "Hip Hop", "Jazz", "Pop", "Punk", "Rock", "Metal"];
+}
+
 async function getRelease(idTest) {
     try {
 
@@ -279,8 +275,6 @@ function toMMSS(thetime) {
 
 async function getAlbums() {
     try {
-        
-
         var sqlAlbumsQuery = `SELECT ID id,
                              AlbumArtPath coverpath,
                              ReleaseName name,
@@ -289,26 +283,26 @@ async function getAlbums() {
         var albums = await db.all(sqlAlbumsQuery);
         console.log(albums);
         return albums;
-        /*
-        db.each(sqlAlbumsQuery, (err, row) => {
-            if (err) throw err;
-            var u = { albumid: `${row.id}`, coverpath: `${row.coverpath}`, name: `${row.name}`, artist: `${row.aID}` };
-            //albums.push(u);
-            deleteFile();
-            fs.writeFile('Output.txt', u.albumid + "," + u.coverpath + "," + u.name + "," + u.artist + ",", {flag:"a"}, (err) => { 
-                if (err) throw err; 
-                if (fs.existsSync("Output.txt")) console.log("BLABLABLABLABLABLABLA THE FILE WAS WRITTEN");
-            }) 
-            if (fs.existsSync("Output.txt")) console.log("here is a debug to say that the db thing happened in getalbums");
-        });
-        */
     }
     catch (e) {
         console.log(e);
         return "error";
     }
-
 }
+
+async function getFormats() {
+    try {
+        var sqlFormatsQuery = `SELECT RelFormat FROM Release`;  
+        var formats = await db.all(sqlFormatsQuery);
+        console.log("HERE ARE THE FORMATS" + formats);
+        return formats;
+    }
+    catch (e) {
+        console.log(e);
+        return "error";
+    }
+}
+
 
 app.get('/Album', async function (req, res) {
 
@@ -392,6 +386,7 @@ app.get('/Discover', async function (req, res) {
 });
 
 app.get('/EditRelease', function (req, res) {
+    getFormats();
     res.render('pages/edit_release');
 });
 
