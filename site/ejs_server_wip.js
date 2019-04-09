@@ -69,7 +69,6 @@ function returnGenres() {
 
 async function getRelease(idTest) {
     try {
-
         var sqlReleaseQuery = `SELECT AlbumArtPath aaPath,
                        ReleaseName relNam,
                        ArtistID aID,
@@ -90,7 +89,7 @@ async function getRelease(idTest) {
         }
         else {
             // val = row["aaPath", "relNam", "aID", "relTyp", "relDat", ];
-            console.log(row);
+            console.log("HERE IS GETRELEASE " + row);
         }
         return row;
     }
@@ -103,11 +102,12 @@ async function getRelease(idTest) {
 async function getTracks(idTest) {
     try {
         var sqlTrackQuery = `SELECT TrackName trkNam,
-                            TrackLength trkLen,
+        TrackLength trkLen,
                             TrackPath trkPat,
                             ReleaseID rID,
                             TrackIndex tIndex FROM Track WHERE ReleaseID="${ idTest}"`;
         var tracks = await db.all(sqlTrackQuery);
+        console.log("HERE ARE THE TRACKS " + tracks[8]["trkNam"] + "<<<<<<<<");
         return tracks;
     }
     catch (e) {
@@ -119,10 +119,10 @@ async function getTracks(idTest) {
 async function getShoppingItems(idTest) {
     try {
         var sqlShoppingQuery = `SELECT ReleaseID rID,
-                               CatalogNum catNum,
-                               Price price,
-                               RelFormat format FROM ShoppingItem WHERE ReleaseID="${ idTest}"`;
-
+        CatalogNum catNum,
+        Price price,
+        RelFormat format FROM ShoppingItem WHERE ReleaseID="${ idTest}"`;
+        
         var shoppingItems = await db.all(sqlShoppingQuery);
         return shoppingItems;
     }
@@ -135,12 +135,16 @@ async function getShoppingItems(idTest) {
 async function getComments(idTest) {
     try {
         var sqlReviewQuery = `SELECT ReleaseID rID,
-                             UserID uID,
-                             Rating rating,
-                             Comment comment,
-                             Date date FROM Review WHERE ReleaseID="${ idTest}"`;
-
+        UserID uID,
+        Rating rating,
+        Comment comment,
+        Date date FROM Review WHERE ReleaseID="${ idTest}"`;
+        
         var comments = await db.all(sqlReviewQuery);
+        for (i = 0; i < comments.length; i++) {
+            comments[i]["uID"] = getUser(comments[i]["uID"]);
+        }
+        console.log("HERE ARE THE COMMENS " + comments + "<<<");
         return comments;
     }
     catch (e) {
@@ -179,7 +183,7 @@ async function getArtist(idTest) {
             console.log("oh no getartist didnt work because artistis was" + idTest);
             return;
         }
-        else { val = row["artNam"]; }
+        else { val = row["artNam"]; console.log("HERE IS GETARTIST " + val) }
         return val;
     }
     catch (e) {
@@ -228,10 +232,26 @@ async function getRating(idTest) {
 async function getAlbums() {
     try {
         var sqlAlbumsQuery = `SELECT ID id,
-                             AlbumArtPath coverpath,
-                             ReleaseName name,
-                             ArtistID aID FROM Release`;
+        AlbumArtPath coverpath,
+        ReleaseName name,
+        ArtistID aID FROM Release`;
         
+        var albums = await db.all(sqlAlbumsQuery);
+        console.log(albums);
+        return albums;
+    }
+    catch (e) {
+        console.log(e);
+        return "error";
+    }
+}
+
+async function getAlbumsWRTGenre(gID) {
+    try {
+        var sqlAlbumsGenreQuery = `SELECT ID id,
+        AlbumArtPath coverpath,
+        ReleaseName name,
+        ArtistID aID FROM Release WHERE Genre="${gID}"`;
         var albums = await db.all(sqlAlbumsQuery);
         console.log(albums);
         return albums;
@@ -268,41 +288,41 @@ async function getFormats() {
 }
 
 app.get('/Album', async function (req, res) {
-
+    
     var albumID = req.query.id;
     console.log("here is the albumID " + albumID);
-
+    
     var album;
     try { album = await getRelease(albumID); }
     catch (e) { res.render('pages/error'); }
     console.log("here is the album " + album);
-
+    
     var tracks = [];
-    try { tracks = await getTracks(albumID); }
+    try { tracks = await getTracks(albumID); console.log("HERE ARE THE TRACKS FROM THE ALBUM PAGE LOADER " + tracks)}
     catch (e) { console.log("track error"); }
-
+    
     var shoppingItems = [];
     try { shoppingItems = await getShoppingItems(albumID); }
     catch (e) { console.log("shopitem error"); }
-
+    
     var comments = [];
     try { comments = await getComments(albumID); }
     catch (e) { console.log("comments error"); }
-
+    
     var label;
     try { label = await getLabel(album["lID"]); }
     catch (e) { label = "erro13r"; }
-
+    
     var artist;
     try { artist = await getArtist(album["aID"]); }
     catch (e) { artist = "erro12133r"; }
-
+    
     for (let i = 0; i < comments.length; i++) {
         //var user;
         try { comments[i].username = await getUser(comments[i].userid); }
         catch (e) { comments[i].username = "oijadsoijdsaerro12133r"; }
     }
-
+    
     var ratingList = [];
     for (let i = 0; i < comments.length; i++) {
         try { rating = await getRating(comments[i].userid); }
@@ -313,7 +333,7 @@ app.get('/Album', async function (req, res) {
     console.log("here is the ratinglist " + ratingList);
     for (i = 0; i < ratingList.length; i++) total += ratingList[i];
     total = total / ratingList.length;
-
+    
     res.render('pages/album', {
         release_name: album["relNam"],
         release_artist: artist,
@@ -330,17 +350,18 @@ app.get('/Album', async function (req, res) {
         items: shoppingItems,
         comments: comments
     });
-
+    
 });
 
 app.get('/Discover', async function (req, res) {
-
+    
     var albums;
     try { albums = await getAlbums(); }
     catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BE") }
     res.render('pages/discover', {
         releases: albums,
-        genres: returnGenres()
+        genres: returnGenres(),
+        formats: getFormats()
     });
 });
 
