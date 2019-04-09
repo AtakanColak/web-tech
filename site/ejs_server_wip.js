@@ -141,16 +141,10 @@ async function getComments(idTest) {
         Date date FROM Review WHERE ReleaseID="${ idTest}"`;
         
         var comments = await db.all(sqlReviewQuery);
-<<<<<<< HEAD
-        for (i = 0; i < comments.length; i++) {
-            comments[i]["uID"] = getUser(comments[i]["uID"]);
-        }
-        console.log("HERE ARE THE COMMENS " + comments + "<<<");
-=======
+
         for(i = 0; i < comments.length; i++) {
             comments[i]["uID"] = await getUser(comments[i]["uID"]);
         }
->>>>>>> 9cbdb40b199ab79a73509ee6e1dbae5d3f12f3ca
         return comments;
     }
     catch (e) {
