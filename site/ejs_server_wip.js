@@ -58,7 +58,6 @@ function toMMSS(thetime) {
     return total;
 }
 
-
 function returnFormats() {
     return ["Vinyl", "CD", "Cassette", "Digital"];
 }
@@ -102,12 +101,11 @@ async function getRelease(idTest) {
 async function getTracks(idTest) {
     try {
         var sqlTrackQuery = `SELECT TrackName trkNam,
-        TrackLength trkLen,
+                            TrackLength trkLen,
                             TrackPath trkPat,
                             ReleaseID rID,
                             TrackIndex tIndex FROM Track WHERE ReleaseID="${ idTest}"`;
         var tracks = await db.all(sqlTrackQuery);
-        console.log("HERE ARE THE TRACKS " + tracks[8]["trkNam"] + "<<<<<<<<");
         return tracks;
     }
     catch (e) {
@@ -234,7 +232,8 @@ async function getAlbums() {
         var sqlAlbumsQuery = `SELECT ID id,
         AlbumArtPath coverpath,
         ReleaseName name,
-        ArtistID aID FROM Release`;
+        ArtistID aID,
+        GenreID gID FROM Release`;
         
         var albums = await db.all(sqlAlbumsQuery);
         console.log(albums);
@@ -246,20 +245,16 @@ async function getAlbums() {
     }
 }
 
-async function getAlbumsWRTGenre(gID) {
-    try {
-        var sqlAlbumsGenreQuery = `SELECT ID id,
-        AlbumArtPath coverpath,
-        ReleaseName name,
-        ArtistID aID FROM Release WHERE Genre="${gID}"`;
-        var albums = await db.all(sqlAlbumsQuery);
-        console.log(albums);
-        return albums;
-    }
-    catch (e) {
-        console.log(e);
-        return "error";
-    }
+async function findBinary(id, thetype) {
+    var albums;
+    var albumsToReturn = [];
+    console.log(id);
+    try { albums = await getAlbums(); }
+    catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BASOIJDOIJDSA") }
+    for (i = 0; i < albums.length; i++) {
+        if (albums[i][(""+thetype)].charAt(id) == 1) albumsToReturn.push(albums[i]);
+    }   
+    return albumsToReturn;
 }
 
 async function getArtists() {
@@ -267,19 +262,6 @@ async function getArtists() {
         var sqlTrackQuery = `SELECT ID id, ArtistName name FROM Artist`;
         var artists = await db.all(sqlTrackQuery);
         return artists;
-    }
-    catch (e) {
-        console.log(e);
-        return "error";
-    }
-}
-
-async function getFormats() {
-    try {
-        var sqlFormatsQuery = `SELECT RelFormat FROM Release`;  
-        var formats = await db.all(sqlFormatsQuery);
-        console.log("HERE ARE THE FORMATS" + formats);
-        return formats;
     }
     catch (e) {
         console.log(e);
@@ -355,12 +337,24 @@ app.get('/Album', async function (req, res) {
 
 app.get('/Discover', async function (req, res) {
 
-    // var genreID = req.query.genre;
-    // if(genreID == NULL) // NO GENRE QUERY
-    // var formatID = req.query.format;
-    var albums;
-    try { albums = await getAlbums(); }
-    catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BE") }
+    var genreID = req.query.genre;
+    var formatID = req.query.format;
+    if(genreID == null && formatID == null) {
+        var albums;
+        try { albums = await getAlbums(); }
+        catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BELLEND") }     
+    }
+    else if (genreID != null && formatID == null) {
+        var albums;
+        try { albums = await findBinary(genreID, "gID"); }
+        catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BACH " + e) }  
+    }
+    else if (genreID == null && formatID != null) {
+        var albums;
+        try { albums = await findBinary(formatID, "relFor"); }
+        catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BEETHOVEN " + e) }  
+    }
+    
     res.render('pages/discover', {
         releases: albums,
         genres: returnGenres(),
