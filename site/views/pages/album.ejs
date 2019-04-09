@@ -104,13 +104,13 @@
                         <% tracks.forEach(function(track) { %>
                         <div class="row ml-5">
                             <h5 class="col-md-2 text-center">
-                                <%= track.number %>
+                                <%= track.tIndex %>
                             </h5>
                             <h5 class="col-md-6 text-left">
-                                <%= track.name %>
+                                <%= track.trkNam %>
                             </h5>
                             <h5 class="col-md-2 text-right">
-                                <%= track.length %>
+                                <%= track.trkLen %>
                             </h5>
                             <div class="col-md-2"></div>
                         </div>
@@ -142,7 +142,7 @@
                             <tbody>
                                 <% items.forEach(function(item) { %>
                                 <tr>
-                                    <th scope="row"><%= item.catalog %> </th>
+                                    <th scope="row"><%= item.catNum %> </th>
                                     <td><%= item.format %></td>
                                     <td>£<%= item.price %></td>
                                     <td class="">
@@ -174,7 +174,7 @@
                         <% comments.forEach(function(comment) { %>
                         <div class="panel panel-default mt-3">
                             <div class="panel-heading">
-                                <strong><%= comment.username %></strong>
+                                <strong><%= comment.uID %></strong>
                                 <% for (var i = 0; i < comment.rating; i++) { %>
                                 <span class=""><img src="images/star-checked.svg" /></span>
                                 <% } %>
@@ -184,7 +184,7 @@
                                 <span class="text-muted ml-2"><%= comment.date %> </span>
                             </div>
                             <div class="panel-body">
-                                <%= comment.desc %>
+                                <%= comment.comment %>
                             </div>
                         </div>
                         <% }); if(!Array.isArray(comments) || !comments.length) { %>

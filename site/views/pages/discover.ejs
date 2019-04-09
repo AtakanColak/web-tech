@@ -20,37 +20,42 @@
                 <div class="row ml-1">
                     <h5 class="nav-link pb-0 mb-1">Genre</h5>
                 </div>
-                <a href="#" class="row ml-4 mt-0 bt-0 text-left">Rock</a>
-                <a href="#" class="row ml-4 mt-0 bt-0 text-left">Pop</a>
-                <a href="#" class="row ml-4 mt-0 bt-0 text-left">Electronic</a>
+                <% var i; for (i = 0; i < 3; ++i) { %>
+                <a href="/Discover?genre=<%= i %>" class="row ml-4 mt-0 bt-0 text-left"><%= genres[i] %></a>
+                <% }; %>
                 <div class="dropdown ml-4 mt-0 bt-0">
                     <a class="dropdown-toggle" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true"
                         aria-expanded="false" style="color:#007bff ;">
                         All
                     </a>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                        <a href="#" class="row ml-4 mt-0 bt-0 text-left">Shoegaze</a>
-                        <a href="#" class="row ml-4 mt-0 bt-0 text-left">Hip Hop</a>
-                        <a href="#" class="row ml-4 mt-0 bt-0 text-left">Classic</a>
-                        <a href="#" class="row ml-4 mt-0 bt-0 text-left">Punk Rock</a>
+                        <% var i; for (i = 3; i < genres.length; ++i) { %>
+                        <a href="/Discover?genre=<%= i %>" class="row ml-4 mt-0 bt-0 text-left"><%= genres[i] %></a>
+                        <% }; %>
                     </div>
                 </div>
                 <div class="row ml-1">
                     <h5 class="nav-link pb-0 mb-1">Format</h5>
                 </div>
-                <a href="#" class="row ml-4 mt-0 bt-0 text-left">Vinyl</a>
+                <% var i; for (i = 0; i < 3; ++i) { %>
+                <a href="#" class="row ml-4 mt-0 bt-0 text-left" value="<%= i %>"><%= formats[i] %></a>
+                <% }; %>
+                <!-- <a href="#" class="row ml-4 mt-0 bt-0 text-left">Vinyl</a>
                 <a href="#" class="row ml-4 mt-0 bt-0 text-left">Album</a>
-                <a href="#" class="row ml-4 mt-0 bt-0 text-left">CD</a>
+                <a href="#" class="row ml-4 mt-0 bt-0 text-left">CD</a> -->
                 <div class="dropdown ml-4 mt-0 bt-0">
                     <a class="dropdown-toggle" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true"
                         aria-expanded="false" style="color:#007bff ;">
                         All
                     </a>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                        <a href="#" class="row ml-4 mt-0 bt-0 text-left">Mixtape</a>
+                        <% var i; for (i = 3; i < formats.length; ++i) { %>
+                        <a href="#" class="row ml-4 mt-0 bt-0 text-left" value="<%= i %>"><%= formats[i] %></a>
+                        <% }; %>
+                        <!-- <a href="#" class="row ml-4 mt-0 bt-0 text-left">Mixtape</a>
                         <a href="#" class="row ml-4 mt-0 bt-0 text-left">DVD</a>
                         <a href="#" class="row ml-4 mt-0 bt-0 text-left">BluRay</a>
-                        <a href="#" class="row ml-4 mt-0 bt-0 text-left">USB 3.2</a>
+                        <a href="#" class="row ml-4 mt-0 bt-0 text-left">USB 3.2</a> -->
                     </div>
                 </div>
                 <div class="row ml-1">
@@ -90,17 +95,20 @@
                 </div>
                 <div class="row">
                     <% releases.forEach(function(release) { %>
-                    <div class="col-sm-2 card border-0">
+                    <div class="col-md-2 card border-0 dis-border">
                         <a class="" href="/Album?id=<%=release.id%>">
-                            <img class="card-img-top" src="<%= release.coverpath %>" alt="Album Image">
+                            <img class="card-img-top dis-cover" src="<%= release.coverpath %>" alt="Album Image">
                         </a>
                         <div class="card-body p-1 ">
                             <div class="noverflow">
-                                <a class="" href="/Album?id=<%=release.id%>"><small><b><%= release.name %></b></small> </a>
+                                <a class="" href="/Album?id=<%=release.id%>"><small><b><%= release.name %></b></small>
+                                </a>
 
                             </div>
                             <div class="noverflow">
-                                <a class="" href="/Album?id=<%=release.id%>"><small><small><%= release.artist %></small></small> </a>
+                                <a class=""
+                                    href="/Album?id=<%=release.id%>"><small><small><%= release.artist %></small></small>
+                                </a>
                             </div>
                         </div>
                     </div>

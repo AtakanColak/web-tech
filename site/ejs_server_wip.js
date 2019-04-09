@@ -141,10 +141,16 @@ async function getComments(idTest) {
         Date date FROM Review WHERE ReleaseID="${ idTest}"`;
         
         var comments = await db.all(sqlReviewQuery);
+<<<<<<< HEAD
         for (i = 0; i < comments.length; i++) {
             comments[i]["uID"] = getUser(comments[i]["uID"]);
         }
         console.log("HERE ARE THE COMMENS " + comments + "<<<");
+=======
+        for(i = 0; i < comments.length; i++) {
+            comments[i]["uID"] = await getUser(comments[i]["uID"]);
+        }
+>>>>>>> 9cbdb40b199ab79a73509ee6e1dbae5d3f12f3ca
         return comments;
     }
     catch (e) {
@@ -354,14 +360,17 @@ app.get('/Album', async function (req, res) {
 });
 
 app.get('/Discover', async function (req, res) {
-    
+
+    // var genreID = req.query.genre;
+    // if(genreID == NULL) // NO GENRE QUERY
+    // var formatID = req.query.format;
     var albums;
     try { albums = await getAlbums(); }
     catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BE") }
     res.render('pages/discover', {
         releases: albums,
         genres: returnGenres(),
-        formats: getFormats()
+        formats: returnFormats()
     });
 });
 
@@ -378,6 +387,7 @@ app.get('/EditRelease', async function (req, res) {
 app.get('/Error', function (req, res) {
     res.render('pages/error');
 });
+
 
 app.listen(8080);
 console.log('8080 is the magic port');
