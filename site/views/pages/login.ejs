@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <% include ../partials/head %>
+</head>
+
+<body>
+
+    <header>
+        <% include ../partials/header %>
+    </header>
+
+    <main class="container mb-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 mt-4 mb-5">
+                <h2 class="text-center">
+                    Login to urMusic
+                </h2>
+                <h5 class="text-center mt-4">
+                    Listen to your music, and others', together, forever, or whatever.
+                </h5>
+                <form>
+                    <div class="row justify-content-center mt-5">
+                        <label for="input_username" class="col-md-4 col-form-label">Username</label>
+                        <div class="col-md-6">
+                            <input type="text" class="form-control" id="input_username" placeholder="Username">
+                        </div>
+                    </div>
+                    <div class="row justify-content-center mt-3">
+                        <label for="input_user_password" class="col-md-4 col-form-label">Password</label>
+                        <div class="col-md-6">
+                            <input type="password" class="form-control" id="input_user_password" placeholder="Password">
+                            <a href="#"><small>Forgot your username or password?</small></a>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center mt-3">
+                        <div class="col-md-4"></div>
+                        <div class="col-md-6">
+                            <button type="submit" class="btn btn-dark mt-3 col-md-4">Login</button>
+                            <div class="col-md-8"></div>
+                            <a href="#"><small>Don't have an account? Come on, sign up!</small></a>
+                        </div>
+                        
+                    </div>
+                </form>
+                
+            </div>
+        </div>
+    </main>
+
+    <footer class="pt-5">
+        <% include ../partials/footer %>
+    </footer>
+
+</body>
+
+</html>
