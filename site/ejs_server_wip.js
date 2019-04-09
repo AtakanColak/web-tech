@@ -358,6 +358,13 @@ app.get('/Discover', async function (req, res) {
     // var genreID = req.query.genre;
     // if(genreID == NULL) // NO GENRE QUERY
     // var formatID = req.query.format;
+    try {
+    var search_string = req.query.search;
+    console.log(search_string);
+    }
+    catch{
+        console.log("NO SEARCH STRING");
+    }
     var albums;
     try { albums = await getAlbums(); }
     catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BE") }
@@ -380,6 +387,10 @@ app.get('/EditRelease', async function (req, res) {
 
 app.get('/Error', function (req, res) {
     res.render('pages/error');
+});
+
+app.get('/Login', function (req, res) {
+    res.render('pages/login');
 });
 
 
