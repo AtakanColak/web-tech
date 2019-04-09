@@ -141,6 +141,9 @@ async function getComments(idTest) {
                              Date date FROM Review WHERE ReleaseID="${ idTest}"`;
 
         var comments = await db.all(sqlReviewQuery);
+        for(i = 0; i < comments.length; i++) {
+            comments[i]["uID"] = await getUser(comments[i]["uID"]);
+        }
         return comments;
     }
     catch (e) {
@@ -335,6 +338,9 @@ app.get('/Album', async function (req, res) {
 
 app.get('/Discover', async function (req, res) {
 
+    // var genreID = req.query.genre;
+    // if(genreID == NULL) // NO GENRE QUERY
+    // var formatID = req.query.format;
     var albums;
     try { albums = await getAlbums(); }
     catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BE") }
@@ -358,6 +364,7 @@ app.get('/EditRelease', async function (req, res) {
 app.get('/Error', function (req, res) {
     res.render('pages/error');
 });
+
 
 app.listen(8080);
 console.log('8080 is the magic port');

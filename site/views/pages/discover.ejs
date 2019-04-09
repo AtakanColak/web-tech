@@ -21,7 +21,7 @@
                     <h5 class="nav-link pb-0 mb-1">Genre</h5>
                 </div>
                 <% var i; for (i = 0; i < 3; ++i) { %>
-                <a href="#" class="row ml-4 mt-0 bt-0 text-left" value="<%= i %>"><%= genres[i] %></a>
+                <a href="/Discover?genre=<%= i %>" class="row ml-4 mt-0 bt-0 text-left"><%= genres[i] %></a>
                 <% }; %>
                 <div class="dropdown ml-4 mt-0 bt-0">
                     <a class="dropdown-toggle" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true"
@@ -30,7 +30,7 @@
                     </a>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
                         <% var i; for (i = 3; i < genres.length; ++i) { %>
-                        <a href="#" class="row ml-4 mt-0 bt-0 text-left" value="<%= i %>"><%= genres[i] %></a>
+                        <a href="/Discover?genre=<%= i %>" class="row ml-4 mt-0 bt-0 text-left"><%= genres[i] %></a>
                         <% }; %>
                     </div>
                 </div>
@@ -38,8 +38,8 @@
                     <h5 class="nav-link pb-0 mb-1">Format</h5>
                 </div>
                 <% var i; for (i = 0; i < 3; ++i) { %>
-                    <a href="#" class="row ml-4 mt-0 bt-0 text-left" value="<%= i %>"><%= formats[i] %></a>
-                    <% }; %>
+                <a href="#" class="row ml-4 mt-0 bt-0 text-left" value="<%= i %>"><%= formats[i] %></a>
+                <% }; %>
                 <!-- <a href="#" class="row ml-4 mt-0 bt-0 text-left">Vinyl</a>
                 <a href="#" class="row ml-4 mt-0 bt-0 text-left">Album</a>
                 <a href="#" class="row ml-4 mt-0 bt-0 text-left">CD</a> -->
@@ -49,9 +49,9 @@
                         All
                     </a>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                            <% var i; for (i = 3; i < formats.length; ++i) { %>
-                                <a href="#" class="row ml-4 mt-0 bt-0 text-left" value="<%= i %>"><%= formats[i] %></a>
-                                <% }; %>
+                        <% var i; for (i = 3; i < formats.length; ++i) { %>
+                        <a href="#" class="row ml-4 mt-0 bt-0 text-left" value="<%= i %>"><%= formats[i] %></a>
+                        <% }; %>
                         <!-- <a href="#" class="row ml-4 mt-0 bt-0 text-left">Mixtape</a>
                         <a href="#" class="row ml-4 mt-0 bt-0 text-left">DVD</a>
                         <a href="#" class="row ml-4 mt-0 bt-0 text-left">BluRay</a>
