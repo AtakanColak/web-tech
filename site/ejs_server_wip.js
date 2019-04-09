@@ -50,6 +50,15 @@ function makeStringFromBin(theString, thetype) {
     return newString;
 }
 
+function toMMSS(thetime) {
+    var hours = parseInt(thetime[0]) + parseInt(thetime[1]);
+    var minutes = parseInt(thetime[3] + thetime[4]);
+    var sum = (hours * 60) + minutes;
+    var total = String(sum) + ":" + (String(thetime[6]) + String(thetime[7]));
+    return total;
+}
+
+
 function returnFormats() {
     return ["Vinyl", "CD", "Cassette", "Digital"];
 }
@@ -93,23 +102,12 @@ async function getRelease(idTest) {
 
 async function getTracks(idTest) {
     try {
-
         var sqlTrackQuery = `SELECT TrackName trkNam,
                             TrackLength trkLen,
                             TrackPath trkPat,
                             ReleaseID rID,
                             TrackIndex tIndex FROM Track WHERE ReleaseID="${ idTest}"`;
-
-   //     var tracks = []; //= await db.get(sqlTrackQuery);
-
         var tracks = await db.all(sqlTrackQuery);
-        /*
-        db.each(sqlTrackQuery, (err, row) => {
-            if (err) throw err;
-            var t = { number: `${row.tIndex}`, name: `${row.trkNam}`, length: toMMSS(`${row.trkLen}`) };
-            tracks.push(t);
-        });
-*/
         return tracks;
     }
     catch (e) {
@@ -120,20 +118,12 @@ async function getTracks(idTest) {
 
 async function getShoppingItems(idTest) {
     try {
-
         var sqlShoppingQuery = `SELECT ReleaseID rID,
                                CatalogNum catNum,
                                Price price,
                                RelFormat format FROM ShoppingItem WHERE ReleaseID="${ idTest}"`;
 
         var shoppingItems = await db.all(sqlShoppingQuery);
-
-        // db.each(sqlShoppingQuery, (err, row) => {
-        //     if (err) throw err;
-        //     var s = { relID: `${row.rID}`, catalog: `${row.catNum}`, price: `${row.price}`, format: `${row.format}` };
-        //     shoppingItems.push(s);
-        // });
-
         return shoppingItems;
     }
     catch (e) {
@@ -144,7 +134,6 @@ async function getShoppingItems(idTest) {
 
 async function getComments(idTest) {
     try {
-
         var sqlReviewQuery = `SELECT ReleaseID rID,
                              UserID uID,
                              Rating rating,
@@ -152,13 +141,6 @@ async function getComments(idTest) {
                              Date date FROM Review WHERE ReleaseID="${ idTest}"`;
 
         var comments = await db.all(sqlReviewQuery);
-
-        // db.each(sqlReviewQuery, (err, row) => {
-        //     if (err) throw err;
-        //     var u = { release: `${row.rID}`, userid: `${row.uID}`, rating: `${row.rating}`, desc: `${row.comment}`, date: `${row.date}` };
-        //     comments.push(u);
-        // });
-
         return comments;
     }
     catch (e) {
@@ -243,36 +225,6 @@ async function getRating(idTest) {
     }
 }
 
-function toMMSS(thetime) {
-    var hours = parseInt(thetime[0]) + parseInt(thetime[1]);
-    var minutes = parseInt(thetime[3] + thetime[4]);
-    var sum = (hours * 60) + minutes;
-    var total = String(sum) + ":" + (String(thetime[6]) + String(thetime[7]));
-    return total;
-}
-
-//var albumID = req.query.id
-
-// async function getAlbums() {
-//     try {
-//         var sqlAlbumsQuery = `SELECT ID id, AlbumArtPath coverpath, ReleaseName name, ArtistID aID FROM Release`;
-//         var albums = []; // await db.get(sqlAlbumsQuery);
-
-//         db.each(sqlAlbumsQuery, (err, row) => {
-//             if (err) throw err;
-//             var t = { albumid: `${row.id}`, coverpath: `${row.coverpath}`, name: `${row.name}`, artist:`${row.aID}` };
-//             albums.push(t);
-//         });
-//         console.log(albums);
-
-//         return albums;
-//     }
-//     catch (e) {
-//         console.log(e);
-//         return "error";
-//     }
-// }
-
 async function getAlbums() {
     try {
         var sqlAlbumsQuery = `SELECT ID id,
@@ -283,6 +235,18 @@ async function getAlbums() {
         var albums = await db.all(sqlAlbumsQuery);
         console.log(albums);
         return albums;
+    }
+    catch (e) {
+        console.log(e);
+        return "error";
+    }
+}
+
+async function getArtists() {
+    try {
+        var sqlTrackQuery = `SELECT ID id, ArtistName name FROM Artist`;
+        var artists = await db.all(sqlTrackQuery);
+        return artists;
     }
     catch (e) {
         console.log(e);
@@ -302,7 +266,6 @@ async function getFormats() {
         return "error";
     }
 }
-
 
 app.get('/Album', async function (req, res) {
 
@@ -372,21 +335,22 @@ app.get('/Album', async function (req, res) {
 
 app.get('/Discover', async function (req, res) {
 
-    getAlbums();
-    
-    var albums = [];
-
     var albums;
     try { albums = await getAlbums(); }
     catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BE") }
-    
     res.render('pages/discover', {
-        releases: albums
+        releases: albums,
+        genres: returnGenres()
     });
 });
 
-app.get('/EditRelease', function (req, res) {
-    getFormats();
+app.get('/EditRelease', async function (req, res) {
+    var artists;
+    try { 
+        artists = await getArtists();
+        console.log("HERE ARE THE ARTISTS " + artists);
+    }
+    catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BE") }
     res.render('pages/edit_release');
 });
 
