@@ -340,7 +340,8 @@ app.get('/Discover', async function (req, res) {
     catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BE") }
     res.render('pages/discover', {
         releases: albums,
-        genres: returnGenres()
+        genres: returnGenres(),
+        formats: returnFormats()
     });
 });
 
