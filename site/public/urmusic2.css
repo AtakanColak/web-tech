@@ -15,12 +15,20 @@
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+
+.max-300 {
+    margin-top: 1%;
+    background: lightgray;
+    min-height: 200px;
+    max-height: 200px;
+    overflow-y: scroll;
+}
 /* 
 .file-name {
     display: inline-block;
     overflow: hidden;
     vertical-align: middle;
-    /* new lines */
+    /* new lines 
     width: 100%;
     position: absolute;
     left: 0;
