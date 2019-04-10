@@ -228,13 +228,21 @@ async function getRating(idTest) {
 }
 
 async function getAlbums(where_string) {
+    //console.log("WHERESTRING SUBSTRING " + where_string.substring(0, where_string.length - 5));
     try {
         var sqlAlbumsQuery = `SELECT ID id,
-        AlbumArtPath coverpath,
-        ReleaseName name,
-        ArtistID aID,
-        GenreID gID,
-        RelFormat relFor FROM Release` + where_string;
+                        AlbumArtPath coverpath,
+                        ReleaseName name,
+                        ArtistID aID,
+                        GenreID gID,
+                        RelType relTyp, 
+                        RelDate relDat,
+                        ReleaseLength relLen,
+                        LabelID lID,
+                        RelFormat relFor,
+                        Rating rating,
+                        Bio bioTxt,
+                        NumRatings ratNum FROM Release`
         
         var albums = await db.all(sqlAlbumsQuery);
         //console.log(albums);
@@ -257,6 +265,15 @@ async function findBinary(id, thetype, albums) {
         if (albums[i][(""+thetype)].charAt(id) == 1) albumsToReturn.push(albums[i]);
     }   
     return albumsToReturn;
+}
+
+function makeRegex(id, len) {
+    var regex = "";
+    for (i = 0; i < len; i++) {
+        if (i != id) regex += "[0-1]";
+        else regex += "1";
+    }
+    return regex;
 }
 
 async function getArtists() {
@@ -340,6 +357,11 @@ app.get('/Album', async function (req, res) {
 app.get('/Discover', async function (req, res) {
 
     var where_string = " WHERE ";
+    var collectedAlbums;
+    try { collectedAlbums = await getAlbums(); }
+    catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BROPOCALYPSE NOW " + e) }  
+    var albumsToReturnTest;
+    console.log("WHEREBEFOREITALL " + where_string);
     var sortSTR = req.query.sort;
     var genreID = req.query.genre;
     var formatID = req.query.format;
@@ -355,74 +377,84 @@ app.get('/Discover', async function (req, res) {
         discover_wo_decade += "&format=" + formatID;
         discover_wo_genre  += "&format=" + formatID;
         discover_wo_sort   += "&format=" + formatID;
-        where_string       += ""
+        try { albumsToReturnTest = await findBinary(formatID, "relFor", collectedAlbums); }
+        catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BRAHMS " + e) } 
     }
     if(searchSTR != null)  {
         discover_wo_format += "&search=" + searchSTR;
         discover_wo_decade += "&search=" + searchSTR;
         discover_wo_genre  += "&search=" + searchSTR;
         discover_wo_sort   += "&search=" + searchSTR;
+        where_string       = ""; //set to blank for now, implement later
     }
     if(decadeSTR != null)  {
         discover_wo_format += "&decade=" + decadeSTR;
         discover_wo_search += "&decade=" + decadeSTR;
         discover_wo_genre  += "&decade=" + decadeSTR;
         discover_wo_sort   += "&decade=" + decadeSTR;
+        where_string       += "relDat LIKE '" + decadeSTR.substring(0,3) + "%' AND ";
     }
     if(genreID != null)  {
         discover_wo_format += "&genre=" + genreID;
         discover_wo_search += "&genre=" + genreID;
         discover_wo_decade += "&genre=" + genreID;
         discover_wo_sort   += "&genre=" + genreID;
+        try { albumsToReturnTest = await findBinary(genreID, "gID", collectedAlbums); }
+        catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BERNSTEIN " + e) }
     }
     if(sortSTR != null)  {
         discover_wo_format += "&sort=" + sortSTR;
         discover_wo_search += "&sort=" + sortSTR;
         discover_wo_decade += "&sort=" + sortSTR;
         discover_wo_genre  += "&sort=" + sortSTR;
+        where_string       = ""; //set to blank for now, implement later
     }
 
-    if(genreID == null && formatID == null) {
-        var albums;
-        try { albums = await getAlbums(); }
-        catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD SCHOENBERG") }     
-    }
-    else if (genreID != null && formatID == null) {
-        var albums;
-        var albumsToReturn;
-        try { albums = await getAlbums(); }
-        catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BACH " + e) }  
-        try { albumsToReturn = await findBinary(genreID, "gID", albums); }
-        catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BACH " + e) }  
-    }
-    else if (genreID == null && formatID != null) {
-        var albums;
-        var albumsToReturn;
-        try { albums = await getAlbums(); }
-        catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BRAHMS " + e) }  
-        try { albumsToReturn = await findBinary(formatID, "relFor", albums); }
-        catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BRAHMS " + e) }  
-    }
-    else if (genreID != null && formatID != null) {
-        var albums;
-        var albumsToReturn;
-        try { albums = await getAlbums(); }
-        catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BRAHMS " + e) }  
-        try { albumsToReturn = await findBinary(genreID, "gID", albums); }
-        catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BRAHMS " + e) }  
-        try { albumsToReturn = await findBinary(formatID, "relFor", albumsToReturn); }
-        catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BRAHMS " + e) } 
-    }
+    console.log("WHERESTRINGBEFOREGETALBUMS " + where_string);
+    var albumsToReturn = getAlbums(where_string);
+
+    // if(genreID == null && formatID == null) {
+    //     var albums;
+    //     try { albums = await getAlbums(); }
+    //     catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD SCHOENBERG") }     
+    // }
+    // else if (genreID != null && formatID == null) {
+    //     var albums;
+    //     var albumsToReturn;
+    //     try { albums = await getAlbums(); }
+    //     catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BACH " + e) }  
+    //     try { albumsToReturn = await findBinary(genreID, "gID", albums); }
+    //     catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BACH " + e) }  
+    // }
+    // else if (genreID == null && formatID != null) {
+    //     var albums;
+    //     var albumsToReturn;
+    //     try { albums = await getAlbums(); }
+    //     catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BRAHMS " + e) }  
+    //     try { albumsToReturn = await findBinary(formatID, "relFor", albums); }
+    //     catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BRAHMS " + e) }  
+    // }
+    // else if (genreID != null && formatID != null) {
+    //     var albums;
+    //     var albumsToReturn;
+    //     try { albums = await getAlbums(); }
+    //     catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BRAHMS " + e) }  
+    //     try { albumsToReturn = await findBinary(genreID, "gID", albums); }
+    //     catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BRAHMS " + e) }  
+    //     try { albumsToReturn = await findBinary(formatID, "relFor", albumsToReturn); }
+    //     catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BRAHMS " + e) } 
+    // }
 
     res.render('pages/discover', {
-        releases: albumsToReturn,
+        releases: albumsToReturnTest,
         genres: returnGenres(),
         formats: returnFormats(),
         discover_wo_format: discover_wo_format,
         discover_wo_search: discover_wo_search,
         discover_wo_decade: discover_wo_decade,
         discover_wo_genre : discover_wo_genre,
-        discover_wo_sort  : discover_wo_sort
+        discover_wo_sort  : discover_wo_sort,
+        browsing_str: ""
     });
 });
 
