@@ -227,14 +227,14 @@ async function getRating(idTest) {
     }
 }
 
-async function getAlbums() {
+async function getAlbums(where_string) {
     try {
         var sqlAlbumsQuery = `SELECT ID id,
         AlbumArtPath coverpath,
         ReleaseName name,
         ArtistID aID,
         GenreID gID,
-        RelFormat relFor FROM Release`;
+        RelFormat relFor FROM Release` + where_string;
         
         var albums = await db.all(sqlAlbumsQuery);
         //console.log(albums);
@@ -249,8 +249,6 @@ async function getAlbums() {
 async function findBinary(id, thetype, albums) {
     var albumsToReturn = [];
     console.log("HERE IS THE ID THAT IS PASSED " + id);
-    // try { albums = await getAlbums(); }
-    // catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BASOIJDOIJDSA") }
     for (i = 0; i < albums.length; i++) {
         try {
             console.log(albums[i][(""+thetype)]);
@@ -341,34 +339,49 @@ app.get('/Album', async function (req, res) {
 
 app.get('/Discover', async function (req, res) {
 
+    var where_string = " WHERE ";
+    var sortSTR = req.query.sort;
     var genreID = req.query.genre;
     var formatID = req.query.format;
     var searchSTR = req.query.search;
     var decadeSTR = req.query.decade;
     var discover_wo_format = "/Discover?";
-    var discover_wo_genre  = "/Discover?";
     var discover_wo_search = "/Discover?";
     var discover_wo_decade = "/Discover?";
-    if(genreID != null)  {
-        discover_wo_format += "&genre=" + genreID;
-        discover_wo_decade += "&genre=" + genreID;
-        discover_wo_search += "&genre=" + genreID;
-    }
+    var discover_wo_genre  = "/Discover?";
+    var discover_wo_sort   = "/Discover?";
     if(formatID != null)  {
+        discover_wo_search += "&format=" + formatID;
         discover_wo_decade += "&format=" + formatID;
         discover_wo_genre  += "&format=" + formatID;
-        discover_wo_search += "&format=" + formatID;
+        discover_wo_sort   += "&format=" + formatID;
+        where_string       += ""
     }
     if(searchSTR != null)  {
         discover_wo_format += "&search=" + searchSTR;
         discover_wo_decade += "&search=" + searchSTR;
         discover_wo_genre  += "&search=" + searchSTR;
+        discover_wo_sort   += "&search=" + searchSTR;
     }
     if(decadeSTR != null)  {
         discover_wo_format += "&decade=" + decadeSTR;
-        discover_wo_genre  += "&decade=" + decadeSTR;
         discover_wo_search += "&decade=" + decadeSTR;
+        discover_wo_genre  += "&decade=" + decadeSTR;
+        discover_wo_sort   += "&decade=" + decadeSTR;
     }
+    if(genreID != null)  {
+        discover_wo_format += "&genre=" + genreID;
+        discover_wo_search += "&genre=" + genreID;
+        discover_wo_decade += "&genre=" + genreID;
+        discover_wo_sort   += "&genre=" + genreID;
+    }
+    if(sortSTR != null)  {
+        discover_wo_format += "&sort=" + sortSTR;
+        discover_wo_search += "&sort=" + sortSTR;
+        discover_wo_decade += "&sort=" + sortSTR;
+        discover_wo_genre  += "&sort=" + sortSTR;
+    }
+
     if(genreID == null && formatID == null) {
         var albums;
         try { albums = await getAlbums(); }
@@ -400,25 +413,16 @@ app.get('/Discover', async function (req, res) {
         try { albumsToReturn = await findBinary(formatID, "relFor", albumsToReturn); }
         catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BRAHMS " + e) } 
     }
-    
-    // var genreID = req.query.genre;
-    // if(genreID == NULL) // NO GENRE QUERY
-    // var formatID = req.query.format;
-    try {
-    var search_string = req.query.search;
-    console.log("SEARCH STRING " + search_string);
-    }
-    catch{
-        console.log("NO SEARCH STRING");
-    }
-    // var albums;
-    // try { albums = await getAlbums(); }
-    // catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BE") }
+
     res.render('pages/discover', {
         releases: albumsToReturn,
         genres: returnGenres(),
         formats: returnFormats(),
-        discover_wo_format: discover_wo_format
+        discover_wo_format: discover_wo_format,
+        discover_wo_search: discover_wo_search,
+        discover_wo_decade: discover_wo_decade,
+        discover_wo_genre : discover_wo_genre,
+        discover_wo_sort  : discover_wo_sort
     });
 });
 
