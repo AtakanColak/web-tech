@@ -38,7 +38,7 @@
                     <h5 class="nav-link pb-0 mb-1">Format</h5>
                 </div>
                 <% var i; for (i = 0; i < 3; ++i) { %>
-                <a href="/Discover?format=<%= i %>" class="row ml-4 mt-0 bt-0 text-left" ><%= formats[i] %></a>
+                <a href="<%= discover_wo_format %>?format=<%= i %>" class="row ml-4 mt-0 bt-0 text-left" ><%= formats[i] %></a>
                 <% }; %>
                 <!-- <a href="#" class="row ml-4 mt-0 bt-0 text-left">Vinyl</a>
                 <a href="#" class="row ml-4 mt-0 bt-0 text-left">Album</a>
@@ -50,7 +50,7 @@
                     </a>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
                         <% var i; for (i = 3; i < formats.length; ++i) { %>
-                        <a href="/Discover?format=<%= i %>" class="row ml-4 mt-0 bt-0 text-left"><%= formats[i] %></a>
+                        <a href="<%= discover_wo_format %>?format=<%= i %>" class="row ml-4 mt-0 bt-0 text-left"><%= formats[i] %></a>
                         <% }; %>
                         <!-- <a href="#" class="row ml-4 mt-0 bt-0 text-left">Mixtape</a>
                         <a href="#" class="row ml-4 mt-0 bt-0 text-left">DVD</a>
