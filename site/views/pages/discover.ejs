@@ -20,13 +20,14 @@
                 <div class="row ml-1">
                     <h5 class="nav-link pb-0 mb-1">Genre</h5>
                 </div>
+                <a href="<%= discover_wo_genre %>" class="row ml-4 mt-0 bt-0 text-left">All</a>
                 <% var i; for (i = 0; i < 3; ++i) { %>
                 <a href="<%= discover_wo_genre %>&genre=<%= i %>" class="row ml-4 mt-0 bt-0 text-left"><%= genres[i] %></a>
                 <% }; %>
                 <div class="dropdown ml-4 mt-0 bt-0">
                     <a class="dropdown-toggle" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true"
                         aria-expanded="false" style="color:#007bff ;">
-                        All
+                        More
                     </a>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
                         <% var i; for (i = 3; i < genres.length; ++i) { %>
@@ -80,7 +81,7 @@
                     <div class="dropdown ml-4 border pl-1 pr-1">
                         <a class="dropdown-toggle" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true"
                             aria-expanded="false" style="color:#007bff ;">
-                            Hottest
+                            <%= selected_sort%>
                         </a>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
                             <a href="<%= discover_wo_sort %>&sort=1" class="row ml-4 mt-0 bt-0 text-left">Hottest</a>
@@ -93,7 +94,7 @@
                 </div>
                 <div class="row">
                     <% if(releases.length == 0) { %>
-                    <h6>Unfortunately there aren't any results...</h6>
+                    <h6 class="p-4">Unfortunately there aren't any results...</h6>
                     <% }; %>
                     <% releases.forEach(function(release) { %>
                     <div class="col-md-2 card border-0 dis-border">

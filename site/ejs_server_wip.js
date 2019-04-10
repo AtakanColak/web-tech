@@ -360,7 +360,7 @@ app.get('/Discover', async function (req, res) {
     var collectedAlbums;
     try { collectedAlbums = await getAlbums(); }
     catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BROPOCALYPSE NOW " + e) }  
-    var albumsToReturnTest;
+    var albumsToReturnTest = collectedAlbums;
     console.log("WHEREBEFOREITALL " + where_string);
     var sortSTR = req.query.sort;
     var genreID = req.query.genre;
