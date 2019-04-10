@@ -236,7 +236,7 @@ async function getAlbums() {
         GenreID gID FROM Release`;
         
         var albums = await db.all(sqlAlbumsQuery);
-        console.log(albums);
+        //console.log(albums);
         return albums;
     }
     catch (e) {
