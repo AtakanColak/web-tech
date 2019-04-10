@@ -233,7 +233,8 @@ async function getAlbums() {
         AlbumArtPath coverpath,
         ReleaseName name,
         ArtistID aID,
-        GenreID gID FROM Release`;
+        GenreID gID,
+        RelFormat relFor FROM Release`;
         
         var albums = await db.all(sqlAlbumsQuery);
         //console.log(albums);
@@ -245,13 +246,16 @@ async function getAlbums() {
     }
 }
 
-async function findBinary(id, thetype) {
-    var albums;
+async function findBinary(id, thetype, albums) {
     var albumsToReturn = [];
-    console.log(id);
-    try { albums = await getAlbums(); }
-    catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BASOIJDOIJDSA") }
+    console.log("HERE IS THE ID THAT IS PASSED " + id);
+    // try { albums = await getAlbums(); }
+    // catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BASOIJDOIJDSA") }
     for (i = 0; i < albums.length; i++) {
+        try {
+            console.log(albums[i][(""+thetype)]);
+        }
+        catch (e) {console.log("now you really fucked up "); throw e}
         if (albums[i][(""+thetype)].charAt(id) == 1) albumsToReturn.push(albums[i]);
     }   
     return albumsToReturn;
@@ -368,17 +372,33 @@ app.get('/Discover', async function (req, res) {
     if(genreID == null && formatID == null) {
         var albums;
         try { albums = await getAlbums(); }
-        catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BELLEND") }     
+        catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD SCHOENBERG") }     
     }
     else if (genreID != null && formatID == null) {
         var albums;
-        try { albums = await findBinary(genreID, "gID"); }
+        var albumsToReturn;
+        try { albums = await getAlbums(); }
+        catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BACH " + e) }  
+        try { albumsToReturn = await findBinary(genreID, "gID", albums); }
         catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BACH " + e) }  
     }
     else if (genreID == null && formatID != null) {
         var albums;
-        try { albums = await findBinary(formatID, "relFor"); }
-        catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BEETHOVEN " + e) }  
+        var albumsToReturn;
+        try { albums = await getAlbums(); }
+        catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BRAHMS " + e) }  
+        try { albumsToReturn = await findBinary(formatID, "relFor", albums); }
+        catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BRAHMS " + e) }  
+    }
+    else if (genreID != null && formatID != null) {
+        var albums;
+        var albumsToReturn;
+        try { albums = await getAlbums(); }
+        catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BRAHMS " + e) }  
+        try { albumsToReturn = await findBinary(genreID, "gID", albums); }
+        catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BRAHMS " + e) }  
+        try { albumsToReturn = await findBinary(formatID, "relFor", albumsToReturn); }
+        catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BRAHMS " + e) } 
     }
     
     // var genreID = req.query.genre;
@@ -386,7 +406,7 @@ app.get('/Discover', async function (req, res) {
     // var formatID = req.query.format;
     try {
     var search_string = req.query.search;
-    console.log(search_string);
+    console.log("SEARCH STRING " + search_string);
     }
     catch{
         console.log("NO SEARCH STRING");
@@ -395,7 +415,7 @@ app.get('/Discover', async function (req, res) {
     // try { albums = await getAlbums(); }
     // catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BE") }
     res.render('pages/discover', {
-        releases: albums,
+        releases: albumsToReturn,
         genres: returnGenres(),
         formats: returnFormats(),
         discover_wo_format: discover_wo_format
