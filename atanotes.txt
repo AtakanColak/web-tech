@@ -1,0 +1,5 @@
+2019.04.10
+
+Added discover_wo genre and search 
+Added discover_wo_decade in decade=2010 format, but there is decade=older option for earlier than 1950
+Added a "no results" statement for album listing
