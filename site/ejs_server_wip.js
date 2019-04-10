@@ -341,29 +341,29 @@ app.get('/Discover', async function (req, res) {
     var formatID = req.query.format;
     var searchSTR = req.query.search;
     var decadeSTR = req.query.decade;
-    var discover_wo_format = "/Discover";
-    var discover_wo_genre  = "/Discover";
-    var discover_wo_search = "/Discover";
-    var discover_wo_decade = "/Discover";
+    var discover_wo_format = "/Discover?";
+    var discover_wo_genre  = "/Discover?";
+    var discover_wo_search = "/Discover?";
+    var discover_wo_decade = "/Discover?";
     if(genreID != null)  {
-        discover_wo_format += "?genre=" + genreID;
-        discover_wo_decade += "?genre=" + genreID;
-        discover_wo_search += "?genre=" + genreID;
+        discover_wo_format += "&genre=" + genreID;
+        discover_wo_decade += "&genre=" + genreID;
+        discover_wo_search += "&genre=" + genreID;
     }
     if(formatID != null)  {
-        discover_wo_decade += "?format=" + formatID;
-        discover_wo_genre  += "?format=" + formatID;
-        discover_wo_search += "?format=" + formatID;
+        discover_wo_decade += "&format=" + formatID;
+        discover_wo_genre  += "&format=" + formatID;
+        discover_wo_search += "&format=" + formatID;
     }
     if(searchSTR != null)  {
-        discover_wo_format += "?search=" + searchSTR;
-        discover_wo_decade += "?search=" + searchSTR;
-        discover_wo_genre  += "?search=" + searchSTR;
+        discover_wo_format += "&search=" + searchSTR;
+        discover_wo_decade += "&search=" + searchSTR;
+        discover_wo_genre  += "&search=" + searchSTR;
     }
     if(decadeSTR != null)  {
-        discover_wo_format += "?decade=" + decadeSTR;
-        discover_wo_genre  += "?decade=" + decadeSTR;
-        discover_wo_search += "?decade=" + decadeSTR;
+        discover_wo_format += "&decade=" + decadeSTR;
+        discover_wo_genre  += "&decade=" + decadeSTR;
+        discover_wo_search += "&decade=" + decadeSTR;
     }
     if(genreID == null && formatID == null) {
         var albums;
