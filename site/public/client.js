@@ -16,7 +16,7 @@ $(function () {
 
 
 
-    $( window ).resize(function() {
+    $(window).resize(function () {
         var wh = $(window).height();
         var mh = $("main").height();
         var bm = $("main").offset().top + mh;
@@ -30,14 +30,28 @@ $(function () {
             // $("footer").css({position: 'relative'});
             $(".subfooter").css({ top: subfootertop, position: 'absolute' });
         }
+
+    });
+
+    $(window).resize();
+
+    $(window).mousedown(function () {
+        $(window).resize();
+    });
+    alert("Blocker cookie is " + Cookies.get("b"));
+    if (Cookies.get("b") != "true") {
+        var targeted_popup_class = $('[data-popup-open]').attr('data-popup-open');
+        $('[data-popup="' + targeted_popup_class + '"]').fadeIn(350);
+    }
+    //----- CLOSE
+    $('[data-popup-close]').on('click', function (e) {
+        var targeted_popup_class = jQuery(this).attr('data-popup-close');
+        $('[data-popup="' + targeted_popup_class + '"]').fadeOut(350);
+        Cookies.set("b", "true")
+        e.preventDefault();
+    });
+
     
-      });
-
-      $( window ).resize();
-
-      $( window ).mousedown(function() {
-        $( window ).resize();
-      });
 
     $(".dropdown-menu a").click(function () {
         $(this).parents(".form-group").find(".dropdown-toggle").text($(this).text());
