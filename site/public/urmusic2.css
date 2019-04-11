@@ -5,6 +5,8 @@
 
 }
 
+html, body { min-height: 100%; height: 100%;}
+
 .dropdown * {
     text-decoration: blue;
 }
@@ -37,6 +39,12 @@
 
 .dis-border {
    clear: both;
+}
+
+.subfooter {
+    width: 100%;
+    margin-left: 0;
+    padding-left: 0;
 }
 /* 
 .file-name {
