@@ -38,7 +38,7 @@ $(function () {
     $(window).mousedown(function () {
         $(window).resize();
     });
-    alert("Blocker cookie is " + Cookies.get("b"));
+    // alert("Blocker cookie is " + Cookies.get("b"));
     if (Cookies.get("b") != "true") {
         var targeted_popup_class = $('[data-popup-open]').attr('data-popup-open');
         $('[data-popup="' + targeted_popup_class + '"]').fadeIn(350);
