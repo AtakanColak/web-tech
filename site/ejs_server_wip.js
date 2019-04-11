@@ -275,15 +275,6 @@ async function findDate(date, albums) {
     return albumsToReturn;
 }
 
-function makeRegex(id, len) {
-    var regex = "";
-    for (i = 0; i < len; i++) {
-        if (i != id) regex += "[0-1]";
-        else regex += "1";
-    }
-    return regex;
-}
-
 function sortID2String(id) {
     var sort_strings = ["Hottest", "Most Popular", "Title, A-Z", "Title, Z-A"];
     if(id == null)  
@@ -322,6 +313,50 @@ async function getArtists() {
     catch (e) {
         console.log(e);
         return "error";
+    }
+}
+
+function compareAsc(a, b) {
+    // Use toUpperCase() to ignore character casing
+    const genreA = a["name"].toString().toUpperCase();
+    const genreB = b["name"].toString().toUpperCase();
+  
+    let comparison = 0;
+    if (genreA > genreB) {
+      comparison = 1;
+    } else if (genreA < genreB) {
+      comparison = -1;
+    }
+    return comparison;
+}
+
+//HEY YOU NEED TO IMPLEMENT SORTING BY MOST POPULAR AND HOTTEST
+
+function compareDes(a, b) {
+    // Use toUpperCase() to ignore character casing
+    const genreA = a["name"].toString().toUpperCase();
+    const genreB = b["name"].toString().toUpperCase();
+  
+    let comparison = 0;
+    if (genreA > genreB) {
+      comparison = 1;
+    } else if (genreA < genreB) {
+      comparison = -1;
+    }
+    return comparison * -1;
+}
+
+function sortAlbums(sortType, albums) {
+    switch(sortType) {
+        case 0:
+            break;
+        case 1:
+            break;
+        case 2:
+            console.log("got here");
+            return albums.sort(compareAsc);
+        case 3:
+            return albums.sort(compareDes);  
     }
 }
 
@@ -450,39 +485,10 @@ app.get('/Discover', async function (req, res) {
         discover_wo_decade += "&sort=" + sortSTR;
         discover_wo_genre  += "&sort=" + sortSTR;
         //where_string       = ""; //set to blank for now, implement later
+        console.log(sortSTR-1);
+        console.log(sortAlbums(sortSTR-1, albumsToReturnTest));
     }
 
-    // if(genreID == null && formatID == null) {
-    //     var albums;
-    //     try { albums = await getAlbums(); }
-    //     catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD SCHOENBERG") }     
-    // }
-    // else if (genreID != null && formatID == null) {
-    //     var albums;
-    //     var albumsToReturn;
-    //     try { albums = await getAlbums(); }
-    //     catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BACH " + e) }  
-    //     try { albumsToReturn = await findBinary(genreID, "gID", albums); }
-    //     catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BACH " + e) }  
-    // }
-    // else if (genreID == null && formatID != null) {
-    //     var albums;
-    //     var albumsToReturn;
-    //     try { albums = await getAlbums(); }
-    //     catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BRAHMS " + e) }  
-    //     try { albumsToReturn = await findBinary(formatID, "relFor", albums); }
-    //     catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BRAHMS " + e) }  
-    // }
-    // else if (genreID != null && formatID != null) {
-    //     var albums;
-    //     var albumsToReturn;
-    //     try { albums = await getAlbums(); }
-    //     catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BRAHMS " + e) }  
-    //     try { albumsToReturn = await findBinary(genreID, "gID", albums); }
-    //     catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BRAHMS " + e) }  
-    //     try { albumsToReturn = await findBinary(formatID, "relFor", albumsToReturn); }
-    //     catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BRAHMS " + e) } 
-    // }
 
     res.render('pages/discover', {
         releases: albumsToReturnTest,
