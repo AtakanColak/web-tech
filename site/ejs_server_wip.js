@@ -227,27 +227,25 @@ async function getRating(idTest) {
     }
 }
 
-async function getAlbums(where_string) {
-    //console.log("WHERESTRING SUBSTRING " + where_string.substring(0, where_string.length - 5));
+async function getAlbums() {
     try {
         var sqlAlbumsQuery = `SELECT ID id,
-                        AlbumArtPath coverpath,
-                        ReleaseName name,
-                        ArtistID aID,
-                        GenreID gID,
-                        RelType relTyp, 
-                        RelDate relDat,
-                        ReleaseLength relLen,
-                        LabelID lID,
-                        RelFormat relFor,
-                        Rating rating,
-                        Bio bioTxt,
-                        NumRatings ratNum FROM Release`
-        
+                            AlbumArtPath coverpath,
+                            ReleaseName name,
+                            ArtistID aID,
+                            GenreID gID,
+                            RelType relTyp, 
+                            RelDate relDat,
+                            ReleaseLength relLen,
+                            LabelID lID,
+                            RelFormat relFor,
+                            Rating rating,
+                            Bio bioTxt,
+                            NumRatings ratNum FROM Release`            
         var albums = await db.all(sqlAlbumsQuery);
         //console.log(albums);
         return albums;
-    }
+        }        
     catch (e) {
         console.log(e);
         return "error";
@@ -258,12 +256,22 @@ async function findBinary(id, thetype, albums) {
     var albumsToReturn = [];
     console.log("HERE IS THE ID THAT IS PASSED " + id);
     for (i = 0; i < albums.length; i++) {
-        try {
-            console.log(albums[i][(""+thetype)]);
-        }
-        catch (e) {console.log("now you really fucked up "); throw e}
         if (albums[i][(""+thetype)].charAt(id) == 1) albumsToReturn.push(albums[i]);
     }   
+    return albumsToReturn;
+}
+
+async function findDate(date, albums) {
+    var albumsToReturn = [];
+    for (i = 0; i < albums.length; i++) {
+        try {
+            console.log(albums[i]["relDat"].toString().substring(0,3));
+            console.log(date.substring(0,3));
+        }
+        catch (e) {console.log("now you really fucked up "); throw e}
+        if (albums[i]["relDat"].toString().substring(0,3) == date.substring(0,3)) albumsToReturn.push(albums[i]);
+    }   
+    console.log("HERE ARE THE ALBUSM TO RETURN IN THE FIND DATE FUNCTION " + albumsToReturn);
     return albumsToReturn;
 }
 
@@ -356,12 +364,12 @@ app.get('/Album', async function (req, res) {
 
 app.get('/Discover', async function (req, res) {
 
-    var where_string = " WHERE ";
+    //var where_string;
     var collectedAlbums;
     try { collectedAlbums = await getAlbums(); }
     catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BROPOCALYPSE NOW " + e) }  
-    var albumsToReturnTest;
-    console.log("WHEREBEFOREITALL " + where_string);
+    var albumsToReturnTest = collectedAlbums;
+    //console.log("WHEREBEFOREITALL " + where_string);
     var sortSTR = req.query.sort;
     var genreID = req.query.genre;
     var formatID = req.query.format;
@@ -372,46 +380,48 @@ app.get('/Discover', async function (req, res) {
     var discover_wo_decade = "/Discover?";
     var discover_wo_genre  = "/Discover?";
     var discover_wo_sort   = "/Discover?";
-    if(formatID != null)  {
-        discover_wo_search += "&format=" + formatID;
-        discover_wo_decade += "&format=" + formatID;
-        discover_wo_genre  += "&format=" + formatID;
-        discover_wo_sort   += "&format=" + formatID;
-        try { albumsToReturnTest = await findBinary(formatID, "relFor", collectedAlbums); }
-        catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BRAHMS " + e) } 
-    }
-    if(searchSTR != null)  {
-        discover_wo_format += "&search=" + searchSTR;
-        discover_wo_decade += "&search=" + searchSTR;
-        discover_wo_genre  += "&search=" + searchSTR;
-        discover_wo_sort   += "&search=" + searchSTR;
-        where_string       = ""; //set to blank for now, implement later
-    }
     if(decadeSTR != null)  {
         discover_wo_format += "&decade=" + decadeSTR;
         discover_wo_search += "&decade=" + decadeSTR;
         discover_wo_genre  += "&decade=" + decadeSTR;
         discover_wo_sort   += "&decade=" + decadeSTR;
-        where_string       += "relDat LIKE '" + decadeSTR.substring(0,3) + "%' AND ";
+        //where_string        = "relDat LIKE '" + decadeSTR.substring(0,3) + "%'";
+        try { albumsToReturnTest = await findDate(decadeSTR, albumsToReturnTest); }
+        catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BERNSTEIN " + e) }
+        console.log("111111111111111111111!"+ albumsToReturnTest);
     }
     if(genreID != null)  {
         discover_wo_format += "&genre=" + genreID;
         discover_wo_search += "&genre=" + genreID;
         discover_wo_decade += "&genre=" + genreID;
         discover_wo_sort   += "&genre=" + genreID;
-        try { albumsToReturnTest = await findBinary(genreID, "gID", collectedAlbums); }
+        try { albumsToReturnTest = await findBinary(genreID, "gID", albumsToReturnTest); }
         catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BERNSTEIN " + e) }
+        console.log("11122222222222111111111!"+ albumsToReturnTest);
+    }
+    if(formatID != null)  {
+        discover_wo_search += "&format=" + formatID;
+        discover_wo_decade += "&format=" + formatID;
+        discover_wo_genre  += "&format=" + formatID;
+        discover_wo_sort   += "&format=" + formatID;
+        try { albumsToReturnTest = await findBinary(formatID, "relFor", albumsToReturnTest); }
+        catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BRAHMS " + e) } 
+        console.log("11111111111111111133333333333111!"+ albumsToReturnTest);
+    }
+    if(searchSTR != null)  {
+        discover_wo_format += "&search=" + searchSTR;
+        discover_wo_decade += "&search=" + searchSTR;
+        discover_wo_genre  += "&search=" + searchSTR;
+        discover_wo_sort   += "&search=" + searchSTR;
+        //where_string       = ""; //set to blank for now, implement later
     }
     if(sortSTR != null)  {
         discover_wo_format += "&sort=" + sortSTR;
         discover_wo_search += "&sort=" + sortSTR;
         discover_wo_decade += "&sort=" + sortSTR;
         discover_wo_genre  += "&sort=" + sortSTR;
-        where_string       = ""; //set to blank for now, implement later
+        //where_string       = ""; //set to blank for now, implement later
     }
-
-    console.log("WHERESTRINGBEFOREGETALBUMS " + where_string);
-    var albumsToReturn = getAlbums(where_string);
 
     // if(genreID == null && formatID == null) {
     //     var albums;
