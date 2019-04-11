@@ -398,11 +398,7 @@ app.get('/Discover', async function (req, res) {
     try { collectedAlbums = await getAlbums(); }
     catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BROPOCALYPSE NOW " + e) }  
     var albumsToReturnTest = collectedAlbums;
-<<<<<<< HEAD
     //console.log("WHEREBEFOREITALL " + where_string);
-=======
-    console.log("WHEREBEFOREITALL " + where_string);
->>>>>>> 39ab88898ca809255446c1bad944abacfc70a2b0
     var sortSTR = req.query.sort;
     var genreID = req.query.genre;
     var formatID = req.query.format;
