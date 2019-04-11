@@ -284,6 +284,35 @@ function makeRegex(id, len) {
     return regex;
 }
 
+function sortID2String(id) {
+    var sort_strings = ["Hottest", "Most Popular", "Title, A-Z", "Title, Z-A"];
+    if(id == null)  
+        return sort_strings[0];
+    else 
+        return sort_strings[id - 1];
+}
+
+function genreID2String(id) {
+    var genre_strings = ["Dance", "Electronic","Experimental", "Folk", "Hip Hop", "Jazz", "Pop", "Punk", "Rock","Metal"];
+    if (id == null) return "";
+    else return genre_strings[id];
+}
+
+function formatID2String(id) {
+    var format_strings = ["Vinyl", "CD", "Cassette", "Digital"];
+    if (id == null) return "";
+    else return format_strings[id];
+}
+
+function browsing_string(genreID, formatID, decade) {
+    var str = genreID2String(genreID);
+    if(genreID != null && (formatID != null || decade !=null) ) str += ", ";
+    str += formatID2String(formatID);
+    if(formatID != null && decade !=null ) str += ", ";
+    if(decade !=null ) str += decade;
+    return str;
+}
+
 async function getArtists() {
     try {
         var sqlTrackQuery = `SELECT ID id, ArtistName name FROM Artist`;
@@ -369,7 +398,11 @@ app.get('/Discover', async function (req, res) {
     try { collectedAlbums = await getAlbums(); }
     catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BROPOCALYPSE NOW " + e) }  
     var albumsToReturnTest = collectedAlbums;
+<<<<<<< HEAD
     //console.log("WHEREBEFOREITALL " + where_string);
+=======
+    console.log("WHEREBEFOREITALL " + where_string);
+>>>>>>> 39ab88898ca809255446c1bad944abacfc70a2b0
     var sortSTR = req.query.sort;
     var genreID = req.query.genre;
     var formatID = req.query.format;
@@ -464,7 +497,8 @@ app.get('/Discover', async function (req, res) {
         discover_wo_decade: discover_wo_decade,
         discover_wo_genre : discover_wo_genre,
         discover_wo_sort  : discover_wo_sort,
-        browsing_str: ""
+        browsing_str: browsing_string(genreID, formatID, decadeSTR),
+        selected_sort : sortID2String(sortSTR)
     });
 });
 

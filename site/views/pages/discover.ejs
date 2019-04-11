@@ -20,25 +20,30 @@
                 <div class="row ml-1">
                     <h5 class="nav-link pb-0 mb-1">Genre</h5>
                 </div>
+                <a href="<%= discover_wo_genre %>" class="row ml-4 mt-0 bt-0 text-left">All</a>
                 <% var i; for (i = 0; i < 3; ++i) { %>
-                <a href="<%= discover_wo_genre %>&genre=<%= i %>" class="row ml-4 mt-0 bt-0 text-left"><%= genres[i] %></a>
+                <a href="<%= discover_wo_genre %>&genre=<%= i %>"
+                    class="row ml-4 mt-0 bt-0 text-left"><%= genres[i] %></a>
                 <% }; %>
                 <div class="dropdown ml-4 mt-0 bt-0">
                     <a class="dropdown-toggle" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true"
                         aria-expanded="false" style="color:#007bff ;">
-                        All
+                        More
                     </a>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
                         <% var i; for (i = 3; i < genres.length; ++i) { %>
-                        <a href="<%= discover_wo_genre %>&genre=<%= i %>" class="row ml-4 mt-0 bt-0 text-left"><%= genres[i] %></a>
+                        <a href="<%= discover_wo_genre %>&genre=<%= i %>"
+                            class="row ml-4 mt-0 bt-0 text-left"><%= genres[i] %></a>
                         <% }; %>
                     </div>
                 </div>
                 <div class="row ml-1">
                     <h5 class="nav-link pb-0 mb-1">Format</h5>
                 </div>
+                <a href="<%= discover_wo_format %>" class="row ml-4 mt-0 bt-0 text-left">All</a>
                 <% var i; for (i = 0; i < 3; ++i) { %>
-                <a href="<%= discover_wo_format %>&format=<%= i %>" class="row ml-4 mt-0 bt-0 text-left" ><%= formats[i] %></a>
+                <a href="<%= discover_wo_format %>&format=<%= i %>"
+                    class="row ml-4 mt-0 bt-0 text-left"><%= formats[i] %></a>
                 <% }; %>
                 <!-- <a href="#" class="row ml-4 mt-0 bt-0 text-left">Vinyl</a>
                 <a href="#" class="row ml-4 mt-0 bt-0 text-left">Album</a>
@@ -46,24 +51,26 @@
                 <div class="dropdown ml-4 mt-0 bt-0">
                     <a class="dropdown-toggle" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true"
                         aria-expanded="false" style="color:#007bff ;">
-                        All
+                        More
                     </a>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
                         <% var i; for (i = 3; i < formats.length; ++i) { %>
-                        <a href="<%= discover_wo_format %>&format=<%= i %>" class="row ml-4 mt-0 bt-0 text-left"><%= formats[i] %></a>
+                        <a href="<%= discover_wo_format %>&format=<%= i %>"
+                            class="row ml-4 mt-0 bt-0 text-left"><%= formats[i] %></a>
                         <% }; %>
                     </div>
                 </div>
                 <div class="row ml-1">
                     <h5 class="nav-link pb-0 mb-1">Decade</h5>
                 </div>
+                <a href="<%= discover_wo_decade %>" class="row ml-4 mt-0 bt-0 text-left">All</a>
                 <a href="<%= discover_wo_decade %>&decade=2010" class="row ml-4 mt-0 bt-0 text-left">2010</a>
                 <a href="<%= discover_wo_decade %>&decade=2000" class="row ml-4 mt-0 bt-0 text-left">2000</a>
                 <a href="<%= discover_wo_decade %>&decade=1990" class="row ml-4 mt-0 bt-0 text-left">1990</a>
                 <div class="dropdown ml-4 mt-0 bt-0">
                     <a class="dropdown-toggle" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true"
                         aria-expanded="false" style="color:#007bff ;">
-                        All
+                        More
                     </a>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
                         <a href="<%= discover_wo_decade %>&decade=1980" class="row ml-4 mt-0 bt-0 text-left">1980</a>
@@ -80,20 +87,26 @@
                     <div class="dropdown ml-4 border pl-1 pr-1">
                         <a class="dropdown-toggle" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true"
                             aria-expanded="false" style="color:#007bff ;">
-                            Hottest
+                            <%= selected_sort%>
                         </a>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
                             <a href="<%= discover_wo_sort %>&sort=1" class="row ml-4 mt-0 bt-0 text-left">Hottest</a>
-                            <a href="<%= discover_wo_sort %>&sort=2" class="row ml-4 mt-0 bt-0 text-left">Most Popular</a>
-                            <a href="<%= discover_wo_sort %>&sort=3" class="row ml-4 mt-0 bt-0 text-left">Title, A-Z </a>
+                            <a href="<%= discover_wo_sort %>&sort=2" class="row ml-4 mt-0 bt-0 text-left">Most
+                                Popular</a>
+                            <a href="<%= discover_wo_sort %>&sort=3" class="row ml-4 mt-0 bt-0 text-left">Title, A-Z
+                            </a>
                             <a href="<%= discover_wo_sort %>&sort=4" class="row ml-4 mt-0 bt-0 text-left">Title, Z-A</a>
                         </div>
                     </div>
-                    <h6 class="pt-2 ml-5">Browsing:<%= browsing_str %></h6>
+                    <% if(browsing_str != "") { %>
+                    <h6 class="pt-2 ml-5">
+                        Browsing: <%= browsing_str %> </h6><a href="/Discover"
+                        class="row ml-4 mt-0 bt-0 text-left">Refresh</a>
+                    <% }; %>
                 </div>
                 <div class="row">
                     <% if(releases.length == 0) { %>
-                    <h6>Unfortunately there aren't any results...</h6>
+                    <h6 class="p-4">Unfortunately there aren't any results...</h6>
                     <% }; %>
                     <% releases.forEach(function(release) { %>
                     <div class="col-md-2 card border-0 dis-border">
@@ -120,7 +133,7 @@
         </div>
     </main>
 
-    <footer>
+    <footer >
         <% include ../partials/footer %>
     </footer>
 </body>
