@@ -332,7 +332,7 @@ function compareHot(a, b) {
     } else if (dateA < dateB) {
       comparison = -1;
     }
-    return comparison;
+    return comparison *  -1;
 }
 
 function comparePop(a, b) {
@@ -559,4 +559,5 @@ app.get('/Login', function (req, res) {
 http.createServer(app).listen(8079);
 https.createServer(options, app).listen(8080);
 // app.listen(8080);
-// console.log('8080 is the magic port');
+console.log('HTTP  PORT 8079');
+console.log('HTTPS PORT 8080');
