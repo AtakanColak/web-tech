@@ -5,3 +5,10 @@ Added discover_wo_decade in decade=2010 format, but there is decade=older option
 Added a "no results" statement for album listing
 Added and forgot to tell discover_wo_sort
 Added server.cert and server.key for HTTPS, THEY CAN'T BE IN PUBLIC
+
+
+2019.04.11
+
+HTTPS YIAY
+USER AUTHENTICATION
+MOST POPULAR SORT YIAY

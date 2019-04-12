@@ -2,10 +2,15 @@
 // load the things we need
 var express = require('express');
 var sqlite = require("sqlite");
+var https = require("https");
+var http = require("http");
 const fs = require('fs');
 var app;
 var db;
-var rel_types = ["Album", "EP", "Single", "Compilation"];
+var options = {
+    key: fs.readFileSync("public/server.key"),
+    cert: fs.readFileSync("public/server.cert")
+};
 start();
 
 async function start() {
@@ -360,6 +365,8 @@ function sortAlbums(sortType, albums) {
     }
 }
 
+var rel_types = ["Album", "EP", "Single", "Compilation"];
+
 app.get('/Album', async function (req, res) {
     
     var albumID = req.query.id;
@@ -522,6 +529,7 @@ app.get('/Login', function (req, res) {
     res.render('pages/login');
 });
 
-
-app.listen(8080);
-console.log('8080 is the magic port');
+http.createServer(app).listen(8079);
+https.createServer(options, app).listen(8080);
+// app.listen(8080);
+// console.log('8080 is the magic port');
