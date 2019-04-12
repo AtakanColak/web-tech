@@ -316,6 +316,34 @@ async function getArtists() {
     }
 }
 
+function compareHot(a, b) {
+    // Use toUpperCase() to ignore character casing
+    const dateA = a["relDat"];
+    const dateB = b["relDat"];
+  
+    let comparison = 0;
+    if (dateA > dateB) {
+      comparison = 1;
+    } else if (dateA < dateB) {
+      comparison = -1;
+    }
+    return comparison;
+}
+
+function comparePop(a, b) {
+    // Use toUpperCase() to ignore character casing
+    const ratingA = a["rating"];
+    const ratingB = b["rating"];
+  
+    let comparison = 0;
+    if (ratingA > ratingB) {
+      comparison = 1;
+    } else if (ratingA < ratingB) {
+      comparison = -1;
+    }
+    return comparison * -1;
+}
+
 function compareAsc(a, b) {
     // Use toUpperCase() to ignore character casing
     const genreA = a["name"].toString().toUpperCase();
@@ -329,8 +357,6 @@ function compareAsc(a, b) {
     }
     return comparison;
 }
-
-//HEY YOU NEED TO IMPLEMENT SORTING BY MOST POPULAR AND HOTTEST
 
 function compareDes(a, b) {
     // Use toUpperCase() to ignore character casing
@@ -346,14 +372,15 @@ function compareDes(a, b) {
     return comparison * -1;
 }
 
+
+
 function sortAlbums(sortType, albums) {
     switch(sortType) {
         case 0:
-            break;
+            return albums.sort(compareHot);
         case 1:
-            break;
+            return albums.sort(comparePop);
         case 2:
-            console.log("got here");
             return albums.sort(compareAsc);
         case 3:
             return albums.sort(compareDes);  
