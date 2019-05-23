@@ -275,6 +275,20 @@ async function findDate(date, albums) {
     return albumsToReturn;
 }
 
+async function findSearch(searchSTR, albums) {
+    var albumsToReturn = [];
+    for (i = 0; i < albums.length; i++) {
+        // try {
+        //     console.log(albums[i]["relDat"].toString().substring(0,3));
+        //     console.log(date.substring(0,3));
+        // }
+        // catch (e) {console.log("now you really fucked up "); throw e}
+        if (albums[i]["name"].toString().toLowerCase().includes(searchSTR)) albumsToReturn.push(albums[i]);
+    }   
+    console.log("HERE ARE THE ALBUSM TO RETURN IN THE SEARCH SARCH SEARHC FUNCTION " + albumsToReturn);
+    return albumsToReturn;
+}
+
 function sortID2String(id) {
     var sort_strings = ["Hottest", "Most Popular", "Title, A-Z", "Title, Z-A"];
     if(id == null)  
@@ -327,7 +341,7 @@ function compareHot(a, b) {
     } else if (dateA < dateB) {
       comparison = -1;
     }
-    return comparison;
+    return comparison * -1;
 }
 
 function comparePop(a, b) {
@@ -371,8 +385,6 @@ function compareDes(a, b) {
     }
     return comparison * -1;
 }
-
-
 
 function sortAlbums(sortType, albums) {
     switch(sortType) {
@@ -476,7 +488,6 @@ app.get('/Discover', async function (req, res) {
         discover_wo_search += "&decade=" + decadeSTR;
         discover_wo_genre  += "&decade=" + decadeSTR;
         discover_wo_sort   += "&decade=" + decadeSTR;
-        //where_string        = "relDat LIKE '" + decadeSTR.substring(0,3) + "%'";
         try { albumsToReturnTest = await findDate(decadeSTR, albumsToReturnTest); }
         catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BERNSTEIN " + e) }
         console.log("111111111111111111111!"+ albumsToReturnTest);
@@ -504,14 +515,15 @@ app.get('/Discover', async function (req, res) {
         discover_wo_decade += "&search=" + searchSTR;
         discover_wo_genre  += "&search=" + searchSTR;
         discover_wo_sort   += "&search=" + searchSTR;
-        //where_string       = ""; //set to blank for now, implement later
+        try { albumsToReturnTest = await findSearch(searchSTR, albumsToReturnTest); }
+        catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BEEAATCHHH " + e) } 
+        console.log("1111111111asdf33111!"+ albumsToReturnTest);
     }
     if(sortSTR != null)  {
         discover_wo_format += "&sort=" + sortSTR;
         discover_wo_search += "&sort=" + sortSTR;
         discover_wo_decade += "&sort=" + sortSTR;
         discover_wo_genre  += "&sort=" + sortSTR;
-        //where_string       = ""; //set to blank for now, implement later
         console.log(sortSTR-1);
         console.log(sortAlbums(sortSTR-1, albumsToReturnTest));
     }
