@@ -374,11 +374,7 @@ function compareHot(a, b) {
     } else if (dateA < dateB) {
       comparison = -1;
     }
-<<<<<<< HEAD
     return comparison * -1;
-=======
-    return comparison *  -1;
->>>>>>> 75a303aba8f22c9588f65f1641656a06b52a6d38
 }
 
 function comparePop(a, b) {
