@@ -2,17 +2,50 @@
 // load the things we need
 var express = require('express');
 var sqlite = require("sqlite");
+var app = express();
+app.set('view engine', 'ejs');
+app.use(express.static("public/")); 
 const fs = require('fs');
-var app;
-var db;
-var rel_types = ["Album", "EP", "Single", "Compilation"];
+var options = {
+    key: fs.readFileSync("public/server.key"),
+    cert: fs.readFileSync("public/server.cert")
+};
+var https = require("https").createServer(options, app);
+var http = require("http").createServer(app); 
+var io = require("socket.io")(https); 
+var scrpyt = require("scrypt");
+
+var db;// = await sqlite.open("bruh.db");
+
 start();
+console.log("IS THIS EXECUTED EVERYTIME?");
+
+
+
+function hashPassword(password) {
+    return scrpyt.kdfSync(password, scrpyt.paramsSync(0.1));
+}
+
+function checkPassword(password, hash) {
+    return scrpyt.verifyKdfSync(hash, password);
+}
+
+function getIP(req) {
+    return  req.headers['x-forwarded-for'] || 
+    req.connection.remoteAddress || 
+    req.socket.remoteAddress ||
+    (req.connection.socket ? req.connection.socket.remoteAddress : null);
+}
 
 async function start() {
-    app = express();
-    app.set('view engine', 'ejs');
-    app.use(express.static("public/"));    
+    // app = express();
+    // app.set('view engine', 'ejs');
+    // app.use(express.static("public/"));    
     db = await sqlite.open("bruh.db");
+    // http = require("http").createServer(app);
+    // https = require("https").createServer(options, app);
+    // io = require("socket.io")(http);
+    
 }
 
 function makeStringFromBin(theString, thetype) {
@@ -341,7 +374,11 @@ function compareHot(a, b) {
     } else if (dateA < dateB) {
       comparison = -1;
     }
+<<<<<<< HEAD
     return comparison * -1;
+=======
+    return comparison *  -1;
+>>>>>>> 75a303aba8f22c9588f65f1641656a06b52a6d38
 }
 
 function comparePop(a, b) {
@@ -398,6 +435,8 @@ function sortAlbums(sortType, albums) {
             return albums.sort(compareDes);  
     }
 }
+
+var rel_types = ["Album", "EP", "Single", "Compilation"];
 
 app.get('/Album', async function (req, res) {
     
@@ -466,7 +505,7 @@ app.get('/Album', async function (req, res) {
 });
 
 app.get('/Discover', async function (req, res) {
-
+    console.log(req.ip);
     //var where_string;
     var collectedAlbums;
     try { collectedAlbums = await getAlbums(); }
@@ -561,6 +600,20 @@ app.get('/Login', function (req, res) {
     res.render('pages/login');
 });
 
+// io.on('connection', function (socket) {
+//     console.log("A USER CONNECTED");
+//     // socket.send(socket.id);
+//     console.log(); //client ID
+// });
 
-app.listen(8080);
-console.log('8080 is the magic port');
+http.listen(8079);
+https.listen(8080);
+// app.listen(8080);
+console.log('HTTP  PORT 8079');
+console.log('HTTPS PORT 8080');
+
+var hash = hashPassword("HELLO123");
+console.log(hash);
+
+console.log(checkPassword("HELLO123", (hash.toString("Base64"))));
+console.log(checkPassword("HELLO153", hash));

@@ -15,6 +15,8 @@ $(function () {
     // }
 
 
+    
+    var socket = io();
 
     $(window).resize(function () {
         var wh = $(window).height();
