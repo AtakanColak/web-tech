@@ -107,8 +107,12 @@ $(function () {
         if (Cookies.get("user") == "false") {
             $("#loggedin").hide();
             $("#notloggedin").show();
+            $("#cli").hide();
+            $("#clo").show();
         }
         else {
+            $("#clo").hide();
+            $("#cli").show();
             $("#notloggedin").hide();
             $("#loggedin").show();
             if(Cookies.get("user") == "admin") {

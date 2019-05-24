@@ -190,7 +190,7 @@
                         <% }); if(!Array.isArray(comments) || !comments.length) { %>
                         <h1>There is no comment</h1>
                         <% } %>
-                        <div class="jumbotron mt-3 pt-3 pb-2 pl-4 pr-4 border">
+                        <div id="cli" class="jumbotron mt-3 pt-3 pb-2 pl-4 pr-4 border">
                             <form>
                                 <div class="form-group">
                                     <label for="user_comment">Post your own comment:</label>
@@ -203,6 +203,11 @@
                                     <button type="submit" class="btn btn-dark mt-2">Post Comment</button>
                                 </div>
                             </form>
+                        </div>
+                        <div id="clo" class="jumbotron mt-3 pt-3 pb-2 pl-4 pr-4 border">
+                                <div class="form-group">
+                                    You are not logged in. <a href="/Login" style="color:silver;">Log in</a> to leave a comment.
+                                </form>
                         </div>
                     </div>
                 </div>
