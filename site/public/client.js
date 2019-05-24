@@ -90,5 +90,14 @@ $(function () {
         Cookies.set("username", u);
         Cookies.set("password", p);
     });
+
+    $("#registerbutton").click(function (e) {
+        var u = $(this).parents("#registerform").find("#input_username").val();
+        var em = $(this).parents("#registerform").find("#input_email").val();
+        var p = $(this).parents("#registerform").find("#input_user_password").val();
+        Cookies.set("username", u);
+        Cookies.set("email", em);
+        Cookies.set("password", p);
+    });
 });
 

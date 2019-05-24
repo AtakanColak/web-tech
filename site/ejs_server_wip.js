@@ -44,13 +44,13 @@ function getIP(req) {
 async function start() {
 
 
-    // var password = "hello123";
-    // var hashed = hashPassword(password);
-    // var truecheck = checkPassword(password, hashed);
-    // var falsecheck = checkPassword("hello12", hashed);
-    // if(truecheck == true && falsecheck == false) {
-    //     console.log("the password " + password + " has been hashed successfully to \n" + hashed + " \n");
-    // }
+    var password = "hello123";
+    var hashed = hashPassword(password);
+    var truecheck = checkPassword(password, hashed);
+    var falsecheck = checkPassword("hello12", hashed);
+    if(truecheck == true && falsecheck == false) {
+        console.log("the password " + password + " has been hashed successfully to \n" + hashed + " \n");
+    }
 
 
     // app = express();
@@ -446,6 +446,11 @@ function sortAlbums(sortType, albums) {
     }
 }
 
+function validateEmail(email) {
+    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+  }
+
 var rel_types = ["Album", "EP", "Single", "Compilation"];
 
 app.get('/Album', async function (req, res) {
@@ -610,21 +615,76 @@ app.get('/Login', function (req, res) {
     res.render('pages/login');
 });
 
-app.get('/Register', function (req, res) {
-    res.render('pages/register');
-});
-app.post('/Login', function (req, res) {
+app.post('/Login', async function (req, res) {
     try {
         var username = req.cookies["username"];
         var password = req.cookies["password"];
         console.log("Username : " + username + "\nPassword : " + password);
-        if (username.length < 8 || password.length < 8) { console.log("Post login data failed\n"); }
-        else { console.log("Post login data successful\n"); }
+        if (username.length < 4 || password.length < 4) { console.log("Post login data failed\n"); }
+        else {
+            try {
+                var userQuery = `SELECT UserName username, Password password FROM User WHERE UserName="${username}"`;
+                var users = await db.all(userQuery);
+                if (users.length == 0) {
+                    console.log(users.length);
+                    console.log("that username does not exist");
+                }
+                else {
+                    if (password != users[0]["password"]) {console.log("bad password")}
+                    else {
+                            console.log("user was logged in");
+                         }
+                }   
+            }
+            catch (e) { "hoppity fuckoff, why? becase " + console.log(e) }
+        }
         res.render('pages/login');
     }
     catch (e) {
         console.log("Post login data failed\n");
         res.render('pages/login');
+    }
+});
+
+app.get('/Register', function (req, res) {
+    res.render('pages/register');
+});
+
+app.post('/Register', async function (req, res) {
+    try {
+        var username = req.cookies["username"];
+        var email    = req.cookies["email"];
+        var password = req.cookies["password"];
+        console.log("Username : " + username + "\nemil: " + email + "\nPassword : " + password);
+        if (username.length < 4 || password.length < 4) { console.log("Post register data failed\n"); }
+        else {
+            try {
+                var usernameQuery = `SELECT UserName username FROM User WHERE UserName="${username}"`;
+                var usernames = await db.all(usernameQuery);
+                if (usernames.length != 0) {
+                    console.log(usernames.length);
+                    console.log(usernames[0]["username"] + " user already exists in the database")
+                }
+                else {
+                    var emailQuery = `SELECT Email email FROM User WHERE Email="${email}"`;
+                    var emails = await db.all(emailQuery);
+                    if (emails.length != 0) {console.log(emails[0]["email"] + " email already exists in the database")}
+                    else {
+                        if (!validateEmail(email)) console.log("enter a valid email");
+                        else {
+                            await db.run("INSERT INTO User VALUES(NULL, '" + username + "', '" + password + "', '" + email + "', NULL, NULL)");
+                            console.log("Post register data successful\n"); 
+                        }
+                    }
+                }   
+            }
+            catch (e) { "hoppity fuckoff, why? becase " + console.log(e) }
+        }
+        res.render('pages/register');
+    }
+    catch (e) {
+        console.log("Post login data failed\n");
+        res.render('pages/register');
     }
 });
 
