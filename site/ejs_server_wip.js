@@ -27,11 +27,13 @@ start();
 
 
 function hashPassword(password) {
-    return scrpyt.kdfSync(password, scrpyt.paramsSync(0.1));
+    var hash = scrpyt.kdfSync(password, scrpyt.paramsSync(0.1));
+    return hash.toString('base64');
 }
 
 function checkPassword(password, hash) {
-    return scrpyt.verifyKdfSync(hash, password);
+    let buff = Buffer.from(hash, 'base64');  
+    return scrpyt.verifyKdfSync(buff, password);
 }
 
 function getIP(req) {
@@ -519,7 +521,7 @@ app.get('/Album', async function (req, res) {
 
 });
 
-app.get('/Discover', async function (req, res) {
+ var discoverGet = async function (req, res) {
     console.log(req.ip);
     //var where_string;
     var collectedAlbums;
@@ -595,7 +597,9 @@ app.get('/Discover', async function (req, res) {
         browsing_str: browsing_string(genreID, formatID, decadeSTR),
         selected_sort: sortID2String(sortSTR)
     });
-});
+};
+
+app.get('/Discover', discoverGet);
 
 app.get('/EditRelease', async function (req, res) {
     var artists;
@@ -630,7 +634,7 @@ app.post('/Login', async function (req, res) {
                     console.log("that username does not exist");
                 }
                 else {
-                    if (password != users[0]["password"]) {console.log("bad password")}
+                    if (!checkPassword(password, users[0]["password"])) {console.log("bad password")}
                     else {
                             console.log("user was logged in");
                          }
@@ -642,8 +646,8 @@ app.post('/Login', async function (req, res) {
     }
     catch (e) {
         console.log("Post login data failed\n");
-        res.render('pages/login');
     }
+    res.render('pages/login');
 });
 
 app.get('/Register', function (req, res) {
@@ -672,7 +676,7 @@ app.post('/Register', async function (req, res) {
                     else {
                         if (!validateEmail(email)) console.log("enter a valid email");
                         else {
-                            await db.run("INSERT INTO User VALUES(NULL, '" + username + "', '" + password + "', '" + email + "', NULL, NULL)");
+                            await db.run("INSERT INTO User VALUES(NULL, '" + username + "', '" + hashPassword(password) + "', '" + email + "', NULL, NULL)");
                             console.log("Post register data successful\n"); 
                         }
                     }
