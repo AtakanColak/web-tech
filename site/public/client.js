@@ -14,7 +14,6 @@ $(function () {
     //     $(".subfooter").css({ top: subfootertop, position: 'absolute' });
     // }
 
-
     
     var socket = io();
 
@@ -83,6 +82,13 @@ $(function () {
         else {
             $(this).parents(".jumbotron").find(".invalid-song").prop("hidden", false);
         }
+    });
+
+    $("#loginbutton").click(function (e) {
+        var u = $(this).parents("#loginform").find("#input_username").val();
+        var p = $(this).parents("#loginform").find("#input_user_password").val();
+        Cookies.set("username", u);
+        Cookies.set("password", p);
     });
 });
 

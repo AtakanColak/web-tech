@@ -2,17 +2,21 @@
 // load the things we need
 var express = require('express');
 var sqlite = require("sqlite");
+var cookieParser = require('cookie-parser');
 var app = express();
 app.set('view engine', 'ejs');
-app.use(express.static("public/")); 
+app.use(cookieParser());
+app.use(express.static("public/"));
+
 const fs = require('fs');
 var options = {
     key: fs.readFileSync("public/server.key"),
     cert: fs.readFileSync("public/server.cert")
 };
+
 var https = require("https").createServer(options, app);
-var http = require("http").createServer(app); 
-var io = require("socket.io")(https); 
+var http = require("http").createServer(app);
+var io = require("socket.io")(https);
 var scrpyt = require("scrypt");
 
 var db;// = await sqlite.open("bruh.db");
@@ -31,13 +35,24 @@ function checkPassword(password, hash) {
 }
 
 function getIP(req) {
-    return  req.headers['x-forwarded-for'] || 
-    req.connection.remoteAddress || 
-    req.socket.remoteAddress ||
-    (req.connection.socket ? req.connection.socket.remoteAddress : null);
+    return req.headers['x-forwarded-for'] ||
+        req.connection.remoteAddress ||
+        req.socket.remoteAddress ||
+        (req.connection.socket ? req.connection.socket.remoteAddress : null);
 }
 
 async function start() {
+
+
+    // var password = "hello123";
+    // var hashed = hashPassword(password);
+    // var truecheck = checkPassword(password, hashed);
+    // var falsecheck = checkPassword("hello12", hashed);
+    // if(truecheck == true && falsecheck == false) {
+    //     console.log("the password " + password + " has been hashed successfully to \n" + hashed + " \n");
+    // }
+
+
     // app = express();
     // app.set('view engine', 'ejs');
     // app.use(express.static("public/"));    
@@ -152,7 +167,7 @@ async function getShoppingItems(idTest) {
         CatalogNum catNum,
         Price price,
         RelFormat format FROM ShoppingItem WHERE ReleaseID="${ idTest}"`;
-        
+
         var shoppingItems = await db.all(sqlShoppingQuery);
         return shoppingItems;
     }
@@ -169,10 +184,10 @@ async function getComments(idTest) {
         Rating rating,
         Comment comment,
         Date date FROM Review WHERE ReleaseID="${ idTest}"`;
-        
+
         var comments = await db.all(sqlReviewQuery);
 
-        for(i = 0; i < comments.length; i++) {
+        for (i = 0; i < comments.length; i++) {
             comments[i]["uID"] = await getUser(comments[i]["uID"]);
         }
         return comments;
@@ -273,11 +288,11 @@ async function getAlbums() {
                             RelFormat relFor,
                             Rating rating,
                             Bio bioTxt,
-                            NumRatings ratNum FROM Release`            
+                            NumRatings ratNum FROM Release`
         var albums = await db.all(sqlAlbumsQuery);
         //console.log(albums);
         return albums;
-        }        
+    }
     catch (e) {
         console.log(e);
         return "error";
@@ -288,8 +303,8 @@ async function findBinary(id, thetype, albums) {
     var albumsToReturn = [];
     console.log("HERE IS THE ID THAT IS PASSED " + id);
     for (i = 0; i < albums.length; i++) {
-        if (albums[i][(""+thetype)].charAt(id) == 1) albumsToReturn.push(albums[i]);
-    }   
+        if (albums[i][("" + thetype)].charAt(id) == 1) albumsToReturn.push(albums[i]);
+    }
     return albumsToReturn;
 }
 
@@ -297,12 +312,12 @@ async function findDate(date, albums) {
     var albumsToReturn = [];
     for (i = 0; i < albums.length; i++) {
         try {
-            console.log(albums[i]["relDat"].toString().substring(0,3));
-            console.log(date.substring(0,3));
+            console.log(albums[i]["relDat"].toString().substring(0, 3));
+            console.log(date.substring(0, 3));
         }
-        catch (e) {console.log("now you really fucked up "); throw e}
-        if (albums[i]["relDat"].toString().substring(0,3) == date.substring(0,3)) albumsToReturn.push(albums[i]);
-    }   
+        catch (e) { console.log("now you really fucked up "); throw e }
+        if (albums[i]["relDat"].toString().substring(0, 3) == date.substring(0, 3)) albumsToReturn.push(albums[i]);
+    }
     console.log("HERE ARE THE ALBUSM TO RETURN IN THE FIND DATE FUNCTION " + albumsToReturn);
     return albumsToReturn;
 }
@@ -316,21 +331,21 @@ async function findSearch(searchSTR, albums) {
         // }
         // catch (e) {console.log("now you really fucked up "); throw e}
         if (albums[i]["name"].toString().toLowerCase().includes(searchSTR)) albumsToReturn.push(albums[i]);
-    }   
+    }
     console.log("HERE ARE THE ALBUSM TO RETURN IN THE SEARCH SARCH SEARHC FUNCTION " + albumsToReturn);
     return albumsToReturn;
 }
 
 function sortID2String(id) {
     var sort_strings = ["Hottest", "Most Popular", "Title, A-Z", "Title, Z-A"];
-    if(id == null)  
+    if (id == null)
         return sort_strings[0];
-    else 
+    else
         return sort_strings[id - 1];
 }
 
 function genreID2String(id) {
-    var genre_strings = ["Dance", "Electronic","Experimental", "Folk", "Hip Hop", "Jazz", "Pop", "Punk", "Rock","Metal"];
+    var genre_strings = ["Dance", "Electronic", "Experimental", "Folk", "Hip Hop", "Jazz", "Pop", "Punk", "Rock", "Metal"];
     if (id == null) return "";
     else return genre_strings[id];
 }
@@ -343,10 +358,10 @@ function formatID2String(id) {
 
 function browsing_string(genreID, formatID, decade) {
     var str = genreID2String(genreID);
-    if(genreID != null && (formatID != null || decade !=null) ) str += ", ";
+    if (genreID != null && (formatID != null || decade != null)) str += ", ";
     str += formatID2String(formatID);
-    if(formatID != null && decade !=null ) str += ", ";
-    if(decade !=null ) str += decade;
+    if (formatID != null && decade != null) str += ", ";
+    if (decade != null) str += decade;
     return str;
 }
 
@@ -366,12 +381,12 @@ function compareHot(a, b) {
     // Use toUpperCase() to ignore character casing
     const dateA = a["relDat"];
     const dateB = b["relDat"];
-  
+
     let comparison = 0;
     if (dateA > dateB) {
-      comparison = 1;
+        comparison = 1;
     } else if (dateA < dateB) {
-      comparison = -1;
+        comparison = -1;
     }
     return comparison * -1;
 }
@@ -380,12 +395,12 @@ function comparePop(a, b) {
     // Use toUpperCase() to ignore character casing
     const ratingA = a["rating"];
     const ratingB = b["rating"];
-  
+
     let comparison = 0;
     if (ratingA > ratingB) {
-      comparison = 1;
+        comparison = 1;
     } else if (ratingA < ratingB) {
-      comparison = -1;
+        comparison = -1;
     }
     return comparison * -1;
 }
@@ -394,12 +409,12 @@ function compareAsc(a, b) {
     // Use toUpperCase() to ignore character casing
     const genreA = a["name"].toString().toUpperCase();
     const genreB = b["name"].toString().toUpperCase();
-  
+
     let comparison = 0;
     if (genreA > genreB) {
-      comparison = 1;
+        comparison = 1;
     } else if (genreA < genreB) {
-      comparison = -1;
+        comparison = -1;
     }
     return comparison;
 }
@@ -408,18 +423,18 @@ function compareDes(a, b) {
     // Use toUpperCase() to ignore character casing
     const genreA = a["name"].toString().toUpperCase();
     const genreB = b["name"].toString().toUpperCase();
-  
+
     let comparison = 0;
     if (genreA > genreB) {
-      comparison = 1;
+        comparison = 1;
     } else if (genreA < genreB) {
-      comparison = -1;
+        comparison = -1;
     }
     return comparison * -1;
 }
 
 function sortAlbums(sortType, albums) {
-    switch(sortType) {
+    switch (sortType) {
         case 0:
             return albums.sort(compareHot);
         case 1:
@@ -427,48 +442,48 @@ function sortAlbums(sortType, albums) {
         case 2:
             return albums.sort(compareAsc);
         case 3:
-            return albums.sort(compareDes);  
+            return albums.sort(compareDes);
     }
 }
 
 var rel_types = ["Album", "EP", "Single", "Compilation"];
 
 app.get('/Album', async function (req, res) {
-    
+
     var albumID = req.query.id;
     console.log("here is the albumID " + albumID);
-    
+
     var album;
     try { album = await getRelease(albumID); }
     catch (e) { res.render('pages/error'); }
     console.log("here is the album " + album);
-    
+
     var tracks = [];
-    try { tracks = await getTracks(albumID); console.log("HERE ARE THE TRACKS FROM THE ALBUM PAGE LOADER " + tracks)}
+    try { tracks = await getTracks(albumID); console.log("HERE ARE THE TRACKS FROM THE ALBUM PAGE LOADER " + tracks) }
     catch (e) { console.log("track error"); }
-    
+
     var shoppingItems = [];
     try { shoppingItems = await getShoppingItems(albumID); }
     catch (e) { console.log("shopitem error"); }
-    
+
     var comments = [];
     try { comments = await getComments(albumID); }
     catch (e) { console.log("comments error"); }
-    
+
     var label;
     try { label = await getLabel(album["lID"]); }
     catch (e) { label = "erro13r"; }
-    
+
     var artist;
     try { artist = await getArtist(album["aID"]); }
     catch (e) { artist = "erro12133r"; }
-    
+
     for (let i = 0; i < comments.length; i++) {
         //var user;
         try { comments[i].username = await getUser(comments[i].userid); }
         catch (e) { comments[i].username = "oijadsoijdsaerro12133r"; }
     }
-    
+
     var ratingList = [];
     for (let i = 0; i < comments.length; i++) {
         try { rating = await getRating(comments[i].userid); }
@@ -479,7 +494,7 @@ app.get('/Album', async function (req, res) {
     console.log("here is the ratinglist " + ratingList);
     for (i = 0; i < ratingList.length; i++) total += ratingList[i];
     total = total / ratingList.length;
-    
+
     res.render('pages/album', {
         release_name: album["relNam"],
         release_artist: artist,
@@ -496,7 +511,7 @@ app.get('/Album', async function (req, res) {
         items: shoppingItems,
         comments: comments
     });
-    
+
 });
 
 app.get('/Discover', async function (req, res) {
@@ -504,7 +519,7 @@ app.get('/Discover', async function (req, res) {
     //var where_string;
     var collectedAlbums;
     try { collectedAlbums = await getAlbums(); }
-    catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BROPOCALYPSE NOW " + e) }  
+    catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BROPOCALYPSE NOW " + e) }
     var albumsToReturnTest = collectedAlbums;
     //console.log("WHEREBEFOREITALL " + where_string);
     var sortSTR = req.query.sort;
@@ -515,51 +530,51 @@ app.get('/Discover', async function (req, res) {
     var discover_wo_format = "/Discover?";
     var discover_wo_search = "/Discover?";
     var discover_wo_decade = "/Discover?";
-    var discover_wo_genre  = "/Discover?";
-    var discover_wo_sort   = "/Discover?";
-    if(decadeSTR != null)  {
+    var discover_wo_genre = "/Discover?";
+    var discover_wo_sort = "/Discover?";
+    if (decadeSTR != null) {
         discover_wo_format += "&decade=" + decadeSTR;
         discover_wo_search += "&decade=" + decadeSTR;
-        discover_wo_genre  += "&decade=" + decadeSTR;
-        discover_wo_sort   += "&decade=" + decadeSTR;
+        discover_wo_genre += "&decade=" + decadeSTR;
+        discover_wo_sort += "&decade=" + decadeSTR;
         try { albumsToReturnTest = await findDate(decadeSTR, albumsToReturnTest); }
         catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BERNSTEIN " + e) }
-        console.log("111111111111111111111!"+ albumsToReturnTest);
+        console.log("111111111111111111111!" + albumsToReturnTest);
     }
-    if(genreID != null)  {
+    if (genreID != null) {
         discover_wo_format += "&genre=" + genreID;
         discover_wo_search += "&genre=" + genreID;
         discover_wo_decade += "&genre=" + genreID;
-        discover_wo_sort   += "&genre=" + genreID;
+        discover_wo_sort += "&genre=" + genreID;
         try { albumsToReturnTest = await findBinary(genreID, "gID", albumsToReturnTest); }
         catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BERNSTEIN " + e) }
-        console.log("11122222222222111111111!"+ albumsToReturnTest);
+        console.log("11122222222222111111111!" + albumsToReturnTest);
     }
-    if(formatID != null)  {
+    if (formatID != null) {
         discover_wo_search += "&format=" + formatID;
         discover_wo_decade += "&format=" + formatID;
-        discover_wo_genre  += "&format=" + formatID;
-        discover_wo_sort   += "&format=" + formatID;
+        discover_wo_genre += "&format=" + formatID;
+        discover_wo_sort += "&format=" + formatID;
         try { albumsToReturnTest = await findBinary(formatID, "relFor", albumsToReturnTest); }
-        catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BRAHMS " + e) } 
-        console.log("11111111111111111133333333333111!"+ albumsToReturnTest);
+        catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BRAHMS " + e) }
+        console.log("11111111111111111133333333333111!" + albumsToReturnTest);
     }
-    if(searchSTR != null)  {
+    if (searchSTR != null) {
         discover_wo_format += "&search=" + searchSTR;
         discover_wo_decade += "&search=" + searchSTR;
-        discover_wo_genre  += "&search=" + searchSTR;
-        discover_wo_sort   += "&search=" + searchSTR;
+        discover_wo_genre += "&search=" + searchSTR;
+        discover_wo_sort += "&search=" + searchSTR;
         try { albumsToReturnTest = await findSearch(searchSTR, albumsToReturnTest); }
-        catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BEEAATCHHH " + e) } 
-        console.log("1111111111asdf33111!"+ albumsToReturnTest);
+        catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BEEAATCHHH " + e) }
+        console.log("1111111111asdf33111!" + albumsToReturnTest);
     }
-    if(sortSTR != null)  {
+    if (sortSTR != null) {
         discover_wo_format += "&sort=" + sortSTR;
         discover_wo_search += "&sort=" + sortSTR;
         discover_wo_decade += "&sort=" + sortSTR;
-        discover_wo_genre  += "&sort=" + sortSTR;
-        console.log(sortSTR-1);
-        console.log(sortAlbums(sortSTR-1, albumsToReturnTest));
+        discover_wo_genre += "&sort=" + sortSTR;
+        console.log(sortSTR - 1);
+        console.log(sortAlbums(sortSTR - 1, albumsToReturnTest));
     }
 
 
@@ -570,16 +585,16 @@ app.get('/Discover', async function (req, res) {
         discover_wo_format: discover_wo_format,
         discover_wo_search: discover_wo_search,
         discover_wo_decade: discover_wo_decade,
-        discover_wo_genre : discover_wo_genre,
-        discover_wo_sort  : discover_wo_sort,
+        discover_wo_genre: discover_wo_genre,
+        discover_wo_sort: discover_wo_sort,
         browsing_str: browsing_string(genreID, formatID, decadeSTR),
-        selected_sort : sortID2String(sortSTR)
+        selected_sort: sortID2String(sortSTR)
     });
 });
 
 app.get('/EditRelease', async function (req, res) {
     var artists;
-    try { 
+    try {
         artists = await getArtists();
         console.log("HERE ARE THE ARTISTS " + artists);
     }
@@ -597,6 +612,20 @@ app.get('/Login', function (req, res) {
 
 app.get('/Register', function (req, res) {
     res.render('pages/register');
+});
+app.post('/Login', function (req, res) {
+    try {
+        var username = req.cookies["username"];
+        var password = req.cookies["password"];
+        console.log("Username : " + username + "\nPassword : " + password);
+        if (username.length < 8 || password.length < 8) { console.log("Post login data failed\n"); }
+        else { console.log("Post login data successful\n"); }
+        res.render('pages/login');
+    }
+    catch (e) {
+        console.log("Post login data failed\n");
+        res.render('pages/login');
+    }
 });
 
 // io.on('connection', function (socket) {
