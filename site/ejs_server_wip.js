@@ -18,7 +18,7 @@ var scrpyt = require("scrypt");
 var db;// = await sqlite.open("bruh.db");
 
 start();
-console.log("IS THIS EXECUTED EVERYTIME?");
+// console.log("IS THIS EXECUTED EVERYTIME?");
 
 
 
@@ -45,7 +45,6 @@ async function start() {
     // http = require("http").createServer(app);
     // https = require("https").createServer(options, app);
     // io = require("socket.io")(http);
-    
 }
 
 function makeStringFromBin(theString, thetype) {
@@ -596,8 +595,8 @@ https.listen(8080);
 console.log('HTTP  PORT 8079');
 console.log('HTTPS PORT 8080');
 
-var hash = hashPassword("HELLO123");
-console.log(hash);
+// var hash = hashPassword("HELLO123");
+// console.log(hash);
 
-console.log(checkPassword("HELLO123", (hash.toString("Base64"))));
-console.log(checkPassword("HELLO153", hash));
+// console.log(checkPassword("HELLO123", (hash.toString("Base64"))));
+// console.log(checkPassword("HELLO153", hash));
