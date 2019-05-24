@@ -514,7 +514,7 @@ app.get('/Album', async function (req, res) {
 
 });
 
-app.get('/Discover', async function (req, res) {
+ var discoverGet = async function (req, res) {
     console.log(req.ip);
     //var where_string;
     var collectedAlbums;
@@ -590,7 +590,9 @@ app.get('/Discover', async function (req, res) {
         browsing_str: browsing_string(genreID, formatID, decadeSTR),
         selected_sort: sortID2String(sortSTR)
     });
-});
+};
+
+app.get('/Discover', discoverGet);
 
 app.get('/EditRelease', async function (req, res) {
     var artists;
@@ -613,19 +615,23 @@ app.get('/Login', function (req, res) {
 app.get('/Register', function (req, res) {
     res.render('pages/register');
 });
-app.post('/Login', function (req, res) {
+app.post('/Login', async function (req, res) {
     try {
         var username = req.cookies["username"];
         var password = req.cookies["password"];
         console.log("Username : " + username + "\nPassword : " + password);
-        if (username.length < 8 || password.length < 8) { console.log("Post login data failed\n"); }
-        else { console.log("Post login data successful\n"); }
-        res.render('pages/login');
+        if (username.length < 8 || password.length < 8) {
+            console.log("Post login data failed\n");
+        }
+        else {
+            console.log("Post login data successful\n");
+        }
+
     }
     catch (e) {
         console.log("Post login data failed\n");
-        res.render('pages/login');
     }
+    res.render('pages/login');
 });
 
 // io.on('connection', function (socket) {
