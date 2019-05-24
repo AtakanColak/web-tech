@@ -20,18 +20,35 @@
                 </li>
             </ul>
             <form class="form-inline mr-auto" action="/Discover" method="GET">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="search"/>
+                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"
+                    name="search" />
                 <button class="btn  my-2 my-sm-0" type="submit">Search</button>
             </form>
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="/Register">Register</a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="/Login">Login</a>
-                </li>
-            </ul>
-            <!-- </div> -->
+
+            <div id="notloggedin">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/Register">Register</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/Login">Login</a>
+                    </li>
+                </ul>
+            </div>
+            <div id="loggedin">
+                <ul class="navbar-nav ml-auto">
+                    <li id="editrel" class="nav-item active">
+                        <a class="nav-link" href="/EditRelease">Edit Release</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/Logout">Logout</a>
+                    </li>
+                </ul>
+            </div>
+
         </div>
+
+        <!-- </div> -->
+    </div>
     </div>
 </nav>

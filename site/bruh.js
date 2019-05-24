@@ -11,7 +11,7 @@ function create() {
     db.run("CREATE TABLE OrderItem (ID INTEGER NOT NULL PRIMARY KEY, UserID int, ShoppingItemID int);");
     db.run("CREATE TABLE Label (ID INTEGER NOT NULL PRIMARY KEY, LabelName Text);");
     db.run("CREATE TABLE Artist (ID INTEGER NOT NULL PRIMARY KEY, ArtistName Text);");
-    db.run("CREATE TABLE User (ID INTEGER NOT NULL PRIMARY KEY, UserName Text, Password Text, Email Text, SessionMID Text, RNDSTR Text);");
+    db.run("CREATE TABLE User (ID INTEGER NOT NULL PRIMARY KEY, UserName Text, Password Text, Email Text, IsAdmin int);");
 
     db.run("INSERT INTO Release VALUES(NULL, 'images/cover.png', 'Naked Flames Who Can Recall His Past Lives', 1, 3, 2018, time(12146, 'unixepoch'), 1, '1111', 3.4, 'A sprawling and meandering compilation of (almost) all of Naked Flames'' tracks between 2015 and 2017.', 21, '0010000010')");
     db.run("INSERT INTO Release VALUES(NULL, 'images/0002.png', 'Professional Amateur', 2, 0, 2018, time(1574, 'unixepoch'), 1, '0001', 3.7, 'Recordings of Atakan Colak playing some of his favorite piano pieces between 2017-2018. None of the original versions or their piano arrangements are made by him.', 0, '0000100000')");
@@ -73,9 +73,9 @@ function create() {
 
     db.run("INSERT INTO ShoppingItem VALUES(NULL, 2, 'ACR 0001', 5.99, 'Digital')");
 
-    db.run("INSERT INTO User VALUES(NULL, '1Chops', 'password12345', '1Chops@gmail.com', NULL, NULL)");
-    db.run("INSERT INTO User VALUES(NULL, 'Hakita', '54321drowssap', 'Hakita@hotmail.com', NULL, NULL)");
-    db.run("INSERT INTO User VALUES(NULL, 'nakedflames', 'asdfghjk', 'as16989@my.bristol.ac.uk', NULL, NULL)");
+    db.run("INSERT INTO User VALUES(NULL, '1Chops', 'c2NyeXB0AA0AAAAIAAAAAel7+S/4GVHwUAqQYqxAX81gbSad/zv1J54VqvXBnjVa/g7DR7WBnO0VTIr+9yXXksBdDHsoD+vkfJCb6xsAQHj2Lvs75DNmIZOT9tMCW6dd', '1Chops@gmail.com', 1)");
+    db.run("INSERT INTO User VALUES(NULL, 'Hakita', '54321drowssap', 'Hakita@hotmail.com', 0)");
+    db.run("INSERT INTO User VALUES(NULL, 'nakedflames', 'asdfghjk', 'as16989@my.bristol.ac.uk', 0)");
 
     // db.run("CREATE TABLE Review (ID INTEGER NOT NULL PRIMARY KEY, ReleaseID int, UserID int, Rating int, Comment Text, Date Text);");
 

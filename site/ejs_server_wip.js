@@ -45,13 +45,14 @@ function getIP(req) {
 
 async function start() {
 
+    
 
-    var password = "hello123";
+    var password = "password12345";
     var hashed = hashPassword(password);
     var truecheck = checkPassword(password, hashed);
     var falsecheck = checkPassword("hello12", hashed);
     if(truecheck == true && falsecheck == false) {
-        console.log("the password " + password + " has been hashed successfully to \n" + hashed + " \n");
+        console.log(hashed + " \n");
     }
 
 
@@ -602,6 +603,10 @@ app.get('/Album', async function (req, res) {
 app.get('/Discover', discoverGet);
 
 app.get('/EditRelease', async function (req, res) {
+    var isadmin = (req.cookies["user"] == "admin");
+    if(!isadmin) {
+        res.redirect("/Error");
+    }
     var artists;
     try {
         artists = await getArtists();
@@ -627,7 +632,7 @@ app.post('/Login', async function (req, res) {
         if (username.length < 4 || password.length < 4) { console.log("Post login data failed\n"); }
         else {
             try {
-                var userQuery = `SELECT UserName username, Password password FROM User WHERE UserName="${username}"`;
+                var userQuery = `SELECT UserName username, Password password, IsAdmin isadmin FROM User WHERE UserName="${username}"`;
                 var users = await db.all(userQuery);
                 if (users.length == 0) {
                     console.log(users.length);
@@ -637,6 +642,13 @@ app.post('/Login', async function (req, res) {
                     if (!checkPassword(password, users[0]["password"])) {console.log("bad password")}
                     else {
                             console.log("user was logged in");
+                            // req.cookies["user"]
+                            //IF ADMIN SET TO admin
+                            if(users[0]["isadmin"] == 1) {res.cookie("user", "admin");}
+                            else {res.cookie("user", "member");}
+                            //IF USER SET TO user
+                            
+                            res.redirect('/Discover');
                          }
                 }   
             }
@@ -652,6 +664,12 @@ app.post('/Login', async function (req, res) {
 
 app.get('/Register', function (req, res) {
     res.render('pages/register');
+});
+
+app.get('/Logout', function (req, res) {
+    
+    res.cookie("user", "false");
+    res.redirect('/Login');
 });
 
 app.post('/Register', async function (req, res) {
@@ -676,7 +694,7 @@ app.post('/Register', async function (req, res) {
                     else {
                         if (!validateEmail(email)) console.log("enter a valid email");
                         else {
-                            await db.run("INSERT INTO User VALUES(NULL, '" + username + "', '" + hashPassword(password) + "', '" + email + "', NULL, NULL)");
+                            await db.run("INSERT INTO User VALUES(NULL, '" + username + "', '" + hashPassword(password) + "', '" + email + "', 0)");
                             console.log("Post register data successful\n"); 
                         }
                     }
