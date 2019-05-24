@@ -27,11 +27,13 @@ start();
 
 
 function hashPassword(password) {
-    return scrpyt.kdfSync(password, scrpyt.paramsSync(0.1));
+    var hash = scrpyt.kdfSync(password, scrpyt.paramsSync(0.1));
+    return hash.toString('base64');
 }
 
 function checkPassword(password, hash) {
-    return scrpyt.verifyKdfSync(hash, password);
+    let buff = Buffer.from(hash, 'base64');  
+    return scrpyt.verifyKdfSync(buff, password);
 }
 
 function getIP(req) {
@@ -44,13 +46,13 @@ function getIP(req) {
 async function start() {
 
 
-    // var password = "hello123";
-    // var hashed = hashPassword(password);
-    // var truecheck = checkPassword(password, hashed);
-    // var falsecheck = checkPassword("hello12", hashed);
-    // if(truecheck == true && falsecheck == false) {
-    //     console.log("the password " + password + " has been hashed successfully to \n" + hashed + " \n");
-    // }
+    var password = "hello123";
+    var hashed = hashPassword(password);
+    var truecheck = checkPassword(password, hashed);
+    var falsecheck = checkPassword("hello12", hashed);
+    if(truecheck == true && falsecheck == false) {
+        console.log("the password " + password + " has been hashed successfully to \n" + hashed + " \n");
+    }
 
 
     // app = express();
