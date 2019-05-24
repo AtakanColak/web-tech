@@ -595,6 +595,10 @@ app.get('/Login', function (req, res) {
     res.render('pages/login');
 });
 
+app.get('/Register', function (req, res) {
+    res.render('pages/register');
+});
+
 // io.on('connection', function (socket) {
 //     console.log("A USER CONNECTED");
 //     // socket.send(socket.id);
