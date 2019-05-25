@@ -8,12 +8,13 @@ var bodyParser = require('body-parser')
 var app = express();
 app.set('view engine', 'ejs');
 app.use(cookieParser());
-app.use(express.static("public/"));
-
 app.use(bodyParser.json());       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
     extended: true
 }));
+app.use(express.static("public/"));
+
+
 const fs = require('fs');
 var options = {
     key: fs.readFileSync("public/server.key"),
@@ -643,11 +644,16 @@ app.post("/Album", async function (req, res) {
     var user_logged_in_cookie = req.cookies["userID"];
     try {
         //Review (ID INTEGER NOT NULL PRIMARY KEY, ReleaseID int, UserID int, Rating int, Comment Text, Date Text);");
-        var review = req.body.user_comment;
+        var review = req.cookies["comment"];
         var rating = req.cookies["commentscore"];
         try {
+<<<<<<< HEAD
             var query = "INSERT INTO Review VALUES(NULL, " + req.query.id + ", " + user_logged_in_cookie + ", " + rating + ", '" + review + "', '" + getDate() + "')";
             // await db.run(query);
+=======
+            var query = "INSERT INTO Review VALUES(NULL, " + req.query.id + ", " + user_logged_in_cookie + ", " + rating + ", '" + review + "', '" + await getDate() + "')";
+            await db.run(query);
+>>>>>>> 1989e20e7ea6cac95bd4a06f00aa945a9039abbf
         }
         catch (e) {
 

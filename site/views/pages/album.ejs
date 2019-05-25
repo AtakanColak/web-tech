@@ -191,8 +191,8 @@
                         <h1>There is no comment</h1>
                         <% } %>
                         <div id="cli" class="jumbotron mt-3 pt-3 pb-2 pl-4 pr-4 border">
-                            <form>
-                                <div class="form-group starbuttons">
+                            <form method="POST">
+                                <div id="fgs" class="form-group starbuttons">
                                     <label for="user_comment">Post your own comment:</label>
                                         <span class="ml-2"><a><img class="star"
                                             src="images/star-checked.svg" /></a></span>
@@ -204,9 +204,8 @@
                                         
                                         <span class=""><a><img class="star" src="images/star.svg" /></a></span>
                                     
-
-                                    <textarea class="form-control" id="user_comment" rows="5"></textarea>
-                                    <button type="submit" class="btn btn-dark mt-2">Post Comment</button>
+                                    <textarea class="form-control" id="comment" rows="5" type="text"></textarea>
+                                    <button id="postcom" type="submit" class="btn btn-dark mt-2">Post Comment</button>
                                 </div>
                             </form>
                         </div>

@@ -95,6 +95,13 @@ $(function () {
         }
     });
 
+    $("#postcom").click(function (e) {
+        var comment = $(this).parents("#fgs").find("#comment").val();
+        Cookies.set("comment", comment);
+        if(Cookies.get("commentscore") == "-1" || Cookies.get("commentscore") == undefined || Cookies.get("commentscore") == null )
+        {Cookies.set("commentscore", "3");}
+    });
+
     $("#loginbutton").click(function (e) {
         var u = $(this).parents("#loginform").find("#input_username").val();
         var p = $(this).parents("#loginform").find("#input_user_password").val();
