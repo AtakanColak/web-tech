@@ -647,13 +647,8 @@ app.post("/Album", async function (req, res) {
         var review = req.cookies["comment"];
         var rating = req.cookies["commentscore"];
         try {
-<<<<<<< HEAD
-            var query = "INSERT INTO Review VALUES(NULL, " + req.query.id + ", " + user_logged_in_cookie + ", " + rating + ", '" + review + "', '" + getDate() + "')";
-            // await db.run(query);
-=======
             var query = "INSERT INTO Review VALUES(NULL, " + req.query.id + ", " + user_logged_in_cookie + ", " + rating + ", '" + review + "', '" + await getDate() + "')";
             await db.run(query);
->>>>>>> 1989e20e7ea6cac95bd4a06f00aa945a9039abbf
         }
         catch (e) {
 
