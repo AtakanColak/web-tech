@@ -138,18 +138,9 @@ async function getRelease(idTest) {
                        GenreID gID FROM Release WHERE ID="${ idTest}"`;
 
         var row = await db.get(sqlReleaseQuery);
-        if (!row) {
-            console.log("oh no getrelease didnt work");
-            return;
-        }
-        else {
-            // val = row["aaPath", "relNam", "aID", "relTyp", "relDat", ];
-            console.log("HERE IS GETRELEASE " + row);
-        }
         return row;
     }
     catch (e) {
-        console.log(e);
         return "error";
     }
 }
@@ -165,7 +156,6 @@ async function getTracks(idTest) {
         return tracks;
     }
     catch (e) {
-        console.log(e);
         return "error";
     }
 }
@@ -176,12 +166,10 @@ async function getShoppingItems(idTest) {
         CatalogNum catNum,
         Price price,
         RelFormat format FROM ShoppingItem WHERE ReleaseID="${ idTest}"`;
-
         var shoppingItems = await db.all(sqlShoppingQuery);
         return shoppingItems;
     }
     catch (e) {
-        console.log(e);
         return "error";
     }
 }
@@ -202,7 +190,6 @@ async function getComments(idTest) {
         return comments;
     }
     catch (e) {
-        console.log(e);
         return "error";
     }
 }
@@ -212,18 +199,10 @@ async function getLabel(idTest) {
         var val;
         var getStmt = `SELECT LabelName lblNam FROM Label WHERE ID="${idTest}"`;
         var row = await db.get(getStmt);
-        if (!row) {
-            console.log("oh no getlabel didnt work");
-            return;
-        }
-        else {
-            val = row["lblNam"];
-            console.log(val);
-        }
+        val = row["lblNam"];
         return val;
     }
     catch (e) {
-        console.log(e);
         return "error";
     }
 }
@@ -233,15 +212,10 @@ async function getArtist(idTest) {
         var val;
         var getStmt = `SELECT ArtistName artNam FROM Artist WHERE ID="${idTest}"`;
         var row = await db.get(getStmt);
-        if (!row) {
-            console.log("oh no getartist didnt work because artistis was" + idTest);
-            return;
-        }
-        else { val = row["artNam"]; console.log("HERE IS GETARTIST " + val) }
+        val = row["artNam"];
         return val;
     }
     catch (e) {
-        console.log(e);
         return "error";
     }
 }
@@ -251,15 +225,10 @@ async function getUser(idTest) {
         var val;
         var getStmt = `SELECT UserName usrNam FROM User WHERE ID="${idTest}"`;
         var row = await db.get(getStmt);
-        if (!row) {
-            console.log("oh no getuser didnt work");
-            return;
-        }
-        else { val = row["usrNam"]; }
+        val = row["usrNam"];
         return val;
     }
     catch (e) {
-        console.log(e);
         return "error";
     }
 }
@@ -269,16 +238,10 @@ async function getRating(idTest) {
         var val;
         var getStmt = `SELECT Rating rating FROM Review WHERE ID="${idTest}"`;
         var row = await db.get(getStmt);
-        if (!row) {
-            console.log("oh no getrating didnt work");
-            return;
-        }
-        else { val = row["rating"]; }
-        console.log(val);
+        val = row["rating"];
         return val;
     }
     catch (e) {
-        console.log(e);
         return "error";
     }
 }
@@ -299,7 +262,6 @@ async function getAlbums() {
                             Bio bioTxt,
                             NumRatings ratNum FROM Release`
         var albums = await db.all(sqlAlbumsQuery);
-        //console.log(albums);
         return albums;
     }
     catch (e) {
@@ -310,7 +272,6 @@ async function getAlbums() {
 
 async function findBinary(id, thetype, albums) {
     var albumsToReturn = [];
-    console.log("HERE IS THE ID THAT IS PASSED " + id);
     for (i = 0; i < albums.length; i++) {
         if (albums[i][("" + thetype)].charAt(id) == 1) albumsToReturn.push(albums[i]);
     }
@@ -320,28 +281,16 @@ async function findBinary(id, thetype, albums) {
 async function findDate(date, albums) {
     var albumsToReturn = [];
     for (i = 0; i < albums.length; i++) {
-        try {
-            console.log(albums[i]["relDat"].toString().substring(0, 3));
-            console.log(date.substring(0, 3));
-        }
-        catch (e) { console.log("now you really fucked up "); throw e }
         if (albums[i]["relDat"].toString().substring(0, 3) == date.substring(0, 3)) albumsToReturn.push(albums[i]);
     }
-    console.log("HERE ARE THE ALBUSM TO RETURN IN THE FIND DATE FUNCTION " + albumsToReturn);
     return albumsToReturn;
 }
 
 async function findSearch(searchSTR, albums) {
     var albumsToReturn = [];
     for (i = 0; i < albums.length; i++) {
-        // try {
-        //     console.log(albums[i]["relDat"].toString().substring(0,3));
-        //     console.log(date.substring(0,3));
-        // }
-        // catch (e) {console.log("now you really fucked up "); throw e}
         if (albums[i]["name"].toString().toLowerCase().includes(searchSTR)) albumsToReturn.push(albums[i]);
     }
-    console.log("HERE ARE THE ALBUSM TO RETURN IN THE SEARCH SARCH SEARHC FUNCTION " + albumsToReturn);
     return albumsToReturn;
 }
 
@@ -465,15 +414,13 @@ var rel_types = ["Album", "EP", "Single", "Compilation"];
 app.get('/Album', async function (req, res) {
 
     var albumID = req.query.id;
-    console.log("here is the albumID " + albumID);
 
     var album;
     try { album = await getRelease(albumID); }
     catch (e) { res.render('pages/error'); }
-    console.log("here is the album " + album);
 
     var tracks = [];
-    try { tracks = await getTracks(albumID); console.log("HERE ARE THE TRACKS FROM THE ALBUM PAGE LOADER " + tracks) }
+    try { tracks = await getTracks(albumID) }
     catch (e) { console.log("track error"); }
 
     var shoppingItems = [];
@@ -505,7 +452,6 @@ app.get('/Album', async function (req, res) {
         ratingList.push(rating);
     }
     var total = 0;
-    console.log("here is the ratinglist " + ratingList);
     for (i = 0; i < ratingList.length; i++) total += ratingList[i];
     total = total / ratingList.length;
 
@@ -533,9 +479,8 @@ var discoverGet = async function (req, res) {
     //var where_string;
     var collectedAlbums;
     try { collectedAlbums = await getAlbums(); }
-    catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BROPOCALYPSE NOW " + e) }
+    catch (e) { console.log(e) }
     var albumsToReturnTest = collectedAlbums;
-    //console.log("WHEREBEFOREITALL " + where_string);
     var sortSTR = req.query.sort;
     var genreID = req.query.genre;
     var formatID = req.query.format;
@@ -552,8 +497,7 @@ var discoverGet = async function (req, res) {
         discover_wo_genre += "&decade=" + decadeSTR;
         discover_wo_sort += "&decade=" + decadeSTR;
         try { albumsToReturnTest = await findDate(decadeSTR, albumsToReturnTest); }
-        catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BERNSTEIN " + e) }
-        console.log("111111111111111111111!" + albumsToReturnTest);
+        catch (e) { console.log(e) }
     }
     if (genreID != null) {
         discover_wo_format += "&genre=" + genreID;
@@ -561,8 +505,7 @@ var discoverGet = async function (req, res) {
         discover_wo_decade += "&genre=" + genreID;
         discover_wo_sort += "&genre=" + genreID;
         try { albumsToReturnTest = await findBinary(genreID, "gID", albumsToReturnTest); }
-        catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BERNSTEIN " + e) }
-        console.log("11122222222222111111111!" + albumsToReturnTest);
+        catch (e) { console.log(e) }
     }
     if (formatID != null) {
         discover_wo_search += "&format=" + formatID;
@@ -570,8 +513,7 @@ var discoverGet = async function (req, res) {
         discover_wo_genre += "&format=" + formatID;
         discover_wo_sort += "&format=" + formatID;
         try { albumsToReturnTest = await findBinary(formatID, "relFor", albumsToReturnTest); }
-        catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BRAHMS " + e) }
-        console.log("11111111111111111133333333333111!" + albumsToReturnTest);
+        catch (e) { console.log(e) }
     }
     if (searchSTR != null) {
         discover_wo_format += "&search=" + searchSTR;
@@ -579,16 +521,13 @@ var discoverGet = async function (req, res) {
         discover_wo_genre += "&search=" + searchSTR;
         discover_wo_sort += "&search=" + searchSTR;
         try { albumsToReturnTest = await findSearch(searchSTR, albumsToReturnTest); }
-        catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BEEAATCHHH " + e) }
-        console.log("1111111111asdf33111!" + albumsToReturnTest);
+        catch (e) { console.log(e) }
     }
     if (sortSTR != null) {
         discover_wo_format += "&sort=" + sortSTR;
         discover_wo_search += "&sort=" + sortSTR;
         discover_wo_decade += "&sort=" + sortSTR;
         discover_wo_genre += "&sort=" + sortSTR;
-        console.log(sortSTR - 1);
-        console.log(sortAlbums(sortSTR - 1, albumsToReturnTest));
     }
 
 
@@ -618,7 +557,7 @@ app.get('/EditRelease', async function (req, res) {
         artists = await getArtists();
         console.log("HERE ARE THE ARTISTS " + artists);
     }
-    catch (e) { console.log("ALL THESE BITCHES ON MY DICK LIKE THEY SHOULD BE") }
+    catch (e) { console.log(e) }
     res.render('pages/edit_release');
 });
 
@@ -658,7 +597,7 @@ app.post('/Login', async function (req, res) {
                     }
                 }
             }
-            catch (e) { "hoppity fuckoff, why? becase " + console.log(e) }
+            catch (e) { console.log(e) }
         }
         res.render('pages/login');
     }
@@ -708,7 +647,6 @@ app.post("/Album", async function (req, res) {
         var rating = req.cookies["commentscore"];
         try {
             var query = "INSERT INTO Review VALUES(NULL, " + req.query.id + ", " + user_logged_in_cookie + ", " + rating + ", '" + review + "', '" + getDate() + "')";
-            console.log(query);
             // await db.run(query);
         }
         catch (e) {
@@ -726,14 +664,12 @@ app.post('/Register', async function (req, res) {
         var username = req.cookies["username"];
         var email = req.cookies["email"];
         var password = req.cookies["password"];
-        console.log("Username : " + username + "\nemil: " + email + "\nPassword : " + password);
         if (username.length < 4 || password.length < 4) { console.log("Post register data failed\n"); }
         else {
             try {
                 var usernameQuery = `SELECT UserName username FROM User WHERE UserName="${username}"`;
                 var usernames = await db.all(usernameQuery);
                 if (usernames.length != 0) {
-                    console.log(usernames.length);
                     console.log(usernames[0]["username"] + " user already exists in the database")
                 }
                 else {
