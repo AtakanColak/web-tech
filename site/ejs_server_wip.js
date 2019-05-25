@@ -47,13 +47,13 @@ async function start() {
 
     
 
-    var password = "password12345";
-    var hashed = hashPassword(password);
-    var truecheck = checkPassword(password, hashed);
-    var falsecheck = checkPassword("hello12", hashed);
-    if(truecheck == true && falsecheck == false) {
-        console.log(hashed + " \n");
-    }
+    // var password = "password12345";
+    // var hashed = hashPassword(password);
+    // var truecheck = checkPassword(password, hashed);
+    // var falsecheck = checkPassword("hello12", hashed);
+    // if(truecheck == true && falsecheck == false) {
+    //     console.log(hashed + " \n");
+    // }
 
 
     // app = express();
@@ -702,10 +702,10 @@ app.post('/Register', async function (req, res) {
             }
             catch (e) { "hoppity fuckoff, why? becase " + console.log(e) }
         }
-        res.render('pages/register');
+        res.render('pages/login');
     }
     catch (e) {
-        console.log("Post login data failed\n");
+        console.log("Post register data failed\n");
         res.render('pages/register');
     }
 });
