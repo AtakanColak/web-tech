@@ -666,6 +666,10 @@ app.get('/Register', function (req, res) {
     res.render('pages/register');
 });
 
+app.get('/', function(req,res) {
+    res.render('pages/home');
+});
+
 app.get('/Logout', function (req, res) {
     
     res.cookie("user", "false");

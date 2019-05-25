@@ -117,8 +117,11 @@ $(function () {
             $("#notloggedin").show();
             $("#cli").hide();
             $("#clo").show();
+            $("#loginhome").show();
+            
         }
         else {
+            $("#loginhome").hide();
             $("#clo").hide();
             $("#cli").show();
             $("#notloggedin").hide();
