@@ -3,11 +3,17 @@
 var express = require('express');
 var sqlite = require("sqlite");
 var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser')
+
 var app = express();
 app.set('view engine', 'ejs');
 app.use(cookieParser());
 app.use(express.static("public/"));
 
+app.use(bodyParser.json());       // to support JSON-encoded bodies
+app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+    extended: true
+}));
 const fs = require('fs');
 var options = {
     key: fs.readFileSync("public/server.key"),
@@ -32,7 +38,7 @@ function hashPassword(password) {
 }
 
 function checkPassword(password, hash) {
-    let buff = Buffer.from(hash, 'base64');  
+    let buff = Buffer.from(hash, 'base64');
     return scrpyt.verifyKdfSync(buff, password);
 }
 
@@ -45,7 +51,7 @@ function getIP(req) {
 
 async function start() {
 
-    
+
 
     // var password = "password12345";
     // var hashed = hashPassword(password);
@@ -452,7 +458,7 @@ function sortAlbums(sortType, albums) {
 function validateEmail(email) {
     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(email);
-  }
+}
 
 var rel_types = ["Album", "EP", "Single", "Compilation"];
 
@@ -522,7 +528,7 @@ app.get('/Album', async function (req, res) {
 
 });
 
- var discoverGet = async function (req, res) {
+var discoverGet = async function (req, res) {
     console.log(req.ip);
     //var where_string;
     var collectedAlbums;
@@ -604,7 +610,7 @@ app.get('/Discover', discoverGet);
 
 app.get('/EditRelease', async function (req, res) {
     var isadmin = (req.cookies["user"] == "admin");
-    if(!isadmin) {
+    if (!isadmin) {
         res.redirect("/Error");
     }
     var artists;
@@ -639,18 +645,18 @@ app.post('/Login', async function (req, res) {
                     console.log("that username does not exist");
                 }
                 else {
-                    if (!checkPassword(password, users[0]["password"])) {console.log("bad password")}
+                    if (!checkPassword(password, users[0]["password"])) { console.log("bad password") }
                     else {
-                            console.log("user was logged in");
-                            // req.cookies["user"]
-                            //IF ADMIN SET TO admin
-                            if(users[0]["isadmin"] == 1) {res.cookie("user", "admin");}
-                            else {res.cookie("user", "member");}
-                            //IF USER SET TO user
-                            res.cookie("userID", users[0]["uid"]);
-                            res.redirect('/Discover');
-                         }
-                }   
+                        console.log("user was logged in");
+                        // req.cookies["user"]
+                        //IF ADMIN SET TO admin
+                        if (users[0]["isadmin"] == 1) { res.cookie("user", "admin"); }
+                        else { res.cookie("user", "member"); }
+                        //IF USER SET TO user
+                        res.cookie("userID", users[0]["uid"]);
+                        res.redirect('/Discover');
+                    }
+                }
             }
             catch (e) { "hoppity fuckoff, why? becase " + console.log(e) }
         }
@@ -666,7 +672,7 @@ app.get('/Register', function (req, res) {
     res.render('pages/register');
 });
 
-app.get('/', function(req,res) {
+app.get('/', function (req, res) {
     res.render('pages/home');
 });
 
@@ -684,23 +690,26 @@ async function getDate() {
     var yyyy = today.getFullYear();
     if (dd < 10) {
         dd = '0' + dd;
-    } 
+    }
     if (mm < 10) {
         mm = '0' + mm;
-    } 
+    }
     var today = dd + '.' + mm + '.' + yyyy;
     return today;
-} 
+}
 
-async function addComment() {
+
+app.post("/Album", async function (req, res) {
     //db.run("INSERT INTO Review VALUES(NULL, 1, 2, 5, 'The va.', '09.02.2019')");
     var user_logged_in_cookie = req.cookies["userID"];
     try {
         //Review (ID INTEGER NOT NULL PRIMARY KEY, ReleaseID int, UserID int, Rating int, Comment Text, Date Text);");
-        var review = req.cookies["review"];
+        var review = req.body.user_comment;
         var rating = req.cookies["commentscore"];
         try {
-            await db.run("INSERT INTO Review VALUES(NULL, " + req.query.id + ", " + user_logged_in_cookie + ", " + rating + ", '" + review + "', '" + getDate() + "')");
+            var query = "INSERT INTO Review VALUES(NULL, " + req.query.id + ", " + user_logged_in_cookie + ", " + rating + ", '" + review + "', '" + getDate() + "')";
+            console.log(query);
+            // await db.run(query);
         }
         catch (e) {
 
@@ -709,12 +718,13 @@ async function addComment() {
     catch (e) {
 
     }
-}
+    res.redirect("/Album?id=" + req.query.id);
+});
 
 app.post('/Register', async function (req, res) {
     try {
         var username = req.cookies["username"];
-        var email    = req.cookies["email"];
+        var email = req.cookies["email"];
         var password = req.cookies["password"];
         console.log("Username : " + username + "\nemil: " + email + "\nPassword : " + password);
         if (username.length < 4 || password.length < 4) { console.log("Post register data failed\n"); }
@@ -729,15 +739,15 @@ app.post('/Register', async function (req, res) {
                 else {
                     var emailQuery = `SELECT Email email FROM User WHERE Email="${email}"`;
                     var emails = await db.all(emailQuery);
-                    if (emails.length != 0) {console.log(emails[0]["email"] + " email already exists in the database")}
+                    if (emails.length != 0) { console.log(emails[0]["email"] + " email already exists in the database") }
                     else {
                         if (!validateEmail(email)) console.log("enter a valid email");
                         else {
                             await db.run("INSERT INTO User VALUES(NULL, '" + username + "', '" + hashPassword(password) + "', '" + email + "', 0)");
-                            console.log("Post register data successful\n"); 
+                            console.log("Post register data successful\n");
                         }
                     }
-                }   
+                }
             }
             catch (e) { "hoppity fuckoff, why? becase " + console.log(e) }
         }
