@@ -632,7 +632,7 @@ app.post('/Login', async function (req, res) {
         if (username.length < 4 || password.length < 4) { console.log("Post login data failed\n"); }
         else {
             try {
-                var userQuery = `SELECT UserName username, Password password, IsAdmin isadmin FROM User WHERE UserName="${username}"`;
+                var userQuery = `SELECT UserName username, Password password, IsAdmin isadmin, ID uid FROM User WHERE UserName="${username}"`;
                 var users = await db.all(userQuery);
                 if (users.length == 0) {
                     console.log(users.length);
@@ -647,7 +647,7 @@ app.post('/Login', async function (req, res) {
                             if(users[0]["isadmin"] == 1) {res.cookie("user", "admin");}
                             else {res.cookie("user", "member");}
                             //IF USER SET TO user
-                            
+                            res.cookie("userID", users[0]["uid"]);
                             res.redirect('/Discover');
                          }
                 }   
@@ -671,10 +671,45 @@ app.get('/', function(req,res) {
 });
 
 app.get('/Logout', function (req, res) {
-    
+    res.cookie("userID", "-1");
     res.cookie("user", "false");
     res.redirect('/Login');
 });
+
+async function getDate() {
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth() + 1; //January is 0!
+
+    var yyyy = today.getFullYear();
+    if (dd < 10) {
+        dd = '0' + dd;
+    } 
+    if (mm < 10) {
+        mm = '0' + mm;
+    } 
+    var today = dd + '.' + mm + '.' + yyyy;
+    return today;
+} 
+
+async function addComment() {
+    //db.run("INSERT INTO Review VALUES(NULL, 1, 2, 5, 'The va.', '09.02.2019')");
+    var user_logged_in_cookie = req.cookies["userID"];
+    try {
+        //Review (ID INTEGER NOT NULL PRIMARY KEY, ReleaseID int, UserID int, Rating int, Comment Text, Date Text);");
+        var review = req.cookies["review"];
+        var rating = req.cookies["commentscore"];
+        try {
+            await db.run("INSERT INTO Review VALUES(NULL, " + req.query.id + ", " + user_logged_in_cookie + ", " + rating + ", '" + review + "', '" + getDate() + "')");
+        }
+        catch (e) {
+
+        }
+    }
+    catch (e) {
+
+    }
+}
 
 app.post('/Register', async function (req, res) {
     try {
