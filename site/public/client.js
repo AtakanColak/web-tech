@@ -118,6 +118,20 @@ $(function () {
         Cookies.set("password", p);
     });
 
+    $("#addrelease").click(function (e) {
+        Cookies.set("releasename", $(this).parents("form").find("#input_release_name").val());
+        Cookies.set("artistname", $(this).parents("form").find("#input_artist").val());
+        Cookies.set("coverpath", $(this).parents("form").find("#inputGroupFile01").val());
+        Cookies.set("releasetype", $(this).parents("form").find("#input_release_type").val());
+        Cookies.set("releasedate", $(this).parents("form").find("#input_release_date").val());
+        Cookies.set("releaselength", $(this).parents("form").find("#input_release_length").val());
+        Cookies.set("labelname", $(this).parents("form").find("#input_label").val());
+        //releaseformats
+        //releasegenres
+        Cookies.set("description", $(this).parents("form").find("#input_release_desc").val());
+        //songs
+    });
+
     $(document).ready(function () {
         if (Cookies.get("user") == "false") {
             $("#loggedin").hide();
