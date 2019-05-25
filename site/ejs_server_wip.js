@@ -708,8 +708,7 @@ app.post("/Album", async function (req, res) {
         var review = req.cookies["comment"];
         var rating = req.cookies["commentscore"];
         try {
-            var query = "INSERT INTO Review VALUES(NULL, " + req.query.id + ", " + user_logged_in_cookie + ", " + rating + ", '" + review + "', '" + getDate() + "')";
-            // console.log(query);
+            var query = "INSERT INTO Review VALUES(NULL, " + req.query.id + ", " + user_logged_in_cookie + ", " + rating + ", '" + review + "', '" + await getDate() + "')";
             await db.run(query);
         }
         catch (e) {
@@ -719,7 +718,7 @@ app.post("/Album", async function (req, res) {
     catch (e) {
 
     }
-    res.redirect("/Discover");
+    res.redirect("/Album?id=" + req.query.id);
 });
 
 app.post('/Register', async function (req, res) {
