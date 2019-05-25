@@ -107,6 +107,15 @@ function makeStringFromBin(theString, thetype) {
     return newString;
 }
 
+// function makeBinFromString(theString, thetype) {
+//     var newString = "";
+//     if (thetype == "format") {
+//         theString = "0000";
+
+//     }
+//     else if (thetype == "genre") theBin = "0000000000";
+// }
+
 function toMMSS(thetime) {
     var hours = parseInt(thetime[0]) + parseInt(thetime[1]);
     var minutes = parseInt(thetime[3] + thetime[4]);
@@ -115,9 +124,24 @@ function toMMSS(thetime) {
     return total;
 }
 
+function toUnix(thetime) {
+    var hours = parseInt(thetime[0]) + parseInt(thetime[1]);
+    var minutes = parseInt(thetime[3] + thetime[4]);
+    var seconds = parseInt(thetime[5] + thetime[6]);
+    return seconds + minutes*60 + hours*3600;
+}
+
 function returnFormats() {
     return ["Vinyl", "CD", "Cassette", "Digital"];
 }
+
+async function returnTypeID(type) {
+    if      (format == "Album") return 0;
+    else if (format == "EP") return 1;
+    else if (format == "Single") return 2;
+    else if (format == "Compilation") return 3;
+    else if (format == "Other") return 4;
+} 
 
 function returnGenres() {
     return ["Dance", "Electronic", "Experimental", "Folk", "Hip Hop", "Jazz", "Pop", "Punk", "Rock", "Metal"];
@@ -410,7 +434,7 @@ function validateEmail(email) {
     return re.test(email);
 }
 
-var rel_types = ["Album", "EP", "Single", "Compilation"];
+var rel_types = ["Album", "EP", "Single", "Compilation", "Other"];
 
 app.get('/Album', async function (req, res) {
 
@@ -636,6 +660,51 @@ async function getDate() {
     }
     var today = dd + '.' + mm + '.' + yyyy;
     return today;
+}
+
+async function addReleaseData() {
+    try {
+        var releaseName = req.cookies["releasename"];
+        var artistName  = req.cookies["artistname"];
+        var coverPath   = req.cookies["coverpath"];
+        var releaseType = req.cookies["releasetype"];
+        var releaseDate = req.cookies["releasedate"];
+        var releaseLen  = req.cookies["releaselength"];
+        var labelName   = req.cookies["labelname"];
+        var formats     = req.cookies["formats"];
+        var genres      = req.cookies["genres"];
+        var description = req.cookies["description"];
+        try {
+            //get the artist and label IDs
+            var artistQuery = `SELECT ID aID FROM Artist WHERE ArtistName="'${artistName}'"`;
+            var artistID = await db.all(artistQuery);
+            var labelQuery = `SELECT ID labelID FROM Label WHERE LabelID="'${labelName}'"`;
+            var labelID = await db.all(labelQuery);
+            var query = "INSERT INTO Release VALUES(NULL, '" + coverPath + "', '" + releaseName + "', " + artistID + ", " + returnTypeID(releaseType) + ", " + releaseDate      + ", '" + releaseLen + "', " + labelID + ", '" + formats + "', " + 0 + ", '" + description + "', " + 0 + ", '" + genres + "')";
+            await db.run(query);
+        }
+        catch (e) {}
+    }
+    catch (e) {}
+}
+
+async function addTrackData() {
+    //db.run("CREATE TABLE Track (ID INTEGER NOT NULL PRIMARY KEY, TrackName Str, TrackLength int, TrackPath Str, ReleaseID int, TrackIndex int);");
+    //db.run("INSERT INTO Track VALUES(NULL, 'Up Syndrome', time(129, 'unixepoch'), 'not sure what to put here', 1, 1)");
+
+    try {
+        var trackName = req.cookies["trackname"];
+        var trackLen  = toUnix(req.cookies["tracklength"]);
+        var trackPath = req.cookies["trackpath"];
+        var trackNum  = req.cookies["tracknum"];
+        var releaseID = 0;
+        try {
+            var query = "INSERT INTO Track VALUES(NULL, '" + trackName + "', time(" + trackLen + "), ''unixepoch''), '" + trackPath + "', " + releaseID + ", " + trackNum + ")";
+            await db.run(query);
+        }
+        catch (e) {}
+    }
+    catch (e) {}
 }
 
 
