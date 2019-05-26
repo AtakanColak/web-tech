@@ -689,17 +689,15 @@ async function addReleaseData() {
 }
 
 async function addTrackData() {
-    //db.run("CREATE TABLE Track (ID INTEGER NOT NULL PRIMARY KEY, TrackName Str, TrackLength int, TrackPath Str, ReleaseID int, TrackIndex int);");
-    //db.run("INSERT INTO Track VALUES(NULL, 'Up Syndrome', time(129, 'unixepoch'), 'not sure what to put here', 1, 1)");
-
     try {
         var trackName = req.cookies["trackname"];
         var trackLen  = toUnix(req.cookies["tracklength"]);
         var trackPath = req.cookies["trackpath"];
         var trackNum  = req.cookies["tracknum"];
-        var releaseID = 0;
         try {
-            var query = "INSERT INTO Track VALUES(NULL, '" + trackName + "', time(" + trackLen + "), ''unixepoch''), '" + trackPath + "', " + releaseID + ", " + trackNum + ")";
+            var releaseQuery = `SELECT ID id FROM Release ORDER BY ID DESC LIMIT 1`;
+            var releaseID = await db.all(releaseQuery);
+            var query = "INSERT INTO Track VALUES(NULL, '" + trackName + "', time(" + trackLen + "), ''unixepoch''), '" + trackPath + "', " + releaseID+1 + ", " + trackNum + ")";
             await db.run(query);
         }
         catch (e) {}
