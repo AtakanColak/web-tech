@@ -13,7 +13,7 @@
 
     <main class="container">
         <div class="p-5 row">
-            <form method="post" class="col-sm-8 offset-sm-2">
+            <form action="/AddRelease" method="post" enctype="multipart/form-data" class="col-sm-8 offset-sm-2">
                 <h1>Add Release</h1>
                 <div class="form-group row">
                     <label for="input_release_name" class="col-sm-4 col-form-label">Release Name</label>
@@ -25,7 +25,8 @@
                     <label for="input_artist" class="col-sm-4 col-form-label">Artist</label>
                     <div class="col-sm-8">
                         <button class="btn btn-outline-secondary dropdown-toggle col text-left" type="button"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="input_artist">Artist</button>
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                            id="input_artist">Artist</button>
                         <div class="dropdown-menu">
                             <a class="dropdown-item" href="#">Atakan Colak</a>
                             <a class="dropdown-item" href="#">Anton Sukhorukov</a>
@@ -36,8 +37,8 @@
                     <label for="input_cover_art" class="col-sm-4 col-form-label">Cover Art</label>
                     <div class="input-group col-sm-8">
                         <div class="custom-file">
-                            <input type="file" class="custom-file-input" id="inputGroupFile01"
-                                aria-describedby="inputGroupFileAddon01" accept=".png">
+                            <input type="file" class="custom-file-input" id="coverart"
+                                aria-describedby="inputGroupFileAddon01" accept=".png" enctype="multipart/form-data" />
                             <label class="custom-file-label noverflow" for="inputGroupFile01">Choose file</label>
                         </div>
                     </div>
@@ -46,7 +47,8 @@
                     <label for="input_release_type" class="col-sm-4 col-form-label">Release Type</label>
                     <div class="col-sm-8">
                         <button class="btn btn-outline-secondary dropdown-toggle col text-left" type="button"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="input_release_type">Release Type</button>
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                            id="input_release_type">Release Type</button>
                         <div class="dropdown-menu">
                             <a class="dropdown-item" href="#">Single</a>
                             <a class="dropdown-item" href="#">EP</a>
@@ -73,7 +75,8 @@
                     <label for="input_label" class="col-sm-4 col-form-label">Label</label>
                     <div class="col-sm-8">
                         <button class="btn btn-outline-secondary dropdown-toggle col text-left" type="button"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="input_label">Label</button>
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                            id="input_label">Label</button>
                         <div class="dropdown-menu">
                             <a class="dropdown-item" href="#">No Label</a>
                             <a class="dropdown-item" href="#">ur the Best - Music</a>
@@ -84,27 +87,51 @@
                     <label for="input_release_formats" class="col-sm-4 col-form-label">Release Formats</label>
                     <div class="col-sm-8">
                         <label class="row ml-1 mt-2 align-items-center">
-                            <input type="checkbox" value="false" /> Digital
+                            <input id="digital" type="checkbox" value="false" /> Digital
                         </label>
                         <label class="row ml-1 align-items-center">
-                            <input type="checkbox" value="false" /> CD
+                            <input id="cd" type="checkbox" value="false" /> CD
                         </label>
                         <label class="row ml-1 align-items-center">
-                            <input type="checkbox" value="false" /> Vinyl
+                            <input id="vinyl" type="checkbox" value="false" /> Vinyl
+                        </label>
+                        <label class="row ml-1 align-items-center">
+                            <input id="casette" type="checkbox" value="false" /> Casette
                         </label>
                     </div>
                 </div>
                 <div class="form-group row">
                     <label for="input_release_genres" class="col-sm-4 col-form-label">Release Genres</label>
                     <div class="col-sm-8">
+                        <label class="row ml-1 align-items-center">
+                            <input id="dance" type="checkbox" value="false" /> Dance
+                        </label>
+                        <label class="row ml-1 align-items-center">
+                            <input id="electronic" type="checkbox" value="false" /> Electronic
+                        </label>
+                        <label class="row ml-1 align-items-center">
+                            <input id="experimental" type="checkbox" value="false" /> Experimental
+                        </label>
+                        <label class="row ml-1 align-items-center">
+                            <input id="folk" type="checkbox" value="false" /> Folk
+                        </label>
+                        <label class="row ml-1 align-items-center">
+                            <input id="hiphop" type="checkbox" value="false" /> Hip Hop
+                        </label>
+                        <label class="row ml-1 align-items-center">
+                            <input id="jazz" type="checkbox" value="false" /> Jazz
+                        </label>
+                        <label class="row ml-1 align-items-center">
+                            <input id="pop" type="checkbox" value="false" /> Pop
+                        </label>
+                        <label class="row ml-1 align-items-center">
+                            <input id="punk" type="checkbox" value="false" /> Punk
+                        </label>
                         <label class="row ml-1 mt-2 align-items-center">
-                            <input type="checkbox" value="false" /> Rock
+                            <input id="rock" type="checkbox" value="false" /> Rock
                         </label>
                         <label class="row ml-1 align-items-center">
-                            <input type="checkbox" value="false" /> Hip Hop
-                        </label>
-                        <label class="row ml-1 align-items-center">
-                            <input type="checkbox" value="false" /> K-Pop
+                            <input id="metal" type="checkbox" value="false" /> Metal
                         </label>
                     </div>
                 </div>
@@ -115,7 +142,7 @@
                             placeholder="Description"></textarea>
                     </div>
                 </div>
-                <div class="form-group row song-section">
+                <!-- <div class="form-group row song-section">
                     <label for="input_song_list" class="col-sm-4 col-form-label">Songs</label>
                     <div class="col-sm-8">
                         <div class="jumbotron p-3 mb-0">
@@ -164,7 +191,7 @@
                             </ul>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <button id="addrelease" type="submit" class="btn btn-dark mt-3">Add Release</button>
             </form>
 
