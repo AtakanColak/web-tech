@@ -4,6 +4,7 @@ var express = require('express');
 var sqlite = require("sqlite");
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser')
+var multer = require('multer');
 
 var app = express();
 app.set('view engine', 'ejs');
@@ -27,6 +28,17 @@ var io = require("socket.io")(https);
 var scrpyt = require("scrypt");
 
 var db;// = await sqlite.open("bruh.db");
+
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'images')
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.fieldname + '-' + Date.now())
+    }
+});
+
+var upload = multer({storage:storage});
 
 start();
 // console.log("IS THIS EXECUTED EVERYTIME?");
@@ -70,6 +82,8 @@ async function start() {
     // http = require("http").createServer(app);
     // https = require("https").createServer(options, app);
     // io = require("socket.io")(http);
+
+    
 }
 
 function makeStringFromBin(theString, thetype) {
@@ -580,7 +594,7 @@ app.get('/EditRelease', async function (req, res) {
     var artists;
     try {
         artists = await getArtists();
-        console.log("HERE ARE THE ARTISTS " + artists);
+        // console.log("HERE ARE THE ARTISTS " + artists);
     }
     catch (e) { console.log(e) }
     res.render('pages/edit_release');
@@ -662,31 +676,7 @@ async function getDate() {
     return today;
 }
 
-async function addReleaseData() {
-    try {
-        var releaseName = req.cookies["releasename"];
-        var artistName  = req.cookies["artistname"];
-        var coverPath   = req.cookies["coverpath"];
-        var releaseType = req.cookies["releasetype"];
-        var releaseDate = req.cookies["releasedate"];
-        var releaseLen  = req.cookies["releaselength"];
-        var labelName   = req.cookies["labelname"];
-        var formats     = req.cookies["formats"];
-        var genres      = req.cookies["genres"];
-        var description = req.cookies["description"];
-        try {
-            //get the artist and label IDs
-            var artistQuery = `SELECT ID aID FROM Artist WHERE ArtistName="'${artistName}'"`;
-            var artistID = await db.all(artistQuery);
-            var labelQuery = `SELECT ID labelID FROM Label WHERE LabelID="'${labelName}'"`;
-            var labelID = await db.all(labelQuery);
-            var query = "INSERT INTO Release VALUES(NULL, '" + coverPath + "', '" + releaseName + "', " + artistID + ", " + returnTypeID(releaseType) + ", " + releaseDate      + ", '" + releaseLen + "', " + labelID + ", '" + formats + "', " + 0 + ", '" + description + "', " + 0 + ", '" + genres + "')";
-            await db.run(query);
-        }
-        catch (e) {}
-    }
-    catch (e) {}
-}
+
 
 async function addTrackData() {
     try {
@@ -761,6 +751,34 @@ app.post('/Register', async function (req, res) {
         console.log("Post register data failed\n");
         res.render('pages/register');
     }
+});
+
+
+app.post("/AddRelease", async function (req, res) {
+    try {
+        var releaseName = req.cookies["releasename"];
+        var artistName  = req.cookies["artistname"];
+        var coverPath   = req.cookies["coverpath"];
+        var releaseType = req.cookies["releasetype"];
+        var releaseDate = req.cookies["releasedate"];
+        var releaseLen  = req.cookies["releaselength"];
+        var labelName   = req.cookies["labelname"];
+        var formats     = req.cookies["formats"];
+        var genres      = req.cookies["genres"];
+        var description = req.cookies["description"];
+        try {
+            //get the artist and label IDs
+            var artistQuery = `SELECT ID aID FROM Artist WHERE ArtistName="'${artistName}'"`;
+            var artistID = await db.all(artistQuery);
+            var labelQuery = `SELECT ID labelID FROM Label WHERE LabelID="'${labelName}'"`;
+            var labelID = await db.all(labelQuery);
+            var query = "INSERT INTO Release VALUES(NULL, '" + coverPath + "', '" + releaseName + "', " + artistID + ", " + returnTypeID(releaseType) + ", " + releaseDate      + ", '" + releaseLen + "', " + labelID + ", '" + formats + "', " + 0 + ", '" + description + "', " + 0 + ", '" + genres + "')";
+            await db.run(query);
+        }
+        catch (e) {}
+    }
+    catch (e) {}
+    res.redirect("/Discover");
 });
 
 // io.on('connection', function (socket) {
