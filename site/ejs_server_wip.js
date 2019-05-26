@@ -149,7 +149,7 @@ function returnFormats() {
     return ["Vinyl", "CD", "Cassette", "Digital"];
 }
 
-async function returnTypeID(type) {
+async function returnTypeID(format) {
     if      (format == "Album") return 0;
     else if (format == "EP") return 1;
     else if (format == "Single") return 2;
@@ -586,18 +586,27 @@ var discoverGet = async function (req, res) {
 
 app.get('/Discover', discoverGet);
 
+app.get("/DeleteAlbum", async function (req, res) {
+    var albumID = req.query.id;
+    var sqlAlbumsQuery = `DELETE FROM Release WHERE ID = "${albumID}"`;
+    await db.all(sqlAlbumsQuery);
+    res.redirect("/Discover");
+});
+
 app.get('/EditRelease', async function (req, res) {
     var isadmin = (req.cookies["user"] == "admin");
     if (!isadmin) {
         res.redirect("/Error");
     }
     var artists;
+    var albums;
     try {
         artists = await getArtists();
+        albums = await getAlbums();
         // console.log("HERE ARE THE ARTISTS " + artists);
     }
     catch (e) { console.log(e) }
-    res.render('pages/edit_release');
+    res.render('pages/edit_release', {releases : albums});
 });
 
 app.get('/Error', function (req, res) {
@@ -759,25 +768,38 @@ app.post('/Register', async function (req, res) {
 app.post("/AddRelease", async function (req, res) {
     try {
         var releaseName = req.cookies["releasename"];
-        var artistName  = req.cookies["artistname"];
+        console.log("Release name : " + releaseName);
+        var artistID  = req.cookies["artistname"];
+        console.log("Artist name : " + artistID);
         var coverPath   = req.cookies["coverpath"];
+        console.log("coverpath : " + coverPath);
         var releaseType = req.cookies["releasetype"];
+        console.log("releaseType : " + releaseType);
         var releaseDate = req.cookies["releasedate"];
+        console.log(" releaseDate : " +  releaseDate);
         var releaseLen  = req.cookies["releaselength"];
-        var labelName   = req.cookies["labelname"];
+        console.log("releaseLen : " + releaseLen);
+        var labelID   = req.cookies["labelname"];
+        console.log("labelName : " + labelID);
         var formats     = req.cookies["formats"];
+        console.log("formats : " + formats);
         var genres      = req.cookies["genres"];
+        console.log("genres : " + genres);
         var description = req.cookies["description"];
+        console.log("description : " + description);
         try {
             //get the artist and label IDs
-            var artistQuery = `SELECT ID aID FROM Artist WHERE ArtistName="'${artistName}'"`;
-            var artistID = await db.all(artistQuery);
-            var labelQuery = `SELECT ID labelID FROM Label WHERE LabelID="'${labelName}'"`;
-            var labelID = await db.all(labelQuery);
-            var query = "INSERT INTO Release VALUES(NULL, '" + coverPath + "', '" + releaseName + "', " + artistID + ", " + returnTypeID(releaseType) + ", " + releaseDate      + ", '" + releaseLen + "', " + labelID + ", '" + formats + "', " + 0 + ", '" + description + "', " + 0 + ", '" + genres + "')";
+            // var artistQuery = `SELECT ID aID FROM Artist WHERE ArtistName="'${artistName}'"`;
+            // var artistID = await db.all(artistQuery);
+            // var labelQuery = `SELECT ID labelID FROM Label WHERE LabelID="'${labelName}'"`;
+            // var labelID = await db.all(labelQuery);
+            var query = "INSERT INTO Release VALUES(NULL, '" + coverPath + "', '" + releaseName + "', " + artistID + ", " + releaseType + ", " + releaseDate      + ", '" + releaseLen + "', " + labelID + ", '" + formats + "', " + 0 + ", '" + description + "', " + 0 + ", '" + genres + "')";
+            console.log(query);
             await db.run(query);
         }
-        catch (e) {}
+        catch (e) {
+            console.log(e);
+        }
     }
     catch (e) {}
     res.redirect("/Discover");

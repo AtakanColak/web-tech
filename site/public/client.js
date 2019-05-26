@@ -17,24 +17,24 @@ $(function () {
 
     var socket = io();
 
-    $(window).resize(function () {
-        var wh = $(window).height();
-        var mh = $("main").height();
-        var bm = $("main").offset().top + mh;
-        if (bm < wh) {
-            var bh = $("body").height();
-            var hh = $("header").height();
-            var fh = bh - (hh + mh);
-            $("footer").height(fh);
-            var footerbottom = $("footer").offset().top + $("footer").height();
-            var subfootertop = footerbottom - $(".subfooter").height();
-            // $("footer").css({position: 'relative'});
-            $(".subfooter").css({ top: subfootertop, position: 'absolute' });
-        }
+    // $(window).resize(function () {
+    //     var wh = $(window).height();
+    //     var mh = $("main").height();
+    //     var bm = $("main").offset().top + mh;
+    //     if (bm < wh) {
+    //         var bh = $("body").height();
+    //         var hh = $("header").height();
+    //         var fh = bh - (hh + mh);
+    //         $("footer").height(fh);
+    //         var footerbottom = $("footer").offset().top + $("footer").height();
+    //         var subfootertop = footerbottom - $(".subfooter").height();
+    //         // $("footer").css({position: 'relative'});
+    //         $(".subfooter").css({ top: subfootertop, position: 'absolute' });
+    //     }
 
-    });
+    // });
 
-    $(window).resize();
+    // $(window).resize();
 
     $(window).mousedown(function () {
         $(window).resize();
@@ -122,7 +122,7 @@ $(function () {
     $("#addrelease").click(function (e) {
         Cookies.set("releasename", $(this).parents("form").find("#input_release_name").val());
         Cookies.set("artistname", $(this).parents("form").find("#input_artist").val());
-        Cookies.set("coverpath", $(this).parents("form").find("#inputGroupFile01").val());
+        Cookies.set("coverpath", $(this).parents("form").find("#coverart").val());
         Cookies.set("releasetype", $(this).parents("form").find("#input_release_type").val());
         Cookies.set("releasedate", $(this).parents("form").find("#input_release_date").val());
         Cookies.set("releaselength", $(this).parents("form").find("#input_release_length").val());
@@ -131,24 +131,24 @@ $(function () {
         
         //releaseformats
         //v , cd, casette, digital
-        var vinyl = $(this).parents("form").find("#vinyl").val() ? "1" : "0";
-        var cd = $(this).parents("form").find("#cd").val() ? "1" : "0";
-        var casette = $(this).parents("form").find("#casette").val() ? "1" : "0";
-        var digital = $(this).parents("form").find("#digital").val() ? "1" : "0";
+        var vinyl = $(this).parents("form").find("#vinyl").val()  == "true"? "1" : "0";
+        var cd = $(this).parents("form").find("#cd").val()  == "true"? "1" : "0";
+        var casette = $(this).parents("form").find("#casette").val() == "true" ? "1" : "0";
+        var digital = $(this).parents("form").find("#digital").val()  == "true"? "1" : "0";
         Cookies.set("formats", vinyl + cd + casette + digital );
         
         //releasegenres
         //dance, electronic, experimental, folk, hiphop, jazz, pop, punk, rock, metal
-        var dance = $(this).parents("form").find("#dance").val() ? "1" : "0";
-        var electronic = $(this).parents("form").find("#electronic").val() ? "1" : "0";
-        var experimental = $(this).parents("form").find("#experimental").val() ? "1" : "0";
-        var folk = $(this).parents("form").find("#folk").val() ? "1" : "0";
-        var hiphop = $(this).parents("form").find("#hiphop").val() ? "1" : "0";
-        var jazz = $(this).parents("form").find("#jazz").val() ? "1" : "0";
-        var pop = $(this).parents("form").find("#pop").val() ? "1" : "0";
-        var punk = $(this).parents("form").find("#punk").val() ? "1" : "0";
-        var rock = $(this).parents("form").find("#rock").val() ? "1" : "0";
-        var metal = $(this).parents("form").find("#metal").val() ? "1" : "0";
+        var dance = $(this).parents("form").find("#dance").val() == "true" ? "1" : "0";
+        var electronic = $(this).parents("form").find("#electronic").val() == "true" ? "1" : "0";
+        var experimental = $(this).parents("form").find("#experimental").val() == "true"? "1" : "0";
+        var folk = $(this).parents("form").find("#folk").val() == "true"? "1" : "0";
+        var hiphop = $(this).parents("form").find("#hiphop").val() == "true"? "1" : "0";
+        var jazz = $(this).parents("form").find("#jazz").val() == "true"? "1" : "0";
+        var pop = $(this).parents("form").find("#pop").val() == "true"? "1" : "0";
+        var punk = $(this).parents("form").find("#punk").val() == "true"? "1" : "0";
+        var rock = $(this).parents("form").find("#rock").val() == "true"? "1" : "0";
+        var metal = $(this).parents("form").find("#metal").val() == "true"? "1" : "0";
         Cookies.set("genres", dance + electronic + experimental + folk + hiphop + jazz + pop + punk + rock + metal);
         Cookies.set("description", $(this).parents("form").find("#input_release_desc").val());
         //songs

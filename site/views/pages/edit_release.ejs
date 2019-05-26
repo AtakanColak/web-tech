@@ -28,8 +28,8 @@
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                             id="input_artist">Artist</button>
                         <div class="dropdown-menu">
+                            <a class="dropdown-item" href="#">Naked Flames</a>
                             <a class="dropdown-item" href="#">Atakan Colak</a>
-                            <a class="dropdown-item" href="#">Anton Sukhorukov</a>
                         </div>
                     </div>
                 </div>
@@ -199,9 +199,14 @@
         <div class="p-5 row">
             <form class="col-sm-8 offset-sm-2">
                 <h1>Remove Release</h1>
-                <ul class="max-300 p-3">
-                    <li></li>
-                </ul>
+                <div class="max-300 p-3">
+                        <% releases.forEach(function(release) { %>
+                            <div class="row">
+                                <b class="col-sm-10"><%= release.name %></b>
+                                <a class="text-danger col" href="/DeleteAlbum?id=<%=release.id%>">Delete</a>
+                            </div>
+                        <% }); %>
+                        </div>
             </form>
         </div>
     </main>
