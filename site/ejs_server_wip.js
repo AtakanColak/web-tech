@@ -626,10 +626,14 @@ app.get('/Error', function (req, res) {
 });
 
 app.get('/Login', function (req, res) {
-
+    var u = req.cookies["user"]
+    if(u == "false") {
     res.render('pages/login', {
         loginmsg: ""
-    });
+    });}
+    else {
+        res.redirect("/");
+    }
 });
 
 app.post('/Login', async function (req, res) {
