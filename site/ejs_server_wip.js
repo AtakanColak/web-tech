@@ -121,15 +121,6 @@ function makeStringFromBin(theString, thetype) {
     return newString;
 }
 
-// function makeBinFromString(theString, thetype) {
-//     var newString = "";
-//     if (thetype == "format") {
-//         theString = "0000";
-
-//     }
-//     else if (thetype == "genre") theBin = "0000000000";
-// }
-
 function toMMSS(thetime) {
     var hours = parseInt(thetime[0]) + parseInt(thetime[1]);
     var minutes = parseInt(thetime[3] + thetime[4]);
@@ -148,14 +139,6 @@ function toUnix(thetime) {
 function returnFormats() {
     return ["Vinyl", "CD", "Cassette", "Digital"];
 }
-
-async function returnTypeID(format) {
-    if      (format == "Album") return 0;
-    else if (format == "EP") return 1;
-    else if (format == "Single") return 2;
-    else if (format == "Compilation") return 3;
-    else if (format == "Other") return 4;
-} 
 
 function returnGenres() {
     return ["Dance", "Electronic", "Experimental", "Folk", "Hip Hop", "Jazz", "Pop", "Punk", "Rock", "Metal"];
@@ -472,27 +455,16 @@ app.get('/Album', async function (req, res) {
 
     var label;
     try { label = await getLabel(album["lID"]); }
-    catch (e) { label = "erro13r"; }
+    catch (e) { label = "error"; }
 
     var artist;
     try { artist = await getArtist(album["aID"]); }
-    catch (e) { artist = "erro12133r"; }
+    catch (e) { artist = "error"; }
 
     for (let i = 0; i < comments.length; i++) {
-        //var user;
         try { comments[i].username = await getUser(comments[i].userid); }
-        catch (e) { comments[i].username = "oijadsoijdsaerro12133r"; }
+        catch (e) { comments[i].username = "error"; }
     }
-
-    // var ratingList = [];
-    // for (let i = 0; i < comments.length; i++) {
-    //     try { rating = await getRating(albumID); }
-    //     catch (e) { rating = "oijadsoijdasdasdasdadsro12133r"; }
-    //     ratingList.push(rating);
-    // }
-    // var total = 0;
-    // for (i = 0; i < ratingList.length; i++) total += ratingList[i];
-    // total = total / ratingList.length;
     
     var ratings = [];
     var total = 0;
@@ -528,7 +500,6 @@ app.get('/Album', async function (req, res) {
 });
 
 var discoverGet = async function (req, res) {
-    //var where_string;
     var collectedAlbums;
     try { collectedAlbums = await getAlbums(); }
     catch (e) { console.log(e) }
@@ -617,7 +588,6 @@ app.get('/EditRelease', async function (req, res) {
     try {
         artists = await getArtists();
         albums = await getAlbums();
-        // console.log("HERE ARE THE ARTISTS " + artists);
     }
     catch (e) { console.log(e) }
     res.render('pages/edit_release', {releases : albums});
@@ -661,12 +631,8 @@ app.post('/Login', async function (req, res) {
                         });
                     }
                     else {
-                        console.log("user was logged in");
-                        // req.cookies["user"]
-                        //IF ADMIN SET TO admin
                         if (users[0]["isadmin"] == 1) { res.cookie("user", "admin"); }
                         else { res.cookie("user", "member"); }
-                        //IF USER SET TO user
                         res.cookie("userID", users[0]["uid"]);
                         res.redirect('/Discover');
                     }
@@ -680,7 +646,6 @@ app.post('/Login', async function (req, res) {
     catch (e) {
         console.log("Post login data failed\n");
     }
-    //res.render('pages/login');
 });
 
 app.get('/Register', function (req, res) {
@@ -706,7 +671,7 @@ app.get('/Logout', function (req, res) {
 async function getDate() {
     var today = new Date();
     var dd = today.getDate();
-    var mm = today.getMonth() + 1; //January is 0!
+    var mm = today.getMonth() + 1;
 
     var yyyy = today.getFullYear();
     if (dd < 10) {
@@ -720,23 +685,17 @@ async function getDate() {
 }
 
 app.post("/Album", async function (req, res) {
-    //db.run("INSERT INTO Review VALUES(NULL, 1, 2, 5, 'The va.', '09.02.2019')");
     var user_logged_in_cookie = req.cookies["userID"];
     try {
-        //Review (ID INTEGER NOT NULL PRIMARY KEY, ReleaseID int, UserID int, Rating int, Comment Text, Date Text);");
         var review = req.cookies["comment"];
         var rating = req.cookies["commentscore"];
         try {
             var query = "INSERT INTO Review VALUES(NULL, " + req.query.id + ", " + user_logged_in_cookie + ", " + rating + ", '" + review + "', '" + await getDate() + "')";
             await db.run(query);
         }
-        catch (e) {
-
-        }
+        catch (e) {}
     }
-    catch (e) {
-
-    }
+    catch (e) {}
     res.redirect("/Album?id=" + req.query.id);
 });
 
@@ -785,7 +744,7 @@ app.post('/Register', async function (req, res) {
                     }
                 }
             }
-            catch (e) { "hoppity fuckoff, why? becase " + console.log(e) }
+            catch (e) { console.log(e) }
         }
         res.render('pages/login', {
             loginmsg: "Account created! You can now login here."
@@ -804,31 +763,16 @@ app.get("/AddSong", async function (req, res) {
 app.post("/AddRelease", async function (req, res) {
     try {
         var releaseName = req.cookies["releasename"];
-        console.log("Release name : " + releaseName);
-        var artistID  = req.cookies["artistname"];
-        console.log("Artist name : " + artistID);
+        var artistID    = req.cookies["artistname"];
         var coverPath   = req.cookies["coverpath"];
-        console.log("coverpath : " + coverPath);
         var releaseType = req.cookies["releasetype"];
-        console.log("releaseType : " + releaseType);
         var releaseDate = req.cookies["releasedate"];
-        console.log(" releaseDate : " +  releaseDate);
         var releaseLen  = req.cookies["releaselength"];
-        console.log("releaseLen : " + releaseLen);
-        var labelID   = req.cookies["labelname"];
-        console.log("labelName : " + labelID);
+        var labelID     = req.cookies["labelname"];
         var formats     = req.cookies["formats"];
-        console.log("formats : " + formats);
         var genres      = req.cookies["genres"];
-        console.log("genres : " + genres);
         var description = req.cookies["description"];
-        console.log("description : " + description);
         try {
-            //get the artist and label IDs
-            // var artistQuery = `SELECT ID aID FROM Artist WHERE ArtistName="'${artistName}'"`;
-            // var artistID = await db.all(artistQuery);
-            // var labelQuery = `SELECT ID labelID FROM Label WHERE LabelID="'${labelName}'"`;
-            // var labelID = await db.all(labelQuery);
             var query = "INSERT INTO Release VALUES(NULL, '" + coverPath + "', '" + releaseName + "', " + artistID + ", " + releaseType + ", '" + releaseDate      + "', '" + releaseLen + "', " + labelID + ", '" + formats + "', " + 0 + ", '" + description + "', " + 0 + ", '" + genres + "')";
             console.log(query);
             await db.run(query);
