@@ -764,7 +764,7 @@ app.post('/Register', async function (req, res) {
                     var emailQuery = `SELECT Email email FROM User WHERE Email="${email}"`;
                     var emails = await db.all(emailQuery);
                     if (emails.length != 0) { 
-                        regmsg + "" + emails[0]["email"] + " email already exists in the database.";
+                        regmsg = "" + emails[0]["email"] + " email already exists in the database.";
                         res.render('pages/register', {
                             regmsg: regmsg
                         });
