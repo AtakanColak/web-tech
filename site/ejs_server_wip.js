@@ -140,8 +140,8 @@ function toMMSS(thetime) {
 
 function toUnix(thetime) {
     var hours = parseInt(thetime[0]) + parseInt(thetime[1]);
-    var minutes = parseInt(thetime[3] + thetime[4]);
-    var seconds = parseInt(thetime[5] + thetime[6]);
+    var minutes = parseInt(thetime[4] + thetime[5]);
+    var seconds = parseInt(thetime[7] + thetime[8]);
     return seconds + minutes*60 + hours*3600;
 }
 
@@ -685,28 +685,6 @@ async function getDate() {
     return today;
 }
 
-
-
-async function addTrackData() {
-    //db.run("CREATE TABLE Track (ID INTEGER NOT NULL PRIMARY KEY, TrackName Str, TrackLength int, TrackPath Str, ReleaseID int, TrackIndex int);");
-    //db.run("INSERT INTO Track VALUES(NULL, 'Up Syndrome', time(129, 'unixepoch'), 'not sure what to put here', 1, 1)");
-
-    try {
-        var trackName = req.cookies["trackname"];
-        var trackLen  = toUnix(req.cookies["tracklength"]);
-        var trackPath = req.cookies["trackpath"];
-        var trackNum  = req.cookies["tracknum"];
-        var releaseID = 0;
-        try {
-            var query = "INSERT INTO Track VALUES(NULL, '" + trackName + "', time(" + trackLen + "), ''unixepoch''), '" + trackPath + "', " + releaseID + ", " + trackNum + ")";
-            await db.run(query);
-        }
-        catch (e) {}
-    }
-    catch (e) {}
-}
-
-
 app.post("/Album", async function (req, res) {
     //db.run("INSERT INTO Review VALUES(NULL, 1, 2, 5, 'The va.', '09.02.2019')");
     var user_logged_in_cookie = req.cookies["userID"];
@@ -764,6 +742,9 @@ app.post('/Register', async function (req, res) {
     }
 });
 
+app.get("/AddSong", async function (req, res) {
+    res.render("pages/add_song");
+});
 
 app.post("/AddRelease", async function (req, res) {
     try {
@@ -803,6 +784,27 @@ app.post("/AddRelease", async function (req, res) {
     }
     catch (e) {}
     res.redirect("/Discover");
+});
+
+app.post("/AddSong", async function (req, res) {
+    try {
+        var trackName = req.cookies["trackname"];
+        console.log(req.cookies["tracklength"]);
+        var trackLen  = toUnix(req.cookies["tracklength"]);
+        var trackPath = req.cookies["trackpath"];
+        var trackNum  = req.cookies["tracknum"];
+        var releaseID = req.cookies["relnum"];
+        try {
+            var query = "INSERT INTO Track VALUES(NULL, '" + trackName + "', time(" + trackLen + ", 'unixepoch'), '" + trackPath + "', " + releaseID + ", " + trackNum + ")";
+            console.log(query);
+            await db.run(query);
+        }
+        catch (e) {
+            console.log(e);
+        }
+    }
+    catch (e) {}
+    res.redirect("/Album?id=" + releaseID);
 });
 
 // io.on('connection', function (socket) {

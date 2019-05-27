@@ -80,19 +80,40 @@ $(function () {
         $(this).val(check);
     });
 
-    $(".add-song").click(function (e) {
-        e.preventDefault();
-        var name = $(this).parents(".jumbotron").find("#input_song_name").val();
-        var length = $(this).parents(".jumbotron").find("#input_song_length").val();
-        var path = $(this).parents(".jumbotron").find("#input_track_path").val();
-        var index = $(this).parents(".jumbotron").find("#input_song_number").val();
-        var isValidTime = /^\d\d:([01]?[0-9]|2[0-3]):[0-5][0-9]$/.test(length);
-        if (name != "" && isValidTime && path != "" && index > 0) {
-            $(this).parents(".song-section").find(".song-list ul").append("<li class=\"row\"><h5 class=\"col-md-2 text-center\">" + index + ".</h5><h5 class=\"col-md-6 text-center\">" + name + "</h5><h5 class=\"col-md-2 text-center\">" + length + "</h5></li>");
-        }
-        else {
-            $(this).parents(".jumbotron").find(".invalid-song").prop("hidden", false);
-        }
+    // $(".add-song").click(function (e) {
+    //     e.preventDefault();
+    //     var name = $(this).parents(".jumbotron").find("#input_song_name").val();
+    //     
+    //     var path = $(this).parents(".jumbotron").find("#input_track_path").val();
+    //     var index = $(this).parents(".jumbotron").find("#input_song_number").val();
+    //     var isValidTime = /^\d\d:([01]?[0-9]|2[0-3]):[0-5][0-9]$/.test(length);
+    //     if (name != "" && isValidTime && path != "" && index > 0) {
+    //         $(this).parents(".song-section").find(".song-list ul").append("<li class=\"row\"><h5 class=\"col-md-2 text-center\">" + index + ".</h5><h5 class=\"col-md-6 text-center\">" + name + "</h5><h5 class=\"col-md-2 text-center\">" + length + "</h5></li>");
+    //     }
+    //     else {
+    //         $(this).parents(".jumbotron").find(".invalid-song").prop("hidden", false);
+    //     }
+    // });
+
+
+    // var trackName = req.cookies["trackname"];
+    // var trackLen  = toUnix(req.cookies["tracklength"]);
+    // var trackPath = req.cookies["trackpath"];
+    // var trackNum  = req.cookies["tracknum"];
+    // var releaseID = 
+
+
+    $("#addsong2").click(function (e) {
+        var name = $(this).parents("form").find("#input_song_name").val();
+        var length = $(this).parents("form").find("#input_song_length").val();
+        var path = $(this).parents("form").find("#input_sound").val();
+        var trackNum = $(this).parents("form").find("#input_song_number").val();
+        var relNum = $(this).parents("form").find("#input_release_id").val();
+        Cookies.set("trackname", name);
+        Cookies.set("tracklength", length);
+        Cookies.set("trackpath", path);
+        Cookies.set("tracknum", trackNum);
+        Cookies.set("relnum", relNum);
     });
 
     $("#postcom").click(function (e) {
@@ -171,9 +192,11 @@ $(function () {
             $("#loggedin").show();
             if (Cookies.get("user") == "admin") {
                 $("#editrel").show();
+                $("#editson").show();
             }
             else {
                 $("#editrel").hide();
+                $("#editson").hide();
             }
         }
     });
