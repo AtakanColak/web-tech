@@ -274,11 +274,9 @@ async function getUser(idTest) {
 
 async function getRating(idTest) {
     try {
-        var val;
-        var getStmt = `SELECT Rating rating FROM Review WHERE ID="${idTest}"`;
-        var row = await db.get(getStmt);
-        val = row["rating"];
-        return val;
+        var ratingQuery = `SELECT Rating rating FROM Review WHERE ReleaseID="${idTest}"`;
+        var ratings = await db.all(ratingQuery);
+        return ratings;
     }
     catch (e) {
         return "error";
@@ -484,15 +482,29 @@ app.get('/Album', async function (req, res) {
         catch (e) { comments[i].username = "oijadsoijdsaerro12133r"; }
     }
 
-    var ratingList = [];
-    for (let i = 0; i < comments.length; i++) {
-        try { rating = await getRating(comments[i].userid); }
-        catch (e) { rating = "oijadsoijdasdasdasdadsro12133r"; }
-        ratingList.push(rating);
-    }
+    // var ratingList = [];
+    // for (let i = 0; i < comments.length; i++) {
+    //     try { rating = await getRating(albumID); }
+    //     catch (e) { rating = "oijadsoijdasdasdasdadsro12133r"; }
+    //     ratingList.push(rating);
+    // }
+    // var total = 0;
+    // for (i = 0; i < ratingList.length; i++) total += ratingList[i];
+    // total = total / ratingList.length;
+    
+    var ratings = [];
     var total = 0;
-    for (i = 0; i < ratingList.length; i++) total += ratingList[i];
-    total = total / ratingList.length;
+    try { ratings = await getRating(albumID); }
+    catch (e) { console.log(e + "rating error"); }
+    console.log(ratings);
+    if (ratings.length != 0) {
+        for (i = 0; i < ratings.length; i++) {
+            total += ratings[i]["rating"];
+            console.log(total);
+        }
+        total = total/ratings.length;
+    }
+    else total = 0;
 
     res.render('pages/album', {
         release_name: album["relNam"],
@@ -504,7 +516,7 @@ app.get('/Album', async function (req, res) {
         release_label: label,
         release_formats: makeStringFromBin(album["relFor"], "format"),
         release_genres: makeStringFromBin(album["gID"], "genre"),
-        release_rating: album["rating"],
+        release_rating: total,
         release_desc: album["bioTxt"],
         tracks: tracks,
         items: shoppingItems,
@@ -514,7 +526,6 @@ app.get('/Album', async function (req, res) {
 });
 
 var discoverGet = async function (req, res) {
-    console.log(req.ip);
     //var where_string;
     var collectedAlbums;
     try { collectedAlbums = await getAlbums(); }
@@ -567,6 +578,7 @@ var discoverGet = async function (req, res) {
         discover_wo_search += "&sort=" + sortSTR;
         discover_wo_decade += "&sort=" + sortSTR;
         discover_wo_genre += "&sort=" + sortSTR;
+        albumsToReturnTest = sortAlbums(sortSTR-1, albumsToReturnTest);
     }
 
 
@@ -614,25 +626,34 @@ app.get('/Error', function (req, res) {
 });
 
 app.get('/Login', function (req, res) {
-    res.render('pages/login');
+
+    res.render('pages/login', {
+        loginmsg: ""
+    });
 });
 
 app.post('/Login', async function (req, res) {
     try {
+        var loginmsg = "";
         var username = req.cookies["username"];
         var password = req.cookies["password"];
-        console.log("Username : " + username + "\nPassword : " + password);
-        if (username.length < 4 || password.length < 4) { console.log("Post login data failed\n"); }
-        else {
             try {
                 var userQuery = `SELECT UserName username, Password password, IsAdmin isadmin, ID uid FROM User WHERE UserName="${username}"`;
                 var users = await db.all(userQuery);
                 if (users.length == 0) {
                     console.log(users.length);
-                    console.log("that username does not exist");
+                    loginmsg = "That username does not exist.";
+                    res.render('pages/login', {
+                        loginmsg: loginmsg
+                    });
                 }
                 else {
-                    if (!checkPassword(password, users[0]["password"])) { console.log("bad password") }
+                    if (!checkPassword(password, users[0]["password"])) { 
+                        loginmsg = "Invalid password.";
+                        res.render('pages/login', {
+                            loginmsg: loginmsg
+                        });
+                    }
                     else {
                         console.log("user was logged in");
                         // req.cookies["user"]
@@ -646,21 +667,28 @@ app.post('/Login', async function (req, res) {
                 }
             }
             catch (e) { console.log(e) }
-        }
-        res.render('pages/login');
+        res.render('pages/login', {
+            loginmsg: loginmsg
+        });
     }
     catch (e) {
         console.log("Post login data failed\n");
     }
-    res.render('pages/login');
+    //res.render('pages/login');
 });
 
 app.get('/Register', function (req, res) {
-    res.render('pages/register');
+    res.render('pages/register', {
+        regmsg: ""
+    });
 });
 
 app.get('/', function (req, res) {
     res.render('pages/home');
+});
+
+app.get('/Lorem', function (req, res) {
+    res.render('pages/lorem');
 });
 
 app.get('/Logout', function (req, res) {
@@ -684,8 +712,6 @@ async function getDate() {
     var today = dd + '.' + mm + '.' + yyyy;
     return today;
 }
-
-
 
 async function addTrackData() {
     try {
@@ -728,23 +754,42 @@ app.post("/Album", async function (req, res) {
 
 app.post('/Register', async function (req, res) {
     try {
+        var regmsg = "";
         var username = req.cookies["username"];
         var email = req.cookies["email"];
         var password = req.cookies["password"];
-        if (username.length < 4 || password.length < 4) { console.log("Post register data failed\n"); }
+        if (username.length < 4 || password.length < 4) { 
+            regmsg = "Username and Password must be longer than 3 characters.";
+            res.render('pages/register', {
+                regmsg: regmsg
+            });
+        }
         else {
             try {
                 var usernameQuery = `SELECT UserName username FROM User WHERE UserName="${username}"`;
                 var usernames = await db.all(usernameQuery);
                 if (usernames.length != 0) {
-                    console.log(usernames[0]["username"] + " user already exists in the database")
+                    regmsg = "" + usernames[0]["username"] + " user already exists in the database.";
+                    res.render('pages/register', {
+                        regmsg: regmsg
+                    });
                 }
                 else {
                     var emailQuery = `SELECT Email email FROM User WHERE Email="${email}"`;
                     var emails = await db.all(emailQuery);
-                    if (emails.length != 0) { console.log(emails[0]["email"] + " email already exists in the database") }
+                    if (emails.length != 0) { 
+                        regmsg + "" + emails[0]["email"] + " email already exists in the database.";
+                        res.render('pages/register', {
+                            regmsg: regmsg
+                        });
+                    }
                     else {
-                        if (!validateEmail(email)) console.log("enter a valid email");
+                        if (!validateEmail(email)) {
+                            regmsg = "Please enter a valid email address.";
+                            res.render('pages/register', {
+                                regmsg: regmsg
+                            });
+                        }
                         else {
                             await db.run("INSERT INTO User VALUES(NULL, '" + username + "', '" + hashPassword(password) + "', '" + email + "', 0)");
                             console.log("Post register data successful\n");
@@ -754,7 +799,9 @@ app.post('/Register', async function (req, res) {
             }
             catch (e) { "hoppity fuckoff, why? becase " + console.log(e) }
         }
-        res.render('pages/login');
+        res.render('pages/login', {
+            loginmsg: "Account created! You can now login here."
+        });
     }
     catch (e) {
         console.log("Post register data failed\n");
@@ -791,7 +838,7 @@ app.post("/AddRelease", async function (req, res) {
             // var artistID = await db.all(artistQuery);
             // var labelQuery = `SELECT ID labelID FROM Label WHERE LabelID="'${labelName}'"`;
             // var labelID = await db.all(labelQuery);
-            var query = "INSERT INTO Release VALUES(NULL, '" + coverPath + "', '" + releaseName + "', " + artistID + ", " + releaseType + ", " + releaseDate      + ", '" + releaseLen + "', " + labelID + ", '" + formats + "', " + 0 + ", '" + description + "', " + 0 + ", '" + genres + "')";
+            var query = "INSERT INTO Release VALUES(NULL, '" + coverPath + "', '" + releaseName + "', " + artistID + ", " + releaseType + ", '" + releaseDate      + "', '" + releaseLen + "', " + labelID + ", '" + formats + "', " + 0 + ", '" + description + "', " + 0 + ", '" + genres + "')";
             console.log(query);
             await db.run(query);
         }
