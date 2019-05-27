@@ -351,12 +351,14 @@ function formatID2String(id) {
     else return format_strings[id];
 }
 
-function browsing_string(genreID, formatID, decade) {
+function browsing_string(genreID, formatID, decade, search) {
     var str = genreID2String(genreID);
     if (genreID != null && (formatID != null || decade != null)) str += ", ";
     str += formatID2String(formatID);
     if (formatID != null && decade != null) str += ", ";
     if (decade != null) str += decade;
+    if ((genreID != null || formatID != null || decade != null) && search != null) str += ", ";
+    if (search != null) str += "Searching for '" + search + "'";
     return str;
 }
 
@@ -591,7 +593,7 @@ var discoverGet = async function (req, res) {
         discover_wo_decade: discover_wo_decade,
         discover_wo_genre: discover_wo_genre,
         discover_wo_sort: discover_wo_sort,
-        browsing_str: browsing_string(genreID, formatID, decadeSTR),
+        browsing_str: browsing_string(genreID, formatID, decadeSTR, searchSTR),
         selected_sort: sortID2String(sortSTR)
     });
 };
